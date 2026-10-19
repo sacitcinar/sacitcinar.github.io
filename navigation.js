@@ -2,7 +2,7 @@
   'use strict';
   const views = {
     home: '/index.html', about: '/about.html', research: '/research.html',
-    projects: '/projects.html', writeups: '/write-ups.html', blog: '/blog.html'
+    projects: '/projects.html', writeups: '/write-ups.html'
   };
   const stateKey = 'portfolio.menu';
   const isShell = location.pathname === '/' || location.pathname === '/index.html';

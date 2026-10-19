@@ -4,7 +4,7 @@ body,.about-body{background:var(--bg)}
 header.site-header{background:#0c0d10f5}
 .brand-mark{background:#151619}
 .site-footer{background-color:var(--bg)}
-.project-card,.placeholder{background:var(--panel)}
+.project-card{background:var(--panel)}
 .project-card:hover{background:#1b1d21}
 .project-badge{background:#23262b}
 
