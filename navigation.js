@@ -9,6 +9,16 @@
   let current = document.body.dataset.sectionPage || 'about';
   let requestId = 0;
   let observer;
+  let updateContactState = null;
+  let contactFramePending = false;
+  addEventListener('scroll', () => {
+    if (contactFramePending) return;
+    contactFramePending = true;
+    requestAnimationFrame(() => {
+      contactFramePending = false;
+      updateContactState?.();
+    });
+  }, { passive: true });
   const cached = new Map();
   const storage = {
     get() { try { return sessionStorage.getItem(stateKey); } catch { return null; } },
@@ -50,12 +60,23 @@
   function bindContact() {
     bindLatestContents();
     observer?.disconnect();
+    updateContactState = null;
     const contact = document.getElementById('contact');
-    if (!contact || !('IntersectionObserver' in window)) return;
-    observer = new IntersectionObserver(([entry]) => {
-      activeSection(entry.isIntersecting ? 'contact' : current);
-    }, { threshold: 0.35 });
-    observer.observe(contact);
+    if (!contact) return;
+    updateContactState = () => {
+      if (!contact.isConnected) return;
+      const bounds = contact.getBoundingClientRect();
+      const headerBottom = document.querySelector('.site-header')?.getBoundingClientRect().bottom || 0;
+      const atBottom = scrollY > 0 && innerHeight + scrollY >= document.documentElement.scrollHeight - 3;
+      const inContact = bounds.bottom > headerBottom &&
+        (bounds.top <= headerBottom + 100 || (atBottom && bounds.top < innerHeight));
+      activeSection(inContact ? 'contact' : current);
+    };
+    if ('IntersectionObserver' in window) {
+      observer = new IntersectionObserver(updateContactState, { threshold: [0, 0.35, 1] });
+      observer.observe(contact);
+    }
+    updateContactState();
   }
   function bindLatestContents() {
     const list = document.querySelector('[data-latest-list]');
