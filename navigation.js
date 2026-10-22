@@ -2,7 +2,7 @@
   'use strict';
   const views = {
     home: '/index.html', about: '/about.html', research: '/research.html',
-    projects: '/projects.html', writeups: '/write-ups.html'
+    projects: '/projects.html', writeups: '/write-ups.html', cheatsheets: '/cheat-sheets.html'
   };
   const stateKey = 'portfolio.menu';
   const isShell = location.pathname === '/' || location.pathname === '/index.html';
@@ -130,13 +130,14 @@
         document.body.className = page.body.className;
         current = target;
         document.body.dataset.sectionPage = target;
-        document.title = target === 'home' ? 'Home — Mehmet Sacit Çınar' : page.title;
+        document.title = target === 'home' ? 'Home' : page.title;
         const description = page.querySelector('meta[name="description"]');
         if (description) document.querySelector('meta[name="description"]')?.setAttribute('content', description.content);
       }
       if (mine !== requestId) return;
       storage.set(section);
       activeSection(section);
+      document.title = {home:'Home', about:'About', contact:'Contact', research:'Research', projects:'Projects', writeups:'Writeups', cheatsheets:'Codex'}[section] || document.title;
       bindContact();
       updateResearchCount();
       updateWriteupFilters();
