@@ -1,0 +1,12 @@
+/* Shared typography: Inter for prose, JetBrains Mono for section headings and technical text. */
+@font-face{font-family:'JetBrains Mono';src:url('/assets/fonts/jetbrains-mono-400.ttf') format('truetype');font-style:normal;font-weight:400;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('/assets/fonts/jetbrains-mono-500.ttf') format('truetype');font-style:normal;font-weight:500;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('/assets/fonts/jetbrains-mono-600.ttf') format('truetype');font-style:normal;font-weight:600;font-display:swap}
+@font-face{font-family:'JetBrains Mono';src:url('/assets/fonts/jetbrains-mono-700.ttf') format('truetype');font-style:normal;font-weight:700;font-display:swap}
+
+:root{--mono:'JetBrains Mono',monospace}
+body{font-family:Inter,sans-serif}
+h1:not(#about-name),h2,.cs-category h2{font-family:var(--mono)}
+.project-card h2,.cs-topic h2{font-family:Inter,sans-serif}
+.about-role,.role,code,kbd,samp,pre{font-family:var(--mono)}
+.ascii-canvas{font-family:'IBM Plex Mono',monospace}

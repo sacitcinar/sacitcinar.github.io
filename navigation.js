@@ -78,6 +78,7 @@
     }
     updateContactState();
   }
+
   function bindLatestContents() {
     const list = document.querySelector('[data-latest-list]');
     if (!list) return;
@@ -151,14 +152,14 @@
         document.body.className = page.body.className;
         current = target;
         document.body.dataset.sectionPage = target;
-        document.title = target === 'home' ? 'Home' : page.title;
+        document.title = target === 'home' ? 'Mehmet Sacit Çınar' : page.title;
         const description = page.querySelector('meta[name="description"]');
         if (description) document.querySelector('meta[name="description"]')?.setAttribute('content', description.content);
       }
       if (mine !== requestId) return;
       storage.set(section);
       activeSection(section);
-      document.title = {home:'Home', about:'About', contact:'Contact', research:'Research', projects:'Projects', writeups:'Writeups', cheatsheets:'Codex'}[section] || document.title;
+      document.title = {home:'Mehmet Sacit Çınar', about:'Mehmet Sacit Çınar', contact:'Contact', research:'Research', projects:'Projects', writeups:'Writeups', cheatsheets:'Codex'}[section] || document.title;
       bindContact();
       updateResearchCount();
       updateWriteupFilters();

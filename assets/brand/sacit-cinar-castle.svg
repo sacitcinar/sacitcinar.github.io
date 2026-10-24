@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 136" width="128" height="136" role="img" aria-labelledby="title">
+  <title id="title">Sacit Çınar — Castle C</title>
+  <defs>
+    <linearGradient id="teal" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#22F1D9"/>
+      <stop offset="1" stop-color="#0AC3AD"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#teal)" d="M 3.7,24.2 L 19.8,16.1 Q 22,15 22,17.5 L 22,26 Q 22,28 24,28 L 37,28 Q 39,28 39,26 L 39,7.5 Q 39,6 40.5,5.6 Q 64,-1.5 89.5,5.6 Q 91,6 91,7.5 L 91,26 Q 91,28 93,28 L 106,28 Q 108,28 108,26 L 108,17.5 Q 108,15 110.2,16.1 L 124.3,24.2 Q 126,25 126,27 L 126,59 C 126,87 114.7,112.5 93.5,131.7 Q 91,134 91,130.5 L 91,83 C 91,68 79,56 65,56 C 50,56 39,68 39,83 L 39,130.5 Q 39,134 36.5,131.7 C 13.3,112.5 2,87 2,59 L 2,27 Q 2,25 3.7,24.2 Z"/>
+</svg>

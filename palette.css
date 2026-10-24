@@ -1,0 +1,27 @@
+/* Approved navy canvas, slate panels and teal accents. */
+:root{--bg:#080e21;--panel:#0f172a;--blue:#10DEC5;--accent:#10DEC5;--line:#29364b;--muted:#adc6d5}
+body,.about-body,header.site-header,.site-footer{background:var(--bg)}
+.project-card,.project-card:hover,.cs-topic,a.cs-topic:hover,.tool-panel,.credential{background:var(--panel)}
+.project-badge{background:#1e293b}
+.resume-button,.button.primary{background:var(--accent);border-color:var(--accent);color:#080e21}
+.resume-button:hover,.button.primary:hover{background:#2dd4bf;border-color:#2dd4bf;color:#080e21}
+.ascii-canvas{color:var(--accent);text-shadow:none}
+.writeup-filter-row button{background:var(--panel)}
+.writeup-filter-row button[aria-pressed=true]{background:#11332f;color:var(--accent);border-color:var(--accent)}
+.writeup-terminal,.writeup-copy pre,.writeup-copy .encoded-command,.writeup-copy .answer-spoiler,.cs-code{background:var(--panel)}
+.cs-reference-table td{background:var(--panel)}
+.cs-reference-table tbody:nth-of-type(even) td{background:#131e33}
+.cs-reference-table th,.cs-examples-table th{background:#123c3e;color:#d1faf3}
+.cs-topic-icon{background:#102d32;color:var(--accent);border-color:#24514f}
+.cs-topic::before,.cs-topic::after{border-color:var(--accent)}
+.project-tags li{display:inline-flex;align-items:center;gap:6px}
+.project-tags li::before{content:"";display:inline-block;flex:0 0 12px;width:12px;height:12px;background:currentColor;mask:url('/assets/tag.svg') center/contain no-repeat;-webkit-mask:url('/assets/tag.svg') center/contain no-repeat}
+
+/* About text is pure white; location, accent details and CV button retain their colors. */
+.about-main #about-name,.about-main .about-role,.about-main .about-role span,
+.about-main .intro-story p,.about-main h2,.about-main .social-name,
+.about-main .latest-content-list a,.about-main .latest-content-meta,
+.about-main .latest-content-list a:hover .latest-content-meta{color:#fff}
+
+/* Project workflows: petrol inset surface with a matching subtle border. */
+.pipeline{background:#0b2029;border-color:#23434b}
