@@ -1,0 +1,31 @@
+/* Keep the language switch outside the menu's layout, in the right gutter. */
+.header-inner { position: relative; }
+.language-toggle {
+  position: absolute;
+  top: 50%;
+  right: calc((var(--content-gutter) - 56px) / 2);
+  transform: translateY(-50%);
+  width: 56px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font: 500 10px/1.7 'JetBrains Mono', monospace;
+}
+.language-toggle span { padding: 1px 4px; border-radius: 2px; }
+.language-toggle .selected { color: var(--bg); background: var(--blue); }
+.language-toggle:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
+html[lang="tr"] .intro-story p { text-wrap: pretty; }
+@media (max-width: 760px) {
+  .language-toggle {
+    top: 12px;
+    right: var(--content-gutter);
+    transform: none;
+  }
+}

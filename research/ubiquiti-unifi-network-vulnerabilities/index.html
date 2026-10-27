@@ -1,3 +1,310 @@
-<!DOCTYPE html>
+<!doctype html>
 
-<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1" name="viewport"/><title>Ubiquiti UniFi Network Application Vulnerabilities</title><meta content="An unauthenticated path traversal vulnerability and an authenticated NoSQL injection flaw put UniFi Network Application deployments at risk." name="description"/><meta content="#0c0d10" name="theme-color"/><link href="/style.css" rel="stylesheet"/><link href="/about.css" rel="stylesheet"/><link href="/projects.css" rel="stylesheet"/><link href="/research.css" rel="stylesheet"/><link href="/theme.css" rel="stylesheet"/><link href="https://sacitcinar.github.io/research/ubiquiti-unifi-network-vulnerabilities/" rel="canonical"/><link rel="icon" href="/assets/brand/sacit-cinar-castle.svg?v=bright2" type="image/svg+xml"><link rel="icon" href="/favicon-32.png?v=castle4" sizes="32x32" type="image/png"><link rel="shortcut icon" href="/favicon.ico?v=castle4"><link rel="stylesheet" href="/cheat-sheets.css"><link rel="stylesheet" href="/typography.css"><link rel="stylesheet" href="/palette.css"></head><body class="research-body" data-section-page="research"><header class="site-header"><div class="header-inner"><a aria-label="Sacit Çınar — About" class="brand" data-section="home" href="/index.html"><span class="brand-mark" aria-hidden="true"><img src="/assets/brand/sacit-cinar-castle.svg?v=bright2" width="34" height="36" alt="" aria-hidden="true"></span><span class="brand-copy"><span class="brand-name">Sacit Çınar</span><span class="brand-prompt">dominic@kali:~$<span aria-hidden="true" class="terminal-cursor"></span></span></span></a><nav aria-label="Main navigation"><a data-section="home" href="/index.html">About</a><a aria-current="page" class="active" data-section="research" href="/research.html">Research</a><a data-section="projects" href="/projects.html">Projects</a><a data-section="writeups" href="/write-ups.html">Write-ups</a><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a><a class="nav-contact" data-section="contact" href="/index.html#contact">Contact</a></nav></div></header><main class="projects-main research-detail"><a class="project-return" data-section="research" href="/research.html">← Research</a><article><header class="research-hero"><div class="project-meta"><span class="project-badge">UBIQUITI</span><span class="project-badge">VULNERABILITY ANALYSIS</span></div><h1>Ubiquiti UniFi Network Application Vulnerabilities</h1><div aria-label="Vulnerability identifiers and CVSS base scores" class="research-cves"><div class="cve-badge-pair"><span>CVE-2026-22557</span><span class="severity-label severity-critical" title="Rating source: Ubiquiti CNA">CRITICAL · CVSS 3.1 10.0</span></div><div class="cve-badge-pair"><span>CVE-2026-22558</span><span class="severity-label severity-high" title="Rating source: Ubiquiti CNA">HIGH · CVSS 3.1 7.7</span></div></div><p class="research-deck">An unauthenticated path traversal vulnerability and an authenticated NoSQL injection flaw put UniFi Network Application deployments at risk.</p><p class="research-byline">Mehmet Sacit Çınar · Published through <a href="https://www.linkedin.com/company/memori-intel/" rel="noopener noreferrer" target="_blank">Memori Intel ↗</a></p><p class="research-edition">Vulnerabilities disclosed: 18 March 2026 · Published on LinkedIn: 21 March 2026</p><div class="research-actions"><a download="ubiquiti-unifi-network-vulnerabilities.pdf" href="/assets/research/ubiquiti-unifi-network-vulnerabilities.pdf">Download Report (PDF) ↓</a><a href="https://www.linkedin.com/feed/update/urn:li:activity:7441108514443403264/" rel="noopener noreferrer" target="_blank">View LinkedIn Post ↗</a></div></header><div class="research-layout"><aside class="article-toc"><p>IN THIS REPORT</p><nav aria-label="Article contents"><a href="#summary">Executive Summary</a><a href="#path-traversal">CVE-2026-22557 — Path Traversal (Critical)</a><a href="#nosql">CVE-2026-22558 — NoSQL Injection (High)</a><a href="#products">Affected Products</a><a href="#exposure">Exposure &amp; Threat Landscape</a><a href="#publication">Published Report</a><a href="#sources">Sources</a></nav></aside><div class="research-copy"><section class="project-story" id="summary"><h2>Executive Summary</h2><p>Two vulnerabilities have been disclosed in the Ubiquiti UniFi Network Application, which could allow attackers to take over accounts and compromise underlying systems.</p><p>The primary issue (CVE-2026-22557) is a unauthenticated path traversal vulnerability with a CVSS score of 10.0 (Critical). A secondary issue (CVE-2026-22558) enables privilege escalation via NoSQL injection.</p><p>These vulnerabilities pose a significant risk, especially for instances exposed to internal networks or the internet.</p></section><section class="project-story" id="path-traversal"><h2>CVE-2026-22557 — Path Traversal (Critical)</h2><p>Type: Unauthenticated Path Traversal CVSS: 10.0 (Critical) Impact: Unauthorized access to sensitive system files Potential extraction of credentials or configuration data May lead to account takeover or full system compromise Attack Requirements: Network access to the UniFi application (no authentication required)</p></section><section class="project-story" id="nosql"><h2>CVE-2026-22558 — NoSQL Injection (High)</h2><p>Type: Authenticated NoSQL Injection Impact: Privilege escalation Abuse of application logic Potential lateral movement within the UniFi environment Attack Requirements: Valid low-privileged account</p></section><section class="project-story" id="products"><h2>Affected Products</h2><div class="report-table-wrap"><table class="report-table"><thead><tr><th>Product / release channel</th><th>Affected application versions in the report</th><th>Fixed release</th></tr></thead><tbody><tr><td>UniFi Network — Official</td><td>10.1.85 and earlier</td><td>10.1.89 or later</td></tr><tr><td>UniFi Network — Release Candidate</td><td>10.2.93 and earlier</td><td>10.2.97 or later</td></tr><tr><td>UniFi Express (UX)</td><td>Network 9.0.114 and earlier</td><td>Firmware 4.0.13 or later (Network 9.0.118 or later)</td></tr></tbody></table></div><p class="report-context">Use Ubiquiti’s bulletin for the appropriate release channel. The application and UniFi Express firmware have separate version numbers.</p></section><section class="project-story" id="exposure"><h2>Exposure &amp; Threat Landscape</h2><p class="report-context">Exposure counts and statements about exploitation below reflect the report published on 21 March 2026.</p><p>According to Censys, approximately 87,000+ UniFi instances are exposed online.</p><p>Version detection from external scanning is limited, making it difficult to determine patch status.</p><p>At the time of reporting: No confirmed public exploit (PoC) No confirmed active exploitation in the wild</p><p>However, due to the critical severity (CVSS 10.0), exploitation is considered highly likely in the near term.</p><figure class="report-figure"><a href="/assets/research/unifi-exposure-censys.png" rel="noopener" target="_blank"><img alt="Censys map and country counts of internet-facing UniFi hosts" height="399" loading="lazy" src="/assets/research/unifi-exposure-censys.png" width="1104"/></a><figcaption>Censys exposure snapshot reproduced from the PDF. Exposed hosts are not necessarily vulnerable or unpatched.</figcaption></figure></section><section class="project-story" id="publication"><h2>Published Report</h2><div class="publication-panel"><a href="/assets/research/ubiquiti-unifi-network-vulnerabilities.pdf" rel="noopener" target="_blank"><img alt="Cover of the Ubiquiti UniFi Network Application Vulnerabilities report published through Memori Intel" height="900" loading="lazy" src="/assets/research/ubiquiti-unifi-network-vulnerabilities-cover.png" width="637"/></a><div><p>A review of Ubiquiti’s disclosed vulnerabilities, published through Memori Intel.</p><a download="ubiquiti-unifi-network-vulnerabilities.pdf" href="/assets/research/ubiquiti-unifi-network-vulnerabilities.pdf">Download Report (PDF) ↓</a><a href="https://www.linkedin.com/feed/update/urn:li:activity:7441108514443403264/" rel="noopener noreferrer" target="_blank">View LinkedIn Post ↗</a></div></div></section><section class="project-story" id="sources"><h2>Sources</h2><ol class="research-sources"><li><a href="https://community.ui.com/releases/Security-Advisory-Bulletin-062-062/c29719c0-405e-4d4a-8f26-e343e99f931b" rel="noopener noreferrer" target="_blank">Ubiquiti — Security Advisory Bulletin 062 ↗</a></li><li><a href="https://www.cve.org/CVERecord?id=CVE-2026-22557" rel="noopener noreferrer" target="_blank">CVE-2026-22557 — CVE record ↗</a><span>CVSS 3.1: 10.0 · Ubiquiti CNA</span></li><li><a href="https://www.cve.org/CVERecord?id=CVE-2026-22558" rel="noopener noreferrer" target="_blank">CVE-2026-22558 — CVE record ↗</a><span>CVSS 3.1: 7.7 · Ubiquiti CNA</span></li></ol></section></div></div></article></main><footer class="site-footer"><div class="footer-inner"><p>© 2026 Mehmet Sacit Çınar</p><nav aria-label="Footer navigation" class="footer-nav"><a data-section="home" href="/index.html">About</a><a aria-current="page" class="active" data-section="research" href="/research.html">Research</a><a data-section="projects" href="/projects.html">Projects</a><a data-section="writeups" href="/write-ups.html">Write-ups</a><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a><a class="nav-contact" data-section="contact" href="/index.html#contact">Contact</a></nav></div></footer><script defer="" src="/navigation.js"></script></body></html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Ubiquiti UniFi Network Application Vulnerabilities</title>
+    <meta
+      content="An unauthenticated path traversal vulnerability and an authenticated NoSQL injection flaw put UniFi Network Application deployments at risk."
+      name="description"
+    />
+    <meta content="#0c0d10" name="theme-color" />
+    <link href="/style.css" rel="stylesheet" />
+    <link href="/about.css" rel="stylesheet" />
+    <link href="/projects.css" rel="stylesheet" />
+    <link href="/research.css" rel="stylesheet" />
+    <link href="/theme.css" rel="stylesheet" />
+    <link
+      href="https://sacit-security-portfolio.dmncdcco.chatgpt.site/research/ubiquiti-unifi-network-vulnerabilities/"
+      rel="canonical"
+    />
+    <link
+      rel="icon"
+      href="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon-32.png?v=castle-original7" sizes="32x32" type="image/png" />
+    <link rel="shortcut icon" href="/favicon.ico?v=castle-original7" />
+    <link rel="stylesheet" href="/cheat-sheets.css" />
+    <link rel="stylesheet" href="/typography.css" />
+    <link rel="stylesheet" href="/palette.css" />
+    <link rel="stylesheet" href="/i18n.css" />
+    <script src="/i18n.js" defer></script>
+  </head>
+  <body class="research-body" data-section-page="research">
+    <header class="site-header">
+      <div class="header-inner">
+        <a aria-label="Sacit Çınar — About" class="brand" data-section="home" href="/index.html"
+          ><span class="brand-mark" aria-hidden="true"
+            ><img
+              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+              width="34"
+              height="36"
+              alt=""
+              aria-hidden="true" /></span
+          ><span class="brand-copy"
+            ><span class="brand-name">sacit çınar</span
+            ><span class="brand-prompt"
+              >dominic@kali:~$<span aria-hidden="true" class="terminal-cursor"></span></span></span
+        ></a>
+        <nav aria-label="Main navigation">
+          <a data-section="home" href="/index.html">About</a
+          ><a aria-current="page" class="active" data-section="research" href="/research.html"
+            >Research</a
+          ><a data-section="projects" href="/projects.html">Projects</a
+          ><a data-section="writeups" href="/write-ups.html">Write-ups</a
+          ><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a
+          ><a class="nav-contact" data-section="contact" href="/index.html#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main class="projects-main research-detail">
+      <a class="project-return" data-section="research" href="/research.html">← Research</a>
+      <article>
+        <header class="research-hero">
+          <div class="project-meta">
+            <span class="project-badge">UBIQUITI</span
+            ><span class="project-badge">VULNERABILITY ANALYSIS</span>
+          </div>
+          <h1>Ubiquiti UniFi Network Application Vulnerabilities</h1>
+          <div aria-label="Vulnerability identifiers and CVSS base scores" class="research-cves">
+            <div class="cve-badge-pair">
+              <span>CVE-2026-22557</span
+              ><span class="severity-label severity-critical" title="Rating source: Ubiquiti CNA"
+                >CRITICAL · CVSS 3.1 10.0</span
+              >
+            </div>
+            <div class="cve-badge-pair">
+              <span>CVE-2026-22558</span
+              ><span class="severity-label severity-high" title="Rating source: Ubiquiti CNA"
+                >HIGH · CVSS 3.1 7.7</span
+              >
+            </div>
+          </div>
+          <p class="research-deck">
+            An unauthenticated path traversal vulnerability and an authenticated NoSQL injection
+            flaw put UniFi Network Application deployments at risk.
+          </p>
+          <p class="research-byline">
+            Mehmet Sacit Çınar · Published through
+            <a
+              href="https://www.linkedin.com/company/memori-intel/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >Memori Intel ↗</a
+            >
+          </p>
+          <p class="research-edition">
+            Vulnerabilities disclosed: 18 March 2026 · Published on LinkedIn: 21 March 2026
+          </p>
+          <div class="research-actions">
+            <a
+              download="ubiquiti-unifi-network-vulnerabilities.pdf"
+              href="/assets/research/ubiquiti-unifi-network-vulnerabilities.pdf"
+              >Download Report (PDF) ↓</a
+            ><a
+              href="https://www.linkedin.com/feed/update/urn:li:activity:7441108514443403264/"
+              rel="noopener noreferrer"
+              target="_blank"
+              >View LinkedIn Post ↗</a
+            >
+          </div>
+        </header>
+        <div class="research-layout">
+          <aside class="article-toc">
+            <p>IN THIS REPORT</p>
+            <nav aria-label="Article contents">
+              <a href="#summary">Executive Summary</a
+              ><a href="#path-traversal">CVE-2026-22557 — Path Traversal (Critical)</a
+              ><a href="#nosql">CVE-2026-22558 — NoSQL Injection (High)</a
+              ><a href="#products">Affected Products</a
+              ><a href="#exposure">Exposure &amp; Threat Landscape</a
+              ><a href="#publication">Published Report</a><a href="#sources">Sources</a>
+            </nav>
+          </aside>
+          <div class="research-copy">
+            <section class="project-story" id="summary">
+              <h2>Executive Summary</h2>
+              <p>
+                Two vulnerabilities have been disclosed in the Ubiquiti UniFi Network Application,
+                which could allow attackers to take over accounts and compromise underlying systems.
+              </p>
+              <p>
+                The primary issue (CVE-2026-22557) is a unauthenticated path traversal vulnerability
+                with a CVSS score of 10.0 (Critical). A secondary issue (CVE-2026-22558) enables
+                privilege escalation via NoSQL injection.
+              </p>
+              <p>
+                These vulnerabilities pose a significant risk, especially for instances exposed to
+                internal networks or the internet.
+              </p>
+            </section>
+            <section class="project-story" id="path-traversal">
+              <h2>CVE-2026-22557 — Path Traversal (Critical)</h2>
+              <p>
+                Type: Unauthenticated Path Traversal CVSS: 10.0 (Critical) Impact: Unauthorized
+                access to sensitive system files Potential extraction of credentials or
+                configuration data May lead to account takeover or full system compromise Attack
+                Requirements: Network access to the UniFi application (no authentication required)
+              </p>
+            </section>
+            <section class="project-story" id="nosql">
+              <h2>CVE-2026-22558 — NoSQL Injection (High)</h2>
+              <p>
+                Type: Authenticated NoSQL Injection Impact: Privilege escalation Abuse of
+                application logic Potential lateral movement within the UniFi environment Attack
+                Requirements: Valid low-privileged account
+              </p>
+            </section>
+            <section class="project-story" id="products">
+              <h2>Affected Products</h2>
+              <div class="report-table-wrap">
+                <table class="report-table">
+                  <thead>
+                    <tr>
+                      <th>Product / release channel</th>
+                      <th>Affected application versions in the report</th>
+                      <th>Fixed release</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>UniFi Network — Official</td>
+                      <td>10.1.85 and earlier</td>
+                      <td>10.1.89 or later</td>
+                    </tr>
+                    <tr>
+                      <td>UniFi Network — Release Candidate</td>
+                      <td>10.2.93 and earlier</td>
+                      <td>10.2.97 or later</td>
+                    </tr>
+                    <tr>
+                      <td>UniFi Express (UX)</td>
+                      <td>Network 9.0.114 and earlier</td>
+                      <td>Firmware 4.0.13 or later (Network 9.0.118 or later)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <p class="report-context">
+                Use Ubiquiti’s bulletin for the appropriate release channel. The application and
+                UniFi Express firmware have separate version numbers.
+              </p>
+            </section>
+            <section class="project-story" id="exposure">
+              <h2>Exposure &amp; Threat Landscape</h2>
+              <p class="report-context">
+                Exposure counts and statements about exploitation below reflect the report published
+                on 21 March 2026.
+              </p>
+              <p>According to Censys, approximately 87,000+ UniFi instances are exposed online.</p>
+              <p>
+                Version detection from external scanning is limited, making it difficult to
+                determine patch status.
+              </p>
+              <p>
+                At the time of reporting: No confirmed public exploit (PoC) No confirmed active
+                exploitation in the wild
+              </p>
+              <p>
+                However, due to the critical severity (CVSS 10.0), exploitation is considered highly
+                likely in the near term.
+              </p>
+              <figure class="report-figure">
+                <a href="/assets/research/unifi-exposure-censys.png" rel="noopener" target="_blank"
+                  ><img
+                    alt="Censys map and country counts of internet-facing UniFi hosts"
+                    height="399"
+                    loading="lazy"
+                    src="/assets/research/unifi-exposure-censys.png"
+                    width="1104"
+                /></a>
+                <figcaption>
+                  Censys exposure snapshot reproduced from the PDF. Exposed hosts are not
+                  necessarily vulnerable or unpatched.
+                </figcaption>
+              </figure>
+            </section>
+            <section class="project-story" id="publication">
+              <h2>Published Report</h2>
+              <div class="publication-panel">
+                <a
+                  href="/assets/research/ubiquiti-unifi-network-vulnerabilities.pdf"
+                  rel="noopener"
+                  target="_blank"
+                  ><img
+                    alt="Cover of the Ubiquiti UniFi Network Application Vulnerabilities report published through Memori Intel"
+                    height="900"
+                    loading="lazy"
+                    src="/assets/research/ubiquiti-unifi-network-vulnerabilities-cover.png"
+                    width="637"
+                /></a>
+                <div>
+                  <p>
+                    A review of Ubiquiti’s disclosed vulnerabilities, published through Memori
+                    Intel.
+                  </p>
+                  <a
+                    download="ubiquiti-unifi-network-vulnerabilities.pdf"
+                    href="/assets/research/ubiquiti-unifi-network-vulnerabilities.pdf"
+                    >Download Report (PDF) ↓</a
+                  ><a
+                    href="https://www.linkedin.com/feed/update/urn:li:activity:7441108514443403264/"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    >View LinkedIn Post ↗</a
+                  >
+                </div>
+              </div>
+            </section>
+            <section class="project-story" id="sources">
+              <h2>Sources</h2>
+              <ol class="research-sources">
+                <li>
+                  <a
+                    href="https://community.ui.com/releases/Security-Advisory-Bulletin-062-062/c29719c0-405e-4d4a-8f26-e343e99f931b"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    >Ubiquiti — Security Advisory Bulletin 062 ↗</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://www.cve.org/CVERecord?id=CVE-2026-22557"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    >CVE-2026-22557 — CVE record ↗</a
+                  ><span>CVSS 3.1: 10.0 · Ubiquiti CNA</span>
+                </li>
+                <li>
+                  <a
+                    href="https://www.cve.org/CVERecord?id=CVE-2026-22558"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    >CVE-2026-22558 — CVE record ↗</a
+                  ><span>CVSS 3.1: 7.7 · Ubiquiti CNA</span>
+                </li>
+              </ol>
+            </section>
+          </div>
+        </div>
+      </article>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2026 Mehmet Sacit Çınar</p>
+        <nav aria-label="Footer navigation" class="footer-nav">
+          <a data-section="home" href="/index.html">About</a
+          ><a aria-current="page" class="active" data-section="research" href="/research.html"
+            >Research</a
+          ><a data-section="projects" href="/projects.html">Projects</a
+          ><a data-section="writeups" href="/write-ups.html">Write-ups</a
+          ><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a
+          ><a class="nav-contact" data-section="contact" href="/index.html#contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+    <script defer="" src="/navigation.js"></script>
+  </body>
+</html>

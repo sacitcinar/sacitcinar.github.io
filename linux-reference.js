@@ -31,6 +31,7 @@
   }
   sizeReferenceTables().then(positionCategoryRail);
   addEventListener('resize', positionCategoryRail);
+  document.addEventListener('portfolio:languagechange', () => sizeReferenceTables().then(positionCategoryRail));
   const toc = document.querySelector('.cs-toc');
   const links = [...document.querySelectorAll('.cs-toc nav a')];
   const targets = links.map(link => document.getElementById(link.hash.slice(1)));

@@ -10,3 +10,6 @@ h1:not(#about-name),h2,.cs-category h2{font-family:var(--mono)}
 .project-card h2,.cs-topic h2{font-family:Inter,sans-serif}
 .about-role,.role,code,kbd,samp,pre{font-family:var(--mono)}
 .ascii-canvas{font-family:'IBM Plex Mono',monospace}
+
+/* Header wordmark: match the section heading typeface. */
+.brand-name{font-family:"JetBrains Mono",monospace;color:#fff}

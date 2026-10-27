@@ -1,1 +1,540 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0c0d10"><meta name="description" content="Classic SPL search patterns for filtering events, transforming fields and building summaries."><title>Splunk SPL Codex</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/about.css"><link rel="stylesheet" href="/projects.css"><link rel="stylesheet" href="/research.css"><link rel="stylesheet" href="/theme.css"><link rel="stylesheet" href="/cheat-sheets.css"><link rel="stylesheet" href="/typography.css"><link rel="stylesheet" href="/palette.css"><link rel="icon" href="/assets/brand/sacit-cinar-castle.svg?v=bright2" type="image/svg+xml"><link rel="icon" href="/favicon-32.png?v=castle4" sizes="32x32" type="image/png"><link rel="canonical" href="https://sacitcinar.github.io/cheat-sheets/splunk-spl/"></head><body data-section-page="cheatsheets" class="projects-body cheat-body"><a class="skip-link" href="#cheats-main">Skip to content</a><header class="site-header"><div class="header-inner"><a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"><span class="brand-mark" aria-hidden="true"><img src="/assets/brand/sacit-cinar-castle.svg?v=bright2" width="34" height="36" alt="" aria-hidden="true"></span><span class="brand-copy"><span class="brand-name">Sacit Çınar</span><span class="brand-prompt">dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span></a><nav aria-label="Main navigation"><a href="/index.html" data-section="home">About</a><a href="/research.html" data-section="research">Research</a><a href="/projects.html" data-section="projects">Projects</a><a href="/write-ups.html" data-section="writeups">Write-ups</a><a href="/cheat-sheets.html" data-section="cheatsheets" class="active" aria-current="page">Codex</a><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a></nav></div></header><main class="projects-main cs-main cs-splunk-spl" id="cheats-main"><div class="cs-breadcrumb"><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a><span aria-hidden="true">/</span><span>Splunk SPL</span></div><section class="projects-intro cs-intro cs-detail-intro"><h1>Splunk SPL</h1><p>Classic SPL search patterns for filtering events, transforming fields and building summaries.</p><p class="cs-filter-note cs-reference-note">Replace &lt;…&gt; with your value; […] is optional.</p><p class="cs-filter-note cs-reference-note">Examples use illustrative indexes and fields; replace them with names from your data.</p></section><div class="cs-detail-layout"><aside class="cs-toc-rail"><details class="cs-toc" open><summary>ON THIS PAGE</summary><nav aria-label="Splunk SPL categories"><a href="#search-filtering">Search &amp; filtering</a><a href="#fields-result-order">Fields &amp; result order</a><a href="#counts-summaries">Counts &amp; summaries</a><a href="#time-based-analysis">Time-based analysis</a><a href="#calculated-fields">Calculated fields</a><a href="#extraction-enrichment">Extraction &amp; enrichment</a></nav></details></aside><div class="cs-category-list"><section class="cs-category" aria-labelledby="search-filtering"><h2 id="search-filtering">Search &amp; filtering</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Search &amp; filtering reference"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">SPL query</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>index=&lt;index&gt; &lt;term&gt;</code></td><td>Search an index for matching events.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>index=&lt;index&gt; sourcetype=&lt;type&gt;</code></td><td>Restrict events to a source type.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>&lt;field&gt;="&lt;value&gt;"</code></td><td>Match a field value in the base search.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>earliest=-24h latest=now</code></td><td>Limit the base search to the last 24 hours.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| search &lt;condition&gt;</code></td><td>Filter pipeline results with search syntax.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| where &lt;expression&gt;</code></td><td>Filter results using an eval expression.</td></tr></tbody></table></div><h3 class="cs-examples-title">Examples</h3><div class="cs-table-scroll"><table class="cs-reference-table cs-examples-table" aria-label="Search &amp; filtering examples"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Example</th><th scope="col">Description</th></tr></thead><tbody><tr data-example-origin="new"><td><code class="cs-example-line">index=web status=404 earliest=-24h</code></td><td>Find 404 events in an example web index.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="fields-result-order"><h2 id="fields-result-order">Fields &amp; result order</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Fields &amp; result order reference"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">SPL query</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>| table &lt;fields&gt;</code></td><td>Display selected fields in the given order.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| fields &lt;fields&gt;</code></td><td>Retain only selected fields.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| sort - &lt;field&gt;</code></td><td>Sort descending; defaults to at most 10,000 rows.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| head &lt;count&gt;</code></td><td>Keep the first results.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| dedup &lt;field&gt;</code></td><td>Keep the first result per value in the current order.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="counts-summaries"><h2 id="counts-summaries">Counts &amp; summaries</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Counts &amp; summaries reference"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">SPL query</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>| stats count by &lt;field&gt;</code></td><td>Return one count per group; omit other event fields.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| eventstats count by &lt;field&gt;</code></td><td>Add group counts while retaining events.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| stats dc(&lt;field&gt;)</code></td><td>Count distinct field values.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| stats sum(&lt;field&gt;)</code></td><td>Sum numeric values.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| stats avg(&lt;field&gt;) by &lt;group&gt;</code></td><td>Calculate a mean for each group.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| top &lt;field&gt;</code></td><td>Show the ten most frequent values.</td></tr></tbody></table></div><h3 class="cs-examples-title">Examples</h3><div class="cs-table-scroll"><table class="cs-reference-table cs-examples-table" aria-label="Counts &amp; summaries examples"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Example</th><th scope="col">Description</th></tr></thead><tbody><tr data-example-origin="existing"><td><code class="cs-example-line">index=&lt;index&gt; earliest=-24h | stats count by host</code></td><td>Count events per host over the last 24 hours.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="time-based-analysis"><h2 id="time-based-analysis">Time-based analysis</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Time-based analysis reference"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">SPL query</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>| timechart span=1h count</code></td><td>Count events in hourly buckets.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| timechart span=1h count by &lt;field&gt;</code></td><td>Split hourly counts by field value.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| bin _time span=5m</code></td><td>Round event times into five-minute buckets.</td></tr></tbody></table></div><h3 class="cs-examples-title">Examples</h3><div class="cs-table-scroll"><table class="cs-reference-table cs-examples-table" aria-label="Time-based analysis examples"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Example</th><th scope="col">Description</th></tr></thead><tbody><tr data-example-origin="new"><td><code class="cs-example-line">index=web earliest=-24h | timechart span=1h count</code></td><td>Count events in hourly buckets.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="calculated-fields"><h2 id="calculated-fields">Calculated fields</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Calculated fields reference"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">SPL query</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>| eval &lt;field&gt;=&lt;expression&gt;</code></td><td>Create or update a field.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| eval label=if(&lt;condition&gt;,"yes","no")</code></td><td>Assign a value based on a condition.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| eval value=coalesce(&lt;a&gt;,&lt;b&gt;)</code></td><td>Use the first non-null value.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| rename &lt;old&gt; AS &lt;new&gt;</code></td><td>Rename a result field.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| fillnull value="unknown" &lt;field&gt;</code></td><td>Fill null values in an existing field.</td></tr></tbody></table></div><h3 class="cs-examples-title">Examples</h3><div class="cs-table-scroll"><table class="cs-reference-table cs-examples-table" aria-label="Calculated fields examples"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Example</th><th scope="col">Description</th></tr></thead><tbody><tr data-example-origin="new"><td><code class="cs-example-line">index=web | eval result=if(status&gt;=400,"error","ok")</code></td><td>Classify events using an example status field.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="extraction-enrichment"><h2 id="extraction-enrichment">Extraction &amp; enrichment</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Extraction &amp; enrichment reference"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">SPL query</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>| rex field=&lt;field&gt; "&lt;regex&gt;"</code></td><td>Extract fields using named regex groups.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| regex &lt;field&gt;="&lt;regex&gt;"</code></td><td>Retain results matching a regex.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| spath</code></td><td>Extract fields from structured JSON or XML.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| lookup &lt;table&gt; &lt;key&gt;</code></td><td>Enrich results using a configured lookup.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>| mvexpand &lt;field&gt;</code></td><td>Create a result for each multivalue entry.</td></tr></tbody></table></div><h3 class="cs-examples-title">Examples</h3><div class="cs-table-scroll"><table class="cs-reference-table cs-examples-table" aria-label="Extraction &amp; enrichment examples"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Example</th><th scope="col">Description</th></tr></thead><tbody><tr data-example-origin="existing"><td><code class="cs-example-line">index=web | rex field=_raw "user=(?&lt;user&gt;\S+)"</code></td><td>Extract a user field from user= followed by non-space text.</td></tr></tbody></table></div></section></div></div></main><footer class="site-footer"><div class="footer-inner"><p>© 2026 Mehmet Sacit Çınar</p><nav aria-label="Footer navigation" class="footer-nav"><a href="/index.html" data-section="home">About</a><a href="/research.html" data-section="research">Research</a><a href="/projects.html" data-section="projects">Projects</a><a href="/write-ups.html" data-section="writeups">Write-ups</a><a href="/cheat-sheets.html" data-section="cheatsheets" class="active" aria-current="page">Codex</a><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a></nav></div></footer><script src="/navigation.js" defer></script><script src="/linux-reference.js" defer></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0c0d10" />
+    <meta
+      name="description"
+      content="Classic SPL search patterns for filtering events, transforming fields and building summaries."
+    />
+    <title>Splunk SPL Codex</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/about.css" />
+    <link rel="stylesheet" href="/projects.css" />
+    <link rel="stylesheet" href="/research.css" />
+    <link rel="stylesheet" href="/theme.css" />
+    <link rel="stylesheet" href="/cheat-sheets.css" />
+    <link rel="stylesheet" href="/typography.css" />
+    <link rel="stylesheet" href="/palette.css" />
+    <link
+      rel="icon"
+      href="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon-32.png?v=castle-original7" sizes="32x32" type="image/png" />
+    <link
+      rel="canonical"
+      href="https://sacit-security-portfolio.dmncdcco.chatgpt.site/cheat-sheets/splunk-spl/"
+    />
+    <link rel="stylesheet" href="/i18n.css" />
+    <script src="/i18n.js" defer></script>
+  </head>
+  <body data-section-page="cheatsheets" class="projects-body cheat-body">
+    <a class="skip-link" href="#cheats-main">Skip to content</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"
+          ><span class="brand-mark" aria-hidden="true"
+            ><img
+              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+              width="34"
+              height="36"
+              alt=""
+              aria-hidden="true" /></span
+          ><span class="brand-copy"
+            ><span class="brand-name">sacit çınar</span
+            ><span class="brand-prompt"
+              >dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span
+        ></a>
+        <nav aria-label="Main navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups">Write-ups</a
+          ><a
+            href="/cheat-sheets.html"
+            data-section="cheatsheets"
+            class="active"
+            aria-current="page"
+            >Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main class="projects-main cs-main cs-splunk-spl" id="cheats-main">
+      <div class="cs-breadcrumb">
+        <a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a
+        ><span aria-hidden="true">/</span><span>Splunk SPL</span>
+      </div>
+      <section class="projects-intro cs-intro cs-detail-intro">
+        <h1>Splunk SPL</h1>
+        <p>
+          Classic SPL search patterns for filtering events, transforming fields and building
+          summaries.
+        </p>
+        <p class="cs-filter-note cs-reference-note">
+          Replace &lt;…&gt; with your value; […] is optional.
+        </p>
+        <p class="cs-filter-note cs-reference-note">
+          Examples use illustrative indexes and fields; replace them with names from your data.
+        </p>
+      </section>
+      <div class="cs-detail-layout">
+        <aside class="cs-toc-rail">
+          <details class="cs-toc" open>
+            <summary>ON THIS PAGE</summary>
+            <nav aria-label="Splunk SPL categories">
+              <a href="#search-filtering">Search &amp; filtering</a
+              ><a href="#fields-result-order">Fields &amp; result order</a
+              ><a href="#counts-summaries">Counts &amp; summaries</a
+              ><a href="#time-based-analysis">Time-based analysis</a
+              ><a href="#calculated-fields">Calculated fields</a
+              ><a href="#extraction-enrichment">Extraction &amp; enrichment</a>
+            </nav>
+          </details>
+        </aside>
+        <div class="cs-category-list">
+          <section class="cs-category" aria-labelledby="search-filtering">
+            <h2 id="search-filtering">Search &amp; filtering</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Search &amp; filtering reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">SPL query</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>index=&lt;index&gt; &lt;term&gt;</code></td>
+                    <td>Search an index for matching events.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>index=&lt;index&gt; sourcetype=&lt;type&gt;</code></td>
+                    <td>Restrict events to a source type.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>&lt;field&gt;="&lt;value&gt;"</code></td>
+                    <td>Match a field value in the base search.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>earliest=-24h latest=now</code></td>
+                    <td>Limit the base search to the last 24 hours.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| search &lt;condition&gt;</code></td>
+                    <td>Filter pipeline results with search syntax.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| where &lt;expression&gt;</code></td>
+                    <td>Filter results using an eval expression.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table cs-examples-table"
+                aria-label="Search &amp; filtering examples"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Example</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td><code class="cs-example-line">index=web status=404 earliest=-24h</code></td>
+                    <td>Find 404 events in an example web index.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="fields-result-order">
+            <h2 id="fields-result-order">Fields &amp; result order</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Fields &amp; result order reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">SPL query</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| table &lt;fields&gt;</code></td>
+                    <td>Display selected fields in the given order.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| fields &lt;fields&gt;</code></td>
+                    <td>Retain only selected fields.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| sort - &lt;field&gt;</code></td>
+                    <td>Sort descending; defaults to at most 10,000 rows.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| head &lt;count&gt;</code></td>
+                    <td>Keep the first results.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| dedup &lt;field&gt;</code></td>
+                    <td>Keep the first result per value in the current order.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="counts-summaries">
+            <h2 id="counts-summaries">Counts &amp; summaries</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Counts &amp; summaries reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">SPL query</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| stats count by &lt;field&gt;</code></td>
+                    <td>Return one count per group; omit other event fields.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| eventstats count by &lt;field&gt;</code></td>
+                    <td>Add group counts while retaining events.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| stats dc(&lt;field&gt;)</code></td>
+                    <td>Count distinct field values.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| stats sum(&lt;field&gt;)</code></td>
+                    <td>Sum numeric values.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| stats avg(&lt;field&gt;) by &lt;group&gt;</code></td>
+                    <td>Calculate a mean for each group.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| top &lt;field&gt;</code></td>
+                    <td>Show the ten most frequent values.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table cs-examples-table"
+                aria-label="Counts &amp; summaries examples"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Example</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-example-origin="existing">
+                    <td>
+                      <code class="cs-example-line"
+                        >index=&lt;index&gt; earliest=-24h | stats count by host</code
+                      >
+                    </td>
+                    <td>Count events per host over the last 24 hours.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="time-based-analysis">
+            <h2 id="time-based-analysis">Time-based analysis</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Time-based analysis reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">SPL query</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| timechart span=1h count</code></td>
+                    <td>Count events in hourly buckets.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| timechart span=1h count by &lt;field&gt;</code></td>
+                    <td>Split hourly counts by field value.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| bin _time span=5m</code></td>
+                    <td>Round event times into five-minute buckets.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table cs-examples-table"
+                aria-label="Time-based analysis examples"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Example</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td>
+                      <code class="cs-example-line"
+                        >index=web earliest=-24h | timechart span=1h count</code
+                      >
+                    </td>
+                    <td>Count events in hourly buckets.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="calculated-fields">
+            <h2 id="calculated-fields">Calculated fields</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Calculated fields reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">SPL query</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| eval &lt;field&gt;=&lt;expression&gt;</code></td>
+                    <td>Create or update a field.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| eval label=if(&lt;condition&gt;,"yes","no")</code></td>
+                    <td>Assign a value based on a condition.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| eval value=coalesce(&lt;a&gt;,&lt;b&gt;)</code></td>
+                    <td>Use the first non-null value.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| rename &lt;old&gt; AS &lt;new&gt;</code></td>
+                    <td>Rename a result field.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| fillnull value="unknown" &lt;field&gt;</code></td>
+                    <td>Fill null values in an existing field.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table cs-examples-table"
+                aria-label="Calculated fields examples"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Example</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td>
+                      <code class="cs-example-line"
+                        >index=web | eval result=if(status&gt;=400,"error","ok")</code
+                      >
+                    </td>
+                    <td>Classify events using an example status field.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="extraction-enrichment">
+            <h2 id="extraction-enrichment">Extraction &amp; enrichment</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Extraction &amp; enrichment reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">SPL query</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| rex field=&lt;field&gt; "&lt;regex&gt;"</code></td>
+                    <td>Extract fields using named regex groups.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| regex &lt;field&gt;="&lt;regex&gt;"</code></td>
+                    <td>Retain results matching a regex.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| spath</code></td>
+                    <td>Extract fields from structured JSON or XML.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| lookup &lt;table&gt; &lt;key&gt;</code></td>
+                    <td>Enrich results using a configured lookup.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>| mvexpand &lt;field&gt;</code></td>
+                    <td>Create a result for each multivalue entry.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table cs-examples-table"
+                aria-label="Extraction &amp; enrichment examples"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Example</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-example-origin="existing">
+                    <td>
+                      <code class="cs-example-line"
+                        >index=web | rex field=_raw "user=(?&lt;user&gt;\S+)"</code
+                      >
+                    </td>
+                    <td>Extract a user field from user= followed by non-space text.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2026 Mehmet Sacit Çınar</p>
+        <nav aria-label="Footer navigation" class="footer-nav">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups">Write-ups</a
+          ><a
+            href="/cheat-sheets.html"
+            data-section="cheatsheets"
+            class="active"
+            aria-current="page"
+            >Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/navigation.js" defer></script>
+    <script src="/linux-reference.js" defer></script>
+  </body>
+</html>

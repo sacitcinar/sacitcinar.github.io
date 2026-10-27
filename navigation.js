@@ -33,12 +33,14 @@
       else link.removeAttribute('aria-current');
     });
   }
+  function localize() { window.PortfolioI18n?.apply(); }
   function updateResearchCount() {
     const label = document.querySelector('[data-research-count]');
     if (!label) return;
     const count = document.querySelectorAll('main .project-list .research-card').length;
     label.textContent = `${count} ${count === 1 ? 'result' : 'results'}`;
     updateResearchPagination();
+    localize();
   }
   function updateResearchPagination() {
     const main = document.querySelector('main');
@@ -56,6 +58,7 @@
     pagination.querySelector('[data-research-step="-1"]').disabled = page === 1;
     pagination.querySelector('[data-research-step="1"]').disabled = page === totalPages;
     pagination.querySelector('[data-research-range]').textContent = `${(page - 1) * 10 + 1}–${Math.min(page * 10, cards.length)} of ${cards.length}`;
+    localize();
   }
   function bindContact() {
     bindLatestContents();
@@ -105,6 +108,7 @@
     });
     main.querySelector('[data-writeup-count]').textContent = `${count} ${count === 1 ? 'result' : 'results'}`;
     main.querySelector('[data-writeup-empty]').hidden = count > 0;
+    localize();
   }
   function clearError() { document.getElementById('navigation-error')?.remove(); }
   function showError(section) {
@@ -120,6 +124,7 @@
     retry.addEventListener('click', () => navigate(section));
     message.append(retry);
     document.querySelector('main').prepend(message);
+    localize();
   }
   async function navigate(section, { initial = false } = {}) {
     const contactRequested = section === 'contact';
@@ -163,6 +168,7 @@
       bindContact();
       updateResearchCount();
       updateWriteupFilters();
+      localize();
       const main = document.querySelector('main');
       main.removeAttribute('aria-busy');
       if (!initial) {

@@ -1,1 +1,1366 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0c0d10"><meta name="description" content="Linux command reference for files, permissions, networking, logs and administration."><title>Linux Codex</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/about.css"><link rel="stylesheet" href="/projects.css"><link rel="stylesheet" href="/research.css"><link rel="stylesheet" href="/theme.css"><link rel="stylesheet" href="/cheat-sheets.css"><link rel="stylesheet" href="/typography.css"><link rel="stylesheet" href="/palette.css"><link rel="icon" href="/assets/brand/sacit-cinar-castle.svg?v=bright2" type="image/svg+xml"><link rel="icon" href="/favicon-32.png?v=castle4" sizes="32x32" type="image/png"><link rel="canonical" href="https://sacitcinar.github.io/cheat-sheets/linux/"></head><body data-section-page="cheatsheets" class="projects-body cheat-body"><a class="skip-link" href="#cheats-main">Skip to content</a><header class="site-header"><div class="header-inner"><a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"><span class="brand-mark" aria-hidden="true"><img src="/assets/brand/sacit-cinar-castle.svg?v=bright2" width="34" height="36" alt="" aria-hidden="true"></span><span class="brand-copy"><span class="brand-name">Sacit Çınar</span><span class="brand-prompt">dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span></a><nav aria-label="Main navigation"><a href="/index.html" data-section="home">About</a><a href="/research.html" data-section="research">Research</a><a href="/projects.html" data-section="projects">Projects</a><a href="/write-ups.html" data-section="writeups">Write-ups</a><a href="/cheat-sheets.html" data-section="cheatsheets" class="active" aria-current="page">Codex</a><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a></nav></div></header><main class="projects-main cs-main cs-linux" id="cheats-main"><div class="cs-breadcrumb"><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a><span aria-hidden="true">/</span><span>Linux</span></div><section class="projects-intro cs-intro cs-detail-intro"><h1>Linux</h1><p>Essential command-line references for everyday administration and security analysis.</p><p class="cs-filter-note cs-reference-note">Replace &lt;…&gt; with your value; […] is optional.</p></section><div class="cs-detail-layout"><aside class="cs-toc-rail"><details class="cs-toc" open><summary>ON THIS PAGE</summary><nav aria-label="Linux categories"><a href="#files-directories">Files &amp; directories</a><a href="#text-editing">Text &amp; editing</a><a href="#permissions-accounts">Permissions &amp; accounts</a><a href="#system-terminal">System &amp; terminal</a><a href="#processes-services">Processes &amp; services</a><a href="#networking-remote-access">Networking &amp; remote access</a><a href="#archives-compression">Archives &amp; compression</a><a href="#package-management">Package management</a></nav></details></aside><div class="cs-category-list"><section class="cs-category" aria-labelledby="files-directories"><h2 id="files-directories">Files &amp; directories</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Files &amp; directories commands"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Command / option</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>ls [&lt;dir&gt;]</code></td><td>List directory contents.</td></tr><tr class="cs-table-option"><td><code>-l</code></td><td>Long listing format</td></tr><tr class="cs-table-option"><td><code>-a</code></td><td>Include hidden entries</td></tr><tr class="cs-table-option"><td><code>-h</code></td><td>Human-readable sizes with -l</td></tr><tr class="cs-table-option"><td><code>-R</code></td><td>List subdirectories recursively</td></tr><tr class="cs-table-option cs-option-last"><td><code>-t</code></td><td>Newest modification time first</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>cd &lt;dir&gt;</code></td><td>Change the working directory.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>pwd</code></td><td>Print the current working directory.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>cp &lt;source&gt; &lt;destination&gt;</code></td><td>Copy files; directories require -r or -a.</td></tr><tr class="cs-table-option"><td><code>-a</code></td><td>Copy recursively and preserve file attributes</td></tr><tr class="cs-table-option cs-option-last"><td><code>-r</code></td><td>Copy directories recursively.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>mv &lt;source&gt; &lt;destination&gt;</code></td><td>Move or rename files and directories.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>mkdir &lt;dir&gt;</code></td><td>Create directories.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-p</code></td><td>Create missing parent directories</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>rm &lt;file&gt;</code></td><td>Remove files; use -r for directory contents.</td></tr><tr class="cs-table-option"><td><code>-i</code></td><td>Ask before removing a file</td></tr><tr class="cs-table-option cs-option-last"><td><code>-r</code></td><td>Remove directories and their contents recursively.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>touch &lt;file&gt;</code></td><td>Create an empty file or update its timestamps.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>find &lt;dir&gt;</code></td><td>Find files and directories.</td></tr><tr class="cs-table-option"><td><code>-type f</code></td><td>Match regular files</td></tr><tr class="cs-table-option cs-option-last"><td><code>-name "&lt;pattern&gt;"</code></td><td>Match filenames against a pattern</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>tree [&lt;dir&gt;]</code></td><td>Display a directory tree.</td></tr><tr class="cs-table-option"><td><code>-a</code></td><td>Include hidden files.</td></tr><tr class="cs-table-option"><td><code>-L &lt;depth&gt;</code></td><td>Limit the displayed directory depth.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-d</code></td><td>Show directories only.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>du &lt;dir&gt;</code></td><td>Show file and directory disk usage.</td></tr><tr class="cs-table-option"><td><code>-s</code></td><td>Show a total for each argument</td></tr><tr class="cs-table-option cs-option-last"><td><code>-h</code></td><td>Human-readable sizes</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>df [&lt;path&gt;]</code></td><td>Show filesystem space usage.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-h</code></td><td>Human-readable sizes</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>stat &lt;file&gt;</code></td><td>Show file metadata.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>which &lt;command&gt;</code></td><td>Find an executable in the shell search path.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-a</code></td><td>Show all matching executables in PATH.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>locate &lt;pattern&gt;</code></td><td>Find paths using the filename database.</td></tr><tr class="cs-table-option"><td><code>-i</code></td><td>Ignore case.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-e</code></td><td>Only include paths that currently exist.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>rmdir &lt;dir&gt;</code></td><td>Remove an empty directory.</td></tr></tbody></table></div><h3 class="cs-examples-title">Examples</h3><div class="cs-table-scroll"><table class="cs-reference-table cs-examples-table" aria-label="Files &amp; directories examples"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Example</th><th scope="col">Description</th></tr></thead><tbody><tr data-example-origin="new"><td><code class="cs-example-line">find . -type f -name '*.log'</code></td><td>Find .log files beneath the current directory.</td></tr></tbody><tbody><tr data-example-origin="new"><td><code class="cs-example-line">cp -r reports reports-backup</code></td><td>Copy a directory and its contents.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="text-editing"><h2 id="text-editing">Text &amp; editing</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Text &amp; editing commands"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Command / option</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>cat &lt;file&gt;</code></td><td>Print file contents.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>grep &lt;pattern&gt; &lt;file&gt;</code></td><td>Find lines matching a pattern.</td></tr><tr class="cs-table-option"><td><code>-R</code></td><td>Search directories recursively</td></tr><tr class="cs-table-option"><td><code>-n</code></td><td>Show line numbers</td></tr><tr class="cs-table-option cs-option-last"><td><code>-i</code></td><td>Ignore case</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>less &lt;file&gt;</code></td><td>Read text one page at a time.</td></tr><tr class="cs-table-option cs-option-last"><td><code>q</code></td><td>Quit the viewer</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>tail &lt;file&gt;</code></td><td>Show the end of a file.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-f</code></td><td>Follow newly appended lines</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>head &lt;file&gt;</code></td><td>Show the beginning of a file.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-n &lt;count&gt;</code></td><td>Print the first &lt;count&gt; lines</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>nano &lt;file&gt;</code></td><td>Edit a file in the terminal.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>sort &lt;file&gt;</code></td><td>Sort lines of text.</td></tr><tr class="cs-table-option"><td><code>-n</code></td><td>Sort numerically.</td></tr><tr class="cs-table-option"><td><code>-r</code></td><td>Reverse the sort order.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-u</code></td><td>Output unique lines.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>wc &lt;file&gt;</code></td><td>Count lines, words and bytes.</td></tr><tr class="cs-table-option"><td><code>-l</code></td><td>Count lines.</td></tr><tr class="cs-table-option"><td><code>-w</code></td><td>Count words.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-c</code></td><td>Count bytes.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>cut -f &lt;fields&gt; &lt;file&gt;</code></td><td>Extract selected fields; tabs delimit by default.</td></tr><tr class="cs-table-option"><td><code>-d &lt;delimiter&gt;</code></td><td>Set the field delimiter</td></tr><tr class="cs-table-option cs-option-last"><td><code>-f &lt;fields&gt;</code></td><td>Select fields to extract</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>awk '&lt;program&gt;' &lt;file&gt;</code></td><td>Process text by patterns and fields.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>sed '&lt;script&gt;' &lt;file&gt;</code></td><td>Filter and transform text.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>tr '&lt;set1&gt;' '&lt;set2&gt;'</code></td><td>Translate characters from standard input.</td></tr><tr class="cs-table-option"><td><code>-d &lt;set&gt;</code></td><td>Delete characters from the specified set.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-s &lt;set&gt;</code></td><td>Squeeze repeated characters from the set.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>column [&lt;file&gt;]</code></td><td>Format input into columns.</td></tr><tr class="cs-table-option"><td><code>-t</code></td><td>Create a table from input fields.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-s &lt;separator&gt;</code></td><td>Set the input field separator.</td></tr></tbody></table></div><h3 class="cs-examples-title">Examples</h3><div class="cs-table-scroll"><table class="cs-reference-table cs-examples-table" aria-label="Text &amp; editing examples"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Example</th><th scope="col">Description</th></tr></thead><tbody><tr data-example-origin="new"><td><code class="cs-example-line">grep -n 'error' app.log</code></td><td>Find error lines and show their line numbers.</td></tr></tbody><tbody><tr data-example-origin="new"><td><code class="cs-example-line">cut -d ':' -f 1 /etc/passwd</code></td><td>Print account names from the first field.</td></tr></tbody><tbody><tr data-example-origin="new"><td><code class="cs-example-line">awk '{print $1}' access.log</code></td><td>Print the first whitespace-separated field.</td></tr></tbody><tbody><tr data-example-origin="new"><td><code class="cs-example-line">sed 's/old/new/g' notes.txt</code></td><td>Print replaced text; leave the file unchanged.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="permissions-accounts"><h2 id="permissions-accounts">Permissions &amp; accounts</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Permissions &amp; accounts commands"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Command / option</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>sudo &lt;command&gt;</code></td><td>Run commands with permitted privileges.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-l</code></td><td>List permitted commands</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>whoami</code></td><td>Print the effective username.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>id</code></td><td>Show user and group IDs.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>chmod &lt;mode&gt; &lt;file&gt;</code></td><td>Change file permissions.</td></tr><tr class="cs-table-option"><td><code>640</code></td><td>Owner read/write; group read; others no access</td></tr><tr class="cs-table-option cs-option-last"><td><code>+x</code></td><td>Add execute permission</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>chown &lt;user&gt;:&lt;group&gt; &lt;file&gt;</code></td><td>Change file ownership.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>passwd [&lt;user&gt;]</code></td><td>Change an account password.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>usermod &lt;options&gt; &lt;user&gt;</code></td><td>Modify an existing user account.</td></tr><tr class="cs-table-option"><td><code>-aG &lt;group&gt;</code></td><td>Append the user to a supplementary group.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-L</code></td><td>Lock the account password.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>useradd &lt;user&gt;</code></td><td>Create a user account.</td></tr><tr class="cs-table-option"><td><code>-m</code></td><td>Create the home directory.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-s &lt;shell&gt;</code></td><td>Set the login shell.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>userdel &lt;user&gt;</code></td><td>Delete a user account.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-r</code></td><td>Also remove the home directory and mail spool.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>getent &lt;database&gt;</code></td><td>Query configured account databases.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>last</code></td><td>Show login history.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-a</code></td><td>Show the hostname in the last column</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>addgroup &lt;group&gt;</code></td><td>Create a group on Debian-based systems.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>delgroup &lt;group&gt;</code></td><td>Delete a group on Debian-based systems.</td></tr></tbody></table></div><h3 class="cs-examples-title">Examples</h3><div class="cs-table-scroll"><table class="cs-reference-table cs-examples-table" aria-label="Permissions &amp; accounts examples"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Example</th><th scope="col">Description</th></tr></thead><tbody><tr data-example-origin="new"><td><code class="cs-example-line">chmod 640 report.txt</code></td><td>Owner: read/write; group: read; others: none.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="system-terminal"><h2 id="system-terminal">System &amp; terminal</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="System &amp; terminal commands"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Command / option</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>uname</code></td><td>Show kernel and system information.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-a</code></td><td>Show all available system information</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>hostname [&lt;name&gt;]</code></td><td>Show or set the system hostname.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>uptime</code></td><td>Show system uptime and load averages.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>free</code></td><td>Show memory usage.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-h</code></td><td>Human-readable sizes</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>lsblk</code></td><td>List block devices.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-f</code></td><td>Show filesystem information</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>date</code></td><td>Show the current date and time.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-u</code></td><td>Use UTC.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>clear</code></td><td>Clear the terminal display.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>cal [&lt;month&gt; &lt;year&gt;]</code></td><td>Display a calendar.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>man &lt;command&gt;</code></td><td>Open a command’s manual page.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>&lt;command&gt; --help</code></td><td>Show help for commands that support --help.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="processes-services"><h2 id="processes-services">Processes &amp; services</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Processes &amp; services commands"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Command / option</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>ps</code></td><td>Show running processes.</td></tr><tr class="cs-table-option cs-option-last"><td><code>aux</code></td><td>List processes for all users, including those without a terminal</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>systemctl &lt;action&gt; &lt;service&gt;</code></td><td>Inspect and manage systemd services.</td></tr><tr class="cs-table-option"><td><code>status</code></td><td>Show service state and recent log entries.</td></tr><tr class="cs-table-option"><td><code>start</code></td><td>Start the service now.</td></tr><tr class="cs-table-option"><td><code>stop</code></td><td>Stop the service now.</td></tr><tr class="cs-table-option"><td><code>restart</code></td><td>Stop and start the service.</td></tr><tr class="cs-table-option cs-option-last"><td><code>enable</code></td><td>Enable startup at boot; does not start it now.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>journalctl</code></td><td>Read systemd journal entries.</td></tr><tr class="cs-table-option"><td><code>-u &lt;service&gt;</code></td><td>Filter by service</td></tr><tr class="cs-table-option"><td><code>--since &lt;time&gt;</code></td><td>Filter by start time</td></tr><tr class="cs-table-option"><td><code>-b</code></td><td>Show the current boot</td></tr><tr class="cs-table-option"><td><code>-p &lt;priority&gt;</code></td><td>Filter by message priority</td></tr><tr class="cs-table-option cs-option-last"><td><code>--since today</code></td><td>Show today’s entries</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>top</code></td><td>Monitor processes and resource usage.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>kill &lt;pid&gt;</code></td><td>Send a signal to a process.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-TERM</code></td><td>Request graceful termination</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>pgrep &lt;pattern&gt;</code></td><td>Find processes by name or command line.</td></tr><tr class="cs-table-option"><td><code>-a</code></td><td>Show the full command line</td></tr><tr class="cs-table-option cs-option-last"><td><code>-f</code></td><td>Match the full command line</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>htop</code></td><td>Interactively monitor processes and resource use.</td></tr></tbody></table></div><h3 class="cs-examples-title">Examples</h3><div class="cs-table-scroll"><table class="cs-reference-table cs-examples-table" aria-label="Processes &amp; services examples"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Example</th><th scope="col">Description</th></tr></thead><tbody><tr data-example-origin="new"><td><code class="cs-example-line">journalctl -u ssh --since today</code></td><td>Read today’s entries for the ssh service.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="networking-remote-access"><h2 id="networking-remote-access">Networking &amp; remote access</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Networking &amp; remote access commands"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Command / option</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>ip &lt;object&gt; [&lt;action&gt;]</code></td><td>Show and manage network interfaces and routes.</td></tr><tr class="cs-table-option"><td><code>-br addr</code></td><td>Show interface addresses briefly</td></tr><tr class="cs-table-option cs-option-last"><td><code>route</code></td><td>Show the routing table</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>ping &lt;ip&gt;</code></td><td>Test network reachability with ICMP.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-c &lt;count&gt;</code></td><td>Send &lt;count&gt; echo requests</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>ss</code></td><td>Inspect network sockets.</td></tr><tr class="cs-table-option"><td><code>-t</code></td><td>TCP sockets</td></tr><tr class="cs-table-option"><td><code>-u</code></td><td>UDP sockets</td></tr><tr class="cs-table-option"><td><code>-l</code></td><td>Listening sockets</td></tr><tr class="cs-table-option cs-option-last"><td><code>-n</code></td><td>Numeric addresses and ports</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>ssh &lt;user&gt;@&lt;host&gt;</code></td><td>Open an encrypted remote shell.</td></tr><tr class="cs-table-option"><td><code>-p &lt;port&gt;</code></td><td>Connect to the specified port.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-i &lt;keyfile&gt;</code></td><td>Use the specified private key.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>curl &lt;url&gt;</code></td><td>Transfer data and inspect HTTP responses.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-I</code></td><td>Make a HEAD request and show headers.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>dig &lt;domain&gt;</code></td><td>Query DNS records.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>wget &lt;url&gt;</code></td><td>Download a file from a URL.</td></tr><tr class="cs-table-option"><td><code>-O &lt;file&gt;</code></td><td>Save output using the specified filename.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-c</code></td><td>Resume a partial download.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>tcpdump [&lt;filter&gt;]</code></td><td>Inspect network traffic on authorized interfaces.</td></tr><tr class="cs-table-option"><td><code>-i &lt;interface&gt;</code></td><td>Select a capture interface</td></tr><tr class="cs-table-option"><td><code>-nn</code></td><td>Disable host and port name resolution</td></tr><tr class="cs-table-option cs-option-last"><td><code>port &lt;port&gt;</code></td><td>Filter traffic by port</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>ifconfig [&lt;interface&gt;]</code></td><td>Legacy interface tool; prefer ip on modern Linux.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-a</code></td><td>Show all interfaces, including inactive ones.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>netstat</code></td><td>Legacy socket tool; prefer ss on modern Linux.</td></tr><tr class="cs-table-option"><td><code>-t</code></td><td>Show TCP sockets.</td></tr><tr class="cs-table-option"><td><code>-u</code></td><td>Show UDP sockets.</td></tr><tr class="cs-table-option"><td><code>-l</code></td><td>Show listening sockets.</td></tr><tr class="cs-table-option"><td><code>-n</code></td><td>Show numeric addresses and ports.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-p</code></td><td>Show associated processes when permitted.</td></tr></tbody></table></div><h3 class="cs-examples-title">Examples</h3><div class="cs-table-scroll"><table class="cs-reference-table cs-examples-table" aria-label="Networking &amp; remote access examples"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Example</th><th scope="col">Description</th></tr></thead><tbody><tr data-example-origin="new"><td><code class="cs-example-line">ss -tuln</code></td><td>List listening TCP and UDP sockets numerically.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="archives-compression"><h2 id="archives-compression">Archives &amp; compression</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Archives &amp; compression commands"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Command / option</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>tar &lt;options&gt;</code></td><td>Create or extract tar archives.</td></tr><tr class="cs-table-option"><td><code>-c</code></td><td>Create an archive.</td></tr><tr class="cs-table-option"><td><code>-x</code></td><td>Extract an archive.</td></tr><tr class="cs-table-option"><td><code>-t</code></td><td>List archive contents.</td></tr><tr class="cs-table-option"><td><code>-f &lt;archive&gt;</code></td><td>Select the archive filename.</td></tr><tr class="cs-table-option"><td><code>-z</code></td><td>Use gzip compression.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-C &lt;dir&gt;</code></td><td>Change directory before processing files.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>gzip &lt;file&gt;</code></td><td>Compress a file using gzip.</td></tr><tr class="cs-table-option"><td><code>-d</code></td><td>Decompress the file.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-k</code></td><td>Keep the input file.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>zip &lt;archive.zip&gt; &lt;file&gt;</code></td><td>Create or update a ZIP archive.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-r &lt;dir&gt;</code></td><td>Include a directory recursively.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>unzip &lt;archive.zip&gt;</code></td><td>Extract a ZIP archive.</td></tr><tr class="cs-table-option"><td><code>-l</code></td><td>List archive contents.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-d &lt;dir&gt;</code></td><td>Extract into the specified directory.</td></tr></tbody></table></div><h3 class="cs-examples-title">Examples</h3><div class="cs-table-scroll"><table class="cs-reference-table cs-examples-table" aria-label="Archives &amp; compression examples"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Example</th><th scope="col">Description</th></tr></thead><tbody><tr data-example-origin="existing"><td><code class="cs-example-line">tar -czf &lt;archive.tar.gz&gt; &lt;dir&gt;</code></td><td>Create a gzip-compressed archive.</td></tr></tbody><tbody><tr data-example-origin="existing"><td><code class="cs-example-line">tar -xzf &lt;archive.tar.gz&gt;</code></td><td>Extract a gzip-compressed archive.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="package-management"><h2 id="package-management">Package management</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Package management commands"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Command / option</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>apt &lt;action&gt;</code></td><td>Manage packages on Debian and Ubuntu.</td></tr><tr class="cs-table-option"><td><code>update</code></td><td>Refresh package indexes</td></tr><tr class="cs-table-option"><td><code>upgrade</code></td><td>Upgrade installed packages without removing packages.</td></tr><tr class="cs-table-option"><td><code>list --upgradable</code></td><td>List packages with updates available</td></tr><tr class="cs-table-option"><td><code>install &lt;package&gt;</code></td><td>Install a package.</td></tr><tr class="cs-table-option cs-option-last"><td><code>remove &lt;package&gt;</code></td><td>Remove a package; retain its configuration files.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>dpkg -l</code></td><td>List installed packages and package status.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>dnf &lt;action&gt;</code></td><td>Manage packages on Fedora and RHEL-based systems.</td></tr><tr class="cs-table-option"><td><code>check-update</code></td><td>Check for available package updates</td></tr><tr class="cs-table-option"><td><code>install &lt;package&gt;</code></td><td>Install a package.</td></tr><tr class="cs-table-option cs-option-last"><td><code>remove &lt;package&gt;</code></td><td>Remove a package.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>pacman &lt;options&gt;</code></td><td>Manage packages on Arch-based systems.</td></tr><tr class="cs-table-option"><td><code>-Syu</code></td><td>Refresh package databases and upgrade the system</td></tr><tr class="cs-table-option"><td><code>-S &lt;package&gt;</code></td><td>Install a package from configured repositories.</td></tr><tr class="cs-table-option cs-option-last"><td><code>-R &lt;package&gt;</code></td><td>Remove a package.</td></tr></tbody></table></div><h3 class="cs-examples-title">Examples</h3><div class="cs-table-scroll"><table class="cs-reference-table cs-examples-table" aria-label="Package management examples"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Example</th><th scope="col">Description</th></tr></thead><tbody><tr data-example-origin="new"><td><code class="cs-example-line">sudo apt install curl</code></td><td>Install curl on Debian or Ubuntu.</td></tr></tbody><tbody><tr data-example-origin="new"><td><code class="cs-example-line">sudo apt update</code><code class="cs-example-line">sudo apt upgrade</code></td><td>Refresh package lists, then upgrade packages.</td></tr></tbody></table></div></section></div></div></main><footer class="site-footer"><div class="footer-inner"><p>© 2026 Mehmet Sacit Çınar</p><nav aria-label="Footer navigation" class="footer-nav"><a href="/index.html" data-section="home">About</a><a href="/research.html" data-section="research">Research</a><a href="/projects.html" data-section="projects">Projects</a><a href="/write-ups.html" data-section="writeups">Write-ups</a><a href="/cheat-sheets.html" data-section="cheatsheets" class="active" aria-current="page">Codex</a><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a></nav></div></footer><script src="/navigation.js" defer></script><script src="/linux-reference.js" defer></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0c0d10" />
+    <meta
+      name="description"
+      content="Linux command reference for files, permissions, networking, logs and administration."
+    />
+    <title>Linux Codex</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/about.css" />
+    <link rel="stylesheet" href="/projects.css" />
+    <link rel="stylesheet" href="/research.css" />
+    <link rel="stylesheet" href="/theme.css" />
+    <link rel="stylesheet" href="/cheat-sheets.css" />
+    <link rel="stylesheet" href="/typography.css" />
+    <link rel="stylesheet" href="/palette.css" />
+    <link
+      rel="icon"
+      href="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon-32.png?v=castle-original7" sizes="32x32" type="image/png" />
+    <link
+      rel="canonical"
+      href="https://sacit-security-portfolio.dmncdcco.chatgpt.site/cheat-sheets/linux/"
+    />
+    <link rel="stylesheet" href="/i18n.css" />
+    <script src="/i18n.js" defer></script>
+  </head>
+  <body data-section-page="cheatsheets" class="projects-body cheat-body">
+    <a class="skip-link" href="#cheats-main">Skip to content</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"
+          ><span class="brand-mark" aria-hidden="true"
+            ><img
+              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+              width="34"
+              height="36"
+              alt=""
+              aria-hidden="true" /></span
+          ><span class="brand-copy"
+            ><span class="brand-name">sacit çınar</span
+            ><span class="brand-prompt"
+              >dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span
+        ></a>
+        <nav aria-label="Main navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups">Write-ups</a
+          ><a
+            href="/cheat-sheets.html"
+            data-section="cheatsheets"
+            class="active"
+            aria-current="page"
+            >Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main class="projects-main cs-main cs-linux" id="cheats-main">
+      <div class="cs-breadcrumb">
+        <a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a
+        ><span aria-hidden="true">/</span><span>Linux</span>
+      </div>
+      <section class="projects-intro cs-intro cs-detail-intro">
+        <h1>Linux</h1>
+        <p>Essential command-line references for everyday administration and security analysis.</p>
+        <p class="cs-filter-note cs-reference-note">
+          Replace &lt;…&gt; with your value; […] is optional.
+        </p>
+      </section>
+      <div class="cs-detail-layout">
+        <aside class="cs-toc-rail">
+          <details class="cs-toc" open>
+            <summary>ON THIS PAGE</summary>
+            <nav aria-label="Linux categories">
+              <a href="#files-directories">Files &amp; directories</a
+              ><a href="#text-editing">Text &amp; editing</a
+              ><a href="#permissions-accounts">Permissions &amp; accounts</a
+              ><a href="#system-terminal">System &amp; terminal</a
+              ><a href="#processes-services">Processes &amp; services</a
+              ><a href="#networking-remote-access">Networking &amp; remote access</a
+              ><a href="#archives-compression">Archives &amp; compression</a
+              ><a href="#package-management">Package management</a>
+            </nav>
+          </details>
+        </aside>
+        <div class="cs-category-list">
+          <section class="cs-category" aria-labelledby="files-directories">
+            <h2 id="files-directories">Files &amp; directories</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Files &amp; directories commands">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command / option</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>ls [&lt;dir&gt;]</code></td>
+                    <td>List directory contents.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-l</code></td>
+                    <td>Long listing format</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-a</code></td>
+                    <td>Include hidden entries</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-h</code></td>
+                    <td>Human-readable sizes with -l</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-R</code></td>
+                    <td>List subdirectories recursively</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-t</code></td>
+                    <td>Newest modification time first</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>cd &lt;dir&gt;</code></td>
+                    <td>Change the working directory.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>pwd</code></td>
+                    <td>Print the current working directory.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>cp &lt;source&gt; &lt;destination&gt;</code></td>
+                    <td>Copy files; directories require -r or -a.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-a</code></td>
+                    <td>Copy recursively and preserve file attributes</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-r</code></td>
+                    <td>Copy directories recursively.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>mv &lt;source&gt; &lt;destination&gt;</code></td>
+                    <td>Move or rename files and directories.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>mkdir &lt;dir&gt;</code></td>
+                    <td>Create directories.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-p</code></td>
+                    <td>Create missing parent directories</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>rm &lt;file&gt;</code></td>
+                    <td>Remove files; use -r for directory contents.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-i</code></td>
+                    <td>Ask before removing a file</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-r</code></td>
+                    <td>Remove directories and their contents recursively.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>touch &lt;file&gt;</code></td>
+                    <td>Create an empty file or update its timestamps.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>find &lt;dir&gt;</code></td>
+                    <td>Find files and directories.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-type f</code></td>
+                    <td>Match regular files</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-name "&lt;pattern&gt;"</code></td>
+                    <td>Match filenames against a pattern</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>tree [&lt;dir&gt;]</code></td>
+                    <td>Display a directory tree.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-a</code></td>
+                    <td>Include hidden files.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-L &lt;depth&gt;</code></td>
+                    <td>Limit the displayed directory depth.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-d</code></td>
+                    <td>Show directories only.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>du &lt;dir&gt;</code></td>
+                    <td>Show file and directory disk usage.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-s</code></td>
+                    <td>Show a total for each argument</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-h</code></td>
+                    <td>Human-readable sizes</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>df [&lt;path&gt;]</code></td>
+                    <td>Show filesystem space usage.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-h</code></td>
+                    <td>Human-readable sizes</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>stat &lt;file&gt;</code></td>
+                    <td>Show file metadata.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>which &lt;command&gt;</code></td>
+                    <td>Find an executable in the shell search path.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-a</code></td>
+                    <td>Show all matching executables in PATH.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>locate &lt;pattern&gt;</code></td>
+                    <td>Find paths using the filename database.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-i</code></td>
+                    <td>Ignore case.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-e</code></td>
+                    <td>Only include paths that currently exist.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>rmdir &lt;dir&gt;</code></td>
+                    <td>Remove an empty directory.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table cs-examples-table"
+                aria-label="Files &amp; directories examples"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Example</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td><code class="cs-example-line">find . -type f -name '*.log'</code></td>
+                    <td>Find .log files beneath the current directory.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td><code class="cs-example-line">cp -r reports reports-backup</code></td>
+                    <td>Copy a directory and its contents.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="text-editing">
+            <h2 id="text-editing">Text &amp; editing</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Text &amp; editing commands">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command / option</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>cat &lt;file&gt;</code></td>
+                    <td>Print file contents.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>grep &lt;pattern&gt; &lt;file&gt;</code></td>
+                    <td>Find lines matching a pattern.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-R</code></td>
+                    <td>Search directories recursively</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-n</code></td>
+                    <td>Show line numbers</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-i</code></td>
+                    <td>Ignore case</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>less &lt;file&gt;</code></td>
+                    <td>Read text one page at a time.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>q</code></td>
+                    <td>Quit the viewer</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>tail &lt;file&gt;</code></td>
+                    <td>Show the end of a file.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-f</code></td>
+                    <td>Follow newly appended lines</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>head &lt;file&gt;</code></td>
+                    <td>Show the beginning of a file.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-n &lt;count&gt;</code></td>
+                    <td>Print the first &lt;count&gt; lines</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>nano &lt;file&gt;</code></td>
+                    <td>Edit a file in the terminal.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>sort &lt;file&gt;</code></td>
+                    <td>Sort lines of text.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-n</code></td>
+                    <td>Sort numerically.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-r</code></td>
+                    <td>Reverse the sort order.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-u</code></td>
+                    <td>Output unique lines.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>wc &lt;file&gt;</code></td>
+                    <td>Count lines, words and bytes.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-l</code></td>
+                    <td>Count lines.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-w</code></td>
+                    <td>Count words.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-c</code></td>
+                    <td>Count bytes.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>cut -f &lt;fields&gt; &lt;file&gt;</code></td>
+                    <td>Extract selected fields; tabs delimit by default.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-d &lt;delimiter&gt;</code></td>
+                    <td>Set the field delimiter</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-f &lt;fields&gt;</code></td>
+                    <td>Select fields to extract</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>awk '&lt;program&gt;' &lt;file&gt;</code></td>
+                    <td>Process text by patterns and fields.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>sed '&lt;script&gt;' &lt;file&gt;</code></td>
+                    <td>Filter and transform text.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>tr '&lt;set1&gt;' '&lt;set2&gt;'</code></td>
+                    <td>Translate characters from standard input.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-d &lt;set&gt;</code></td>
+                    <td>Delete characters from the specified set.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-s &lt;set&gt;</code></td>
+                    <td>Squeeze repeated characters from the set.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>column [&lt;file&gt;]</code></td>
+                    <td>Format input into columns.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-t</code></td>
+                    <td>Create a table from input fields.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-s &lt;separator&gt;</code></td>
+                    <td>Set the input field separator.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table cs-examples-table"
+                aria-label="Text &amp; editing examples"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Example</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td><code class="cs-example-line">grep -n 'error' app.log</code></td>
+                    <td>Find error lines and show their line numbers.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td><code class="cs-example-line">cut -d ':' -f 1 /etc/passwd</code></td>
+                    <td>Print account names from the first field.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td><code class="cs-example-line">awk '{print $1}' access.log</code></td>
+                    <td>Print the first whitespace-separated field.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td><code class="cs-example-line">sed 's/old/new/g' notes.txt</code></td>
+                    <td>Print replaced text; leave the file unchanged.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="permissions-accounts">
+            <h2 id="permissions-accounts">Permissions &amp; accounts</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Permissions &amp; accounts commands">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command / option</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>sudo &lt;command&gt;</code></td>
+                    <td>Run commands with permitted privileges.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-l</code></td>
+                    <td>List permitted commands</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>whoami</code></td>
+                    <td>Print the effective username.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>id</code></td>
+                    <td>Show user and group IDs.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>chmod &lt;mode&gt; &lt;file&gt;</code></td>
+                    <td>Change file permissions.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>640</code></td>
+                    <td>Owner read/write; group read; others no access</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>+x</code></td>
+                    <td>Add execute permission</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>chown &lt;user&gt;:&lt;group&gt; &lt;file&gt;</code></td>
+                    <td>Change file ownership.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>passwd [&lt;user&gt;]</code></td>
+                    <td>Change an account password.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>usermod &lt;options&gt; &lt;user&gt;</code></td>
+                    <td>Modify an existing user account.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-aG &lt;group&gt;</code></td>
+                    <td>Append the user to a supplementary group.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-L</code></td>
+                    <td>Lock the account password.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>useradd &lt;user&gt;</code></td>
+                    <td>Create a user account.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-m</code></td>
+                    <td>Create the home directory.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-s &lt;shell&gt;</code></td>
+                    <td>Set the login shell.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>userdel &lt;user&gt;</code></td>
+                    <td>Delete a user account.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-r</code></td>
+                    <td>Also remove the home directory and mail spool.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>getent &lt;database&gt;</code></td>
+                    <td>Query configured account databases.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>last</code></td>
+                    <td>Show login history.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-a</code></td>
+                    <td>Show the hostname in the last column</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>addgroup &lt;group&gt;</code></td>
+                    <td>Create a group on Debian-based systems.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>delgroup &lt;group&gt;</code></td>
+                    <td>Delete a group on Debian-based systems.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table cs-examples-table"
+                aria-label="Permissions &amp; accounts examples"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Example</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td><code class="cs-example-line">chmod 640 report.txt</code></td>
+                    <td>Owner: read/write; group: read; others: none.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="system-terminal">
+            <h2 id="system-terminal">System &amp; terminal</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="System &amp; terminal commands">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command / option</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>uname</code></td>
+                    <td>Show kernel and system information.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-a</code></td>
+                    <td>Show all available system information</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>hostname [&lt;name&gt;]</code></td>
+                    <td>Show or set the system hostname.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>uptime</code></td>
+                    <td>Show system uptime and load averages.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>free</code></td>
+                    <td>Show memory usage.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-h</code></td>
+                    <td>Human-readable sizes</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>lsblk</code></td>
+                    <td>List block devices.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-f</code></td>
+                    <td>Show filesystem information</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>date</code></td>
+                    <td>Show the current date and time.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-u</code></td>
+                    <td>Use UTC.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>clear</code></td>
+                    <td>Clear the terminal display.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>cal [&lt;month&gt; &lt;year&gt;]</code></td>
+                    <td>Display a calendar.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>man &lt;command&gt;</code></td>
+                    <td>Open a command’s manual page.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>&lt;command&gt; --help</code></td>
+                    <td>Show help for commands that support --help.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="processes-services">
+            <h2 id="processes-services">Processes &amp; services</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Processes &amp; services commands">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command / option</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>ps</code></td>
+                    <td>Show running processes.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>aux</code></td>
+                    <td>List processes for all users, including those without a terminal</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>systemctl &lt;action&gt; &lt;service&gt;</code></td>
+                    <td>Inspect and manage systemd services.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>status</code></td>
+                    <td>Show service state and recent log entries.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>start</code></td>
+                    <td>Start the service now.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>stop</code></td>
+                    <td>Stop the service now.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>restart</code></td>
+                    <td>Stop and start the service.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>enable</code></td>
+                    <td>Enable startup at boot; does not start it now.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>journalctl</code></td>
+                    <td>Read systemd journal entries.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-u &lt;service&gt;</code></td>
+                    <td>Filter by service</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>--since &lt;time&gt;</code></td>
+                    <td>Filter by start time</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-b</code></td>
+                    <td>Show the current boot</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-p &lt;priority&gt;</code></td>
+                    <td>Filter by message priority</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>--since today</code></td>
+                    <td>Show today’s entries</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>top</code></td>
+                    <td>Monitor processes and resource usage.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>kill &lt;pid&gt;</code></td>
+                    <td>Send a signal to a process.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-TERM</code></td>
+                    <td>Request graceful termination</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>pgrep &lt;pattern&gt;</code></td>
+                    <td>Find processes by name or command line.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-a</code></td>
+                    <td>Show the full command line</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-f</code></td>
+                    <td>Match the full command line</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>htop</code></td>
+                    <td>Interactively monitor processes and resource use.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table cs-examples-table"
+                aria-label="Processes &amp; services examples"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Example</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td><code class="cs-example-line">journalctl -u ssh --since today</code></td>
+                    <td>Read today’s entries for the ssh service.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="networking-remote-access">
+            <h2 id="networking-remote-access">Networking &amp; remote access</h2>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table"
+                aria-label="Networking &amp; remote access commands"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command / option</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>ip &lt;object&gt; [&lt;action&gt;]</code></td>
+                    <td>Show and manage network interfaces and routes.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-br addr</code></td>
+                    <td>Show interface addresses briefly</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>route</code></td>
+                    <td>Show the routing table</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>ping &lt;ip&gt;</code></td>
+                    <td>Test network reachability with ICMP.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-c &lt;count&gt;</code></td>
+                    <td>Send &lt;count&gt; echo requests</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>ss</code></td>
+                    <td>Inspect network sockets.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-t</code></td>
+                    <td>TCP sockets</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-u</code></td>
+                    <td>UDP sockets</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-l</code></td>
+                    <td>Listening sockets</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-n</code></td>
+                    <td>Numeric addresses and ports</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>ssh &lt;user&gt;@&lt;host&gt;</code></td>
+                    <td>Open an encrypted remote shell.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-p &lt;port&gt;</code></td>
+                    <td>Connect to the specified port.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-i &lt;keyfile&gt;</code></td>
+                    <td>Use the specified private key.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>curl &lt;url&gt;</code></td>
+                    <td>Transfer data and inspect HTTP responses.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-I</code></td>
+                    <td>Make a HEAD request and show headers.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>dig &lt;domain&gt;</code></td>
+                    <td>Query DNS records.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>wget &lt;url&gt;</code></td>
+                    <td>Download a file from a URL.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-O &lt;file&gt;</code></td>
+                    <td>Save output using the specified filename.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-c</code></td>
+                    <td>Resume a partial download.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>tcpdump [&lt;filter&gt;]</code></td>
+                    <td>Inspect network traffic on authorized interfaces.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-i &lt;interface&gt;</code></td>
+                    <td>Select a capture interface</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-nn</code></td>
+                    <td>Disable host and port name resolution</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>port &lt;port&gt;</code></td>
+                    <td>Filter traffic by port</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>ifconfig [&lt;interface&gt;]</code></td>
+                    <td>Legacy interface tool; prefer ip on modern Linux.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-a</code></td>
+                    <td>Show all interfaces, including inactive ones.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>netstat</code></td>
+                    <td>Legacy socket tool; prefer ss on modern Linux.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-t</code></td>
+                    <td>Show TCP sockets.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-u</code></td>
+                    <td>Show UDP sockets.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-l</code></td>
+                    <td>Show listening sockets.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-n</code></td>
+                    <td>Show numeric addresses and ports.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-p</code></td>
+                    <td>Show associated processes when permitted.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table cs-examples-table"
+                aria-label="Networking &amp; remote access examples"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Example</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td><code class="cs-example-line">ss -tuln</code></td>
+                    <td>List listening TCP and UDP sockets numerically.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="archives-compression">
+            <h2 id="archives-compression">Archives &amp; compression</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Archives &amp; compression commands">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command / option</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>tar &lt;options&gt;</code></td>
+                    <td>Create or extract tar archives.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-c</code></td>
+                    <td>Create an archive.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-x</code></td>
+                    <td>Extract an archive.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-t</code></td>
+                    <td>List archive contents.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-f &lt;archive&gt;</code></td>
+                    <td>Select the archive filename.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-z</code></td>
+                    <td>Use gzip compression.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-C &lt;dir&gt;</code></td>
+                    <td>Change directory before processing files.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>gzip &lt;file&gt;</code></td>
+                    <td>Compress a file using gzip.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-d</code></td>
+                    <td>Decompress the file.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-k</code></td>
+                    <td>Keep the input file.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>zip &lt;archive.zip&gt; &lt;file&gt;</code></td>
+                    <td>Create or update a ZIP archive.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-r &lt;dir&gt;</code></td>
+                    <td>Include a directory recursively.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>unzip &lt;archive.zip&gt;</code></td>
+                    <td>Extract a ZIP archive.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-l</code></td>
+                    <td>List archive contents.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-d &lt;dir&gt;</code></td>
+                    <td>Extract into the specified directory.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table cs-examples-table"
+                aria-label="Archives &amp; compression examples"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Example</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-example-origin="existing">
+                    <td>
+                      <code class="cs-example-line"
+                        >tar -czf &lt;archive.tar.gz&gt; &lt;dir&gt;</code
+                      >
+                    </td>
+                    <td>Create a gzip-compressed archive.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr data-example-origin="existing">
+                    <td><code class="cs-example-line">tar -xzf &lt;archive.tar.gz&gt;</code></td>
+                    <td>Extract a gzip-compressed archive.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="package-management">
+            <h2 id="package-management">Package management</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Package management commands">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command / option</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>apt &lt;action&gt;</code></td>
+                    <td>Manage packages on Debian and Ubuntu.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>update</code></td>
+                    <td>Refresh package indexes</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>upgrade</code></td>
+                    <td>Upgrade installed packages without removing packages.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>list --upgradable</code></td>
+                    <td>List packages with updates available</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>install &lt;package&gt;</code></td>
+                    <td>Install a package.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>remove &lt;package&gt;</code></td>
+                    <td>Remove a package; retain its configuration files.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>dpkg -l</code></td>
+                    <td>List installed packages and package status.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>dnf &lt;action&gt;</code></td>
+                    <td>Manage packages on Fedora and RHEL-based systems.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>check-update</code></td>
+                    <td>Check for available package updates</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>install &lt;package&gt;</code></td>
+                    <td>Install a package.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>remove &lt;package&gt;</code></td>
+                    <td>Remove a package.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>pacman &lt;options&gt;</code></td>
+                    <td>Manage packages on Arch-based systems.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-Syu</code></td>
+                    <td>Refresh package databases and upgrade the system</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td><code>-S &lt;package&gt;</code></td>
+                    <td>Install a package from configured repositories.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td><code>-R &lt;package&gt;</code></td>
+                    <td>Remove a package.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table cs-examples-table"
+                aria-label="Package management examples"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Example</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td><code class="cs-example-line">sudo apt install curl</code></td>
+                    <td>Install curl on Debian or Ubuntu.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td>
+                      <code class="cs-example-line">sudo apt update</code
+                      ><code class="cs-example-line">sudo apt upgrade</code>
+                    </td>
+                    <td>Refresh package lists, then upgrade packages.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2026 Mehmet Sacit Çınar</p>
+        <nav aria-label="Footer navigation" class="footer-nav">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups">Write-ups</a
+          ><a
+            href="/cheat-sheets.html"
+            data-section="cheatsheets"
+            class="active"
+            aria-current="page"
+            >Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/navigation.js" defer></script>
+    <script src="/linux-reference.js" defer></script>
+  </body>
+</html>

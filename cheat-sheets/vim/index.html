@@ -1,1 +1,570 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#0c0d10"><meta name="description" content="Essential Vim keys for editing, movement, search, saving and working with multiple files."><title>Vim Codex</title><link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/about.css"><link rel="stylesheet" href="/projects.css"><link rel="stylesheet" href="/research.css"><link rel="stylesheet" href="/theme.css"><link rel="stylesheet" href="/cheat-sheets.css"><link rel="stylesheet" href="/typography.css"><link rel="stylesheet" href="/palette.css"><link rel="icon" href="/assets/brand/sacit-cinar-castle.svg?v=bright2" type="image/svg+xml"><link rel="icon" href="/favicon-32.png?v=castle4" sizes="32x32" type="image/png"><link rel="canonical" href="https://sacitcinar.github.io/cheat-sheets/vim/"></head><body data-section-page="cheatsheets" class="projects-body cheat-body"><a class="skip-link" href="#cheats-main">Skip to content</a><header class="site-header"><div class="header-inner"><a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"><span class="brand-mark" aria-hidden="true"><img src="/assets/brand/sacit-cinar-castle.svg?v=bright2" width="34" height="36" alt="" aria-hidden="true"></span><span class="brand-copy"><span class="brand-name">Sacit Çınar</span><span class="brand-prompt">dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span></a><nav aria-label="Main navigation"><a href="/index.html" data-section="home">About</a><a href="/research.html" data-section="research">Research</a><a href="/projects.html" data-section="projects">Projects</a><a href="/write-ups.html" data-section="writeups">Write-ups</a><a href="/cheat-sheets.html" data-section="cheatsheets" class="active" aria-current="page">Codex</a><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a></nav></div></header><main class="projects-main cs-main cs-vim" id="cheats-main"><div class="cs-breadcrumb"><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a><span aria-hidden="true">/</span><span>Vim</span></div><section class="projects-intro cs-intro cs-detail-intro"><h1>Vim</h1><p>Essential Vim keys for editing, movement, search, saving and working with multiple files.</p><p class="cs-filter-note cs-reference-note">Replace &lt;…&gt; with your value; […] is optional.</p><p class="cs-filter-note cs-reference-note">Keys apply in Normal mode unless stated. : starts a command; / between keys separates alternatives.</p><p class="cs-filter-note cs-reference-note">In examples, → separates successive keystrokes; do not type the arrows.</p></section><div class="cs-detail-layout"><aside class="cs-toc-rail"><details class="cs-toc" open><summary>ON THIS PAGE</summary><nav aria-label="Vim categories"><a href="#modes-inserting">Modes &amp; inserting</a><a href="#saving-quitting">Saving &amp; quitting</a><a href="#movement">Movement</a><a href="#editing-undo">Editing &amp; undo</a><a href="#search-replace">Search &amp; replace</a><a href="#files-windows-help">Files, windows &amp; help</a></nav></details></aside><div class="cs-category-list"><section class="cs-category" aria-labelledby="modes-inserting"><h2 id="modes-inserting">Modes &amp; inserting</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Modes &amp; inserting reference"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Key / command</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>Esc</code></td><td>Return to Normal mode.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>i</code></td><td>Insert before the cursor.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>I</code></td><td>Insert before the first non-blank character.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>a</code></td><td>Insert after the cursor.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>A</code></td><td>Insert at the end of the line.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>o</code></td><td>Open a new line below and enter Insert mode.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>O</code></td><td>Open a new line above and enter Insert mode.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>v</code></td><td>Start characterwise Visual selection.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>V</code></td><td>Start linewise Visual selection.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>Ctrl+v</code></td><td>Start blockwise Visual selection.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="saving-quitting"><h2 id="saving-quitting">Saving &amp; quitting</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Saving &amp; quitting reference"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Key / command</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>:w</code></td><td>Save the current file.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>:wq</code></td><td>Save and close the current window.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>:q</code></td><td>Close the current window if no changes are pending.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>:q!</code></td><td>Close the window and discard unsaved changes.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>:w &lt;file&gt;</code></td><td>Write the buffer to the specified file.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="movement"><h2 id="movement">Movement</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Movement reference"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Key / command</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>h / j / k / l</code></td><td>Move left / down / up / right.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>w / b</code></td><td>Move to the next / previous word start.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>0 / $</code></td><td>Move to the start / end of the line.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>gg / G</code></td><td>Move to the first / last line.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>&lt;line&gt;G</code></td><td>Jump to a line number.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>Ctrl+d / Ctrl+u</code></td><td>Scroll down / up half a screen.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>%</code></td><td>Jump to a matching bracket.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="editing-undo"><h2 id="editing-undo">Editing &amp; undo</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Editing &amp; undo reference"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Key / command</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>u</code></td><td>Undo the last change.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>Ctrl+r</code></td><td>Redo an undone change.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>dd</code></td><td>Delete the current line into a register.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>dw</code></td><td>Delete through the next word start.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>yy</code></td><td>Copy the current line into a register.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>p / P</code></td><td>Put register contents after / before the cursor.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>x</code></td><td>Delete the character under the cursor.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>ciw</code></td><td>Replace the word under the cursor.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>cw</code></td><td>Change from the cursor to the word end.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>&gt;&gt; / &lt;&lt;</code></td><td>Indent / unindent the current line.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>.</code></td><td>Repeat the last change.</td></tr></tbody></table></div><h3 class="cs-examples-title">Examples</h3><div class="cs-table-scroll"><table class="cs-reference-table cs-examples-table" aria-label="Editing &amp; undo examples"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Example</th><th scope="col">Description</th></tr></thead><tbody><tr data-example-origin="new"><td><code class="cs-example-line">V → j → &gt;</code></td><td>Select this line and the next, then indent both.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="search-replace"><h2 id="search-replace">Search &amp; replace</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Search &amp; replace reference"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Key / command</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>/&lt;pattern&gt;</code></td><td>Search forward.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>?&lt;pattern&gt;</code></td><td>Search backward.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>n / N</code></td><td>Repeat the search / reverse its direction.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>*</code></td><td>Search forward for the word under the cursor.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>:nohlsearch</code></td><td>Clear the current search highlighting.</td></tr></tbody></table></div><h3 class="cs-examples-title">Examples</h3><div class="cs-table-scroll"><table class="cs-reference-table cs-examples-table" aria-label="Search &amp; replace examples"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Example</th><th scope="col">Description</th></tr></thead><tbody><tr data-example-origin="existing"><td><code class="cs-example-line">:%s/old/new/gc</code></td><td>Replace matches throughout the file, confirming each.</td></tr></tbody></table></div></section><section class="cs-category" aria-labelledby="files-windows-help"><h2 id="files-windows-help">Files, windows &amp; help</h2><div class="cs-table-scroll"><table class="cs-reference-table" aria-label="Files, windows &amp; help reference"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Key / command</th><th scope="col">Description</th></tr></thead><tbody><tr class="cs-table-command"><td><code>:e &lt;file&gt;</code></td><td>Open a file in the current window.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>:ls</code></td><td>List buffers.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>:bn / :bp</code></td><td>Switch to the next / previous buffer.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>:split &lt;file&gt;</code></td><td>Open a file in a horizontal split.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>:vsplit &lt;file&gt;</code></td><td>Open a file in a vertical split.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>Ctrl+w w</code></td><td>Move to the next window.</td></tr></tbody><tbody><tr class="cs-table-command"><td><code>:help &lt;topic&gt;</code></td><td>Open Vim help for a topic.</td></tr></tbody></table></div><h3 class="cs-examples-title">Examples</h3><div class="cs-table-scroll"><table class="cs-reference-table cs-examples-table" aria-label="Files, windows &amp; help examples"><colgroup><col class="cs-command-col"><col></colgroup><thead><tr><th scope="col">Example</th><th scope="col">Description</th></tr></thead><tbody><tr data-example-origin="new"><td><code class="cs-example-line">:vsplit notes.txt → Enter → Ctrl+w w</code></td><td>Open a vertical split, then switch windows.</td></tr></tbody></table></div></section></div></div></main><footer class="site-footer"><div class="footer-inner"><p>© 2026 Mehmet Sacit Çınar</p><nav aria-label="Footer navigation" class="footer-nav"><a href="/index.html" data-section="home">About</a><a href="/research.html" data-section="research">Research</a><a href="/projects.html" data-section="projects">Projects</a><a href="/write-ups.html" data-section="writeups">Write-ups</a><a href="/cheat-sheets.html" data-section="cheatsheets" class="active" aria-current="page">Codex</a><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a></nav></div></footer><script src="/navigation.js" defer></script><script src="/linux-reference.js" defer></script></body></html>
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0c0d10" />
+    <meta
+      name="description"
+      content="Essential Vim keys for editing, movement, search, saving and working with multiple files."
+    />
+    <title>Vim Codex</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/about.css" />
+    <link rel="stylesheet" href="/projects.css" />
+    <link rel="stylesheet" href="/research.css" />
+    <link rel="stylesheet" href="/theme.css" />
+    <link rel="stylesheet" href="/cheat-sheets.css" />
+    <link rel="stylesheet" href="/typography.css" />
+    <link rel="stylesheet" href="/palette.css" />
+    <link
+      rel="icon"
+      href="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon-32.png?v=castle-original7" sizes="32x32" type="image/png" />
+    <link
+      rel="canonical"
+      href="https://sacit-security-portfolio.dmncdcco.chatgpt.site/cheat-sheets/vim/"
+    />
+    <link rel="stylesheet" href="/i18n.css" />
+    <script src="/i18n.js" defer></script>
+  </head>
+  <body data-section-page="cheatsheets" class="projects-body cheat-body">
+    <a class="skip-link" href="#cheats-main">Skip to content</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"
+          ><span class="brand-mark" aria-hidden="true"
+            ><img
+              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+              width="34"
+              height="36"
+              alt=""
+              aria-hidden="true" /></span
+          ><span class="brand-copy"
+            ><span class="brand-name">sacit çınar</span
+            ><span class="brand-prompt"
+              >dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span
+        ></a>
+        <nav aria-label="Main navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups">Write-ups</a
+          ><a
+            href="/cheat-sheets.html"
+            data-section="cheatsheets"
+            class="active"
+            aria-current="page"
+            >Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main class="projects-main cs-main cs-vim" id="cheats-main">
+      <div class="cs-breadcrumb">
+        <a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a
+        ><span aria-hidden="true">/</span><span>Vim</span>
+      </div>
+      <section class="projects-intro cs-intro cs-detail-intro">
+        <h1>Vim</h1>
+        <p>
+          Essential Vim keys for editing, movement, search, saving and working with multiple files.
+        </p>
+        <p class="cs-filter-note cs-reference-note">
+          Replace &lt;…&gt; with your value; […] is optional.
+        </p>
+        <p class="cs-filter-note cs-reference-note">
+          Keys apply in Normal mode unless stated. : starts a command; / between keys separates
+          alternatives.
+        </p>
+        <p class="cs-filter-note cs-reference-note">
+          In examples, → separates successive keystrokes; do not type the arrows.
+        </p>
+      </section>
+      <div class="cs-detail-layout">
+        <aside class="cs-toc-rail">
+          <details class="cs-toc" open>
+            <summary>ON THIS PAGE</summary>
+            <nav aria-label="Vim categories">
+              <a href="#modes-inserting">Modes &amp; inserting</a
+              ><a href="#saving-quitting">Saving &amp; quitting</a><a href="#movement">Movement</a
+              ><a href="#editing-undo">Editing &amp; undo</a
+              ><a href="#search-replace">Search &amp; replace</a
+              ><a href="#files-windows-help">Files, windows &amp; help</a>
+            </nav>
+          </details>
+        </aside>
+        <div class="cs-category-list">
+          <section class="cs-category" aria-labelledby="modes-inserting">
+            <h2 id="modes-inserting">Modes &amp; inserting</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Modes &amp; inserting reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Key / command</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>Esc</code></td>
+                    <td>Return to Normal mode.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>i</code></td>
+                    <td>Insert before the cursor.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>I</code></td>
+                    <td>Insert before the first non-blank character.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>a</code></td>
+                    <td>Insert after the cursor.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>A</code></td>
+                    <td>Insert at the end of the line.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>o</code></td>
+                    <td>Open a new line below and enter Insert mode.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>O</code></td>
+                    <td>Open a new line above and enter Insert mode.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>v</code></td>
+                    <td>Start characterwise Visual selection.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>V</code></td>
+                    <td>Start linewise Visual selection.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>Ctrl+v</code></td>
+                    <td>Start blockwise Visual selection.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="saving-quitting">
+            <h2 id="saving-quitting">Saving &amp; quitting</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Saving &amp; quitting reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Key / command</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>:w</code></td>
+                    <td>Save the current file.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>:wq</code></td>
+                    <td>Save and close the current window.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>:q</code></td>
+                    <td>Close the current window if no changes are pending.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>:q!</code></td>
+                    <td>Close the window and discard unsaved changes.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>:w &lt;file&gt;</code></td>
+                    <td>Write the buffer to the specified file.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="movement">
+            <h2 id="movement">Movement</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Movement reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Key / command</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>h / j / k / l</code></td>
+                    <td>Move left / down / up / right.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>w / b</code></td>
+                    <td>Move to the next / previous word start.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>0 / $</code></td>
+                    <td>Move to the start / end of the line.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>gg / G</code></td>
+                    <td>Move to the first / last line.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>&lt;line&gt;G</code></td>
+                    <td>Jump to a line number.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>Ctrl+d / Ctrl+u</code></td>
+                    <td>Scroll down / up half a screen.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>%</code></td>
+                    <td>Jump to a matching bracket.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="editing-undo">
+            <h2 id="editing-undo">Editing &amp; undo</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Editing &amp; undo reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Key / command</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>u</code></td>
+                    <td>Undo the last change.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>Ctrl+r</code></td>
+                    <td>Redo an undone change.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>dd</code></td>
+                    <td>Delete the current line into a register.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>dw</code></td>
+                    <td>Delete through the next word start.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>yy</code></td>
+                    <td>Copy the current line into a register.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>p / P</code></td>
+                    <td>Put register contents after / before the cursor.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>x</code></td>
+                    <td>Delete the character under the cursor.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>ciw</code></td>
+                    <td>Replace the word under the cursor.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>cw</code></td>
+                    <td>Change from the cursor to the word end.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>&gt;&gt; / &lt;&lt;</code></td>
+                    <td>Indent / unindent the current line.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>.</code></td>
+                    <td>Repeat the last change.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table cs-examples-table"
+                aria-label="Editing &amp; undo examples"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Example</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td><code class="cs-example-line">V → j → &gt;</code></td>
+                    <td>Select this line and the next, then indent both.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="search-replace">
+            <h2 id="search-replace">Search &amp; replace</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Search &amp; replace reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Key / command</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>/&lt;pattern&gt;</code></td>
+                    <td>Search forward.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>?&lt;pattern&gt;</code></td>
+                    <td>Search backward.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>n / N</code></td>
+                    <td>Repeat the search / reverse its direction.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>*</code></td>
+                    <td>Search forward for the word under the cursor.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>:nohlsearch</code></td>
+                    <td>Clear the current search highlighting.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table cs-examples-table"
+                aria-label="Search &amp; replace examples"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Example</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-example-origin="existing">
+                    <td><code class="cs-example-line">:%s/old/new/gc</code></td>
+                    <td>Replace matches throughout the file, confirming each.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="files-windows-help">
+            <h2 id="files-windows-help">Files, windows &amp; help</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Files, windows &amp; help reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Key / command</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>:e &lt;file&gt;</code></td>
+                    <td>Open a file in the current window.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>:ls</code></td>
+                    <td>List buffers.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>:bn / :bp</code></td>
+                    <td>Switch to the next / previous buffer.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>:split &lt;file&gt;</code></td>
+                    <td>Open a file in a horizontal split.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>:vsplit &lt;file&gt;</code></td>
+                    <td>Open a file in a vertical split.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>Ctrl+w w</code></td>
+                    <td>Move to the next window.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td><code>:help &lt;topic&gt;</code></td>
+                    <td>Open Vim help for a topic.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table cs-examples-table"
+                aria-label="Files, windows &amp; help examples"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Example</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr data-example-origin="new">
+                    <td>
+                      <code class="cs-example-line">:vsplit notes.txt → Enter → Ctrl+w w</code>
+                    </td>
+                    <td>Open a vertical split, then switch windows.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2026 Mehmet Sacit Çınar</p>
+        <nav aria-label="Footer navigation" class="footer-nav">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups">Write-ups</a
+          ><a
+            href="/cheat-sheets.html"
+            data-section="cheatsheets"
+            class="active"
+            aria-current="page"
+            >Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/navigation.js" defer></script>
+    <script src="/linux-reference.js" defer></script>
+  </body>
+</html>

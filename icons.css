@@ -1,0 +1,19 @@
+.svg-icon{display:inline-block;flex-shrink:0;background-color:currentColor;-webkit-mask:var(--icon) center/contain no-repeat;mask:var(--icon) center/contain no-repeat}
+.icon-content-project{--icon:url("/assets/icons/content-project.svg")}
+.icon-content-research{--icon:url("/assets/icons/content-research.svg")}
+.icon-content-writeup{--icon:url("/assets/icons/content-writeup.svg")}
+.icon-download{--icon:url("/assets/icons/download.svg")}
+.icon-email{--icon:url("/assets/icons/email.svg")}
+.icon-git{--icon:url("/assets/icons/git.svg")}
+.icon-github{--icon:url("/assets/icons/github.svg")}
+.icon-hackthebox{--icon:url("/assets/icons/hackthebox.svg")}
+.icon-http-curl{--icon:url("/assets/icons/http-curl.svg")}
+.icon-linkedin{--icon:url("/assets/icons/linkedin.svg")}
+.icon-linux{--icon:url("/assets/icons/linux.svg")}
+.icon-location-pin{--icon:url("/assets/icons/location-pin.svg")}
+.icon-nmap{--icon:url("/assets/icons/nmap.svg")}
+.icon-powershell{--icon:url("/assets/icons/powershell.svg")}
+.icon-splunk{--icon:url("/assets/icons/splunk.svg")}
+.icon-tryhackme{--icon:url("/assets/icons/tryhackme.svg")}
+.icon-vim{--icon:url("/assets/icons/vim.svg")}
+.icon-wireshark{--icon:url("/assets/icons/wireshark.svg")}

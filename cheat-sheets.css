@@ -64,7 +64,7 @@ a.cs-topic:hover{border-color:var(--blue);background:#192027;transform:translate
 
 /* A continuous command reference: one command family per full-width section. */
 .cs-linux-title{justify-content:flex-start;align-items:center;gap:15px;margin-bottom:22px}
-.cs-linux-title h2{margin:0}.cs-topic-icon svg{width:31px;height:31px;display:block}
+.cs-linux-title h2{margin:0}.cs-topic-icon :is(svg,.svg-icon){width:31px;height:31px;display:block}
 .cs-topic:has(.cs-linux-title) .cs-topic-bottom{justify-content:flex-end}
 .cs-command-list{width:100%;margin-top:35px}
 .cs-command-group{padding:27px 0 30px;border-top:1px solid #2e3b43;scroll-margin-top:90px}
@@ -95,14 +95,14 @@ a.cs-topic:hover{border-color:var(--blue);background:#192027;transform:translate
 .cs-table-option td:first-child:before{content:"";position:absolute;left:18px;top:0;height:100%;border-left:1px solid #436278}
 .cs-table-option td:first-child:after{content:"";position:absolute;left:18px;top:50%;width:11px;border-top:1px solid #436278}
 .cs-option-last td:first-child:before{height:50%}
-.cs-topic-icon svg,.cs-topic-icon svg path{fill:var(--blue)!important;stroke:none!important;filter:none!important;opacity:1!important}
+.cs-topic-icon :is(svg,.svg-icon),.cs-topic-icon :is(svg,.svg-icon) path{fill:var(--blue)!important;stroke:none!important;filter:none!important;opacity:1!important}
 @media(max-width:700px){.cs-category-list{margin-top:24px}.cs-category h2{font-size:15px}}
 
 /* Match all topic cards and keep the category rail outside the centered tables. */
-.cs-topic-pending{opacity:1}.cs-tool-icon svg{color:var(--blue)}
-.cs-tool-icon svg,.cs-tool-icon svg *{fill:unset!important;stroke:unset!important}
-.cs-tool-icon svg path[stroke],.cs-tool-icon svg circle[stroke]{stroke:currentColor!important;fill:none!important}
-.cs-tool-icon svg circle[fill],.cs-tool-icon svg[fill="currentColor"] path{fill:currentColor!important;stroke:none!important}
+.cs-topic-pending{opacity:1}.cs-tool-icon :is(svg,.svg-icon){color:var(--blue)}
+.cs-tool-icon :is(svg,.svg-icon),.cs-tool-icon :is(svg,.svg-icon) *{fill:unset!important;stroke:unset!important}
+.cs-tool-icon :is(svg,.svg-icon) path[stroke],.cs-tool-icon :is(svg,.svg-icon) circle[stroke]{stroke:currentColor!important;fill:none!important}
+.cs-tool-icon :is(svg,.svg-icon) circle[fill],.cs-tool-icon :is(svg,.svg-icon)[fill="currentColor"] path{fill:currentColor!important;stroke:none!important}
 .cs-detail-layout{position:relative}.cs-category{scroll-margin-top:90px}
 .cs-toc-rail{position:absolute;left:0;top:0;bottom:0;width:190px}
 .cs-toc{position:sticky;top:90px}
