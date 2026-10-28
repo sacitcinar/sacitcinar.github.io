@@ -2,7 +2,7 @@
   'use strict';
   const views = {
     home: '/index.html', about: '/about.html', research: '/research.html',
-    projects: '/projects.html', writeups: '/write-ups.html', cheatsheets: '/cheat-sheets.html'
+    projects: '/projects.html', writeups: '/write-ups.html', codex: '/codex/'
   };
   const stateKey = 'portfolio.menu';
   const isShell = location.pathname === '/' || location.pathname === '/index.html';
@@ -164,7 +164,7 @@
       if (mine !== requestId) return;
       storage.set(section);
       activeSection(section);
-      document.title = {home:'Mehmet Sacit Çınar', about:'Mehmet Sacit Çınar', contact:'Contact', research:'Research', projects:'Projects', writeups:'Writeups', cheatsheets:'Codex'}[section] || document.title;
+      document.title = {home:'Mehmet Sacit Çınar', about:'Mehmet Sacit Çınar', contact:'Contact', research:'Research', projects:'Projects', writeups:'Writeups', codex:'Codex'}[section] || document.title;
       bindContact();
       updateResearchCount();
       updateWriteupFilters();

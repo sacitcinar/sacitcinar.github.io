@@ -1,0 +1,904 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0c0d10" />
+    <meta
+      name="description"
+      content="HTTP methods, response codes and practical curl options for everyday requests."
+    />
+    <title>HTTP / cURL Codex</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/about.css" />
+    <link rel="stylesheet" href="/projects.css" />
+    <link rel="stylesheet" href="/research.css" />
+    <link rel="stylesheet" href="/theme.css" />
+    <link rel="stylesheet" href="/codex.css" />
+    <link rel="stylesheet" href="/typography.css" />
+    <link rel="stylesheet" href="/palette.css" />
+    <link
+      rel="icon"
+      href="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon-32.png?v=castle-original7" sizes="32x32" type="image/png" />
+    <link
+      rel="canonical"
+      href="https://sacitcinar.github.io/codex/http-curl/"
+    />
+    <link rel="stylesheet" href="/i18n.css" />
+    <script src="/i18n.js" defer></script>
+  </head>
+  <body data-section-page="codex" class="projects-body codex-body">
+    <a class="skip-link" href="#codex-main">Skip to content</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"
+          ><span class="brand-mark" aria-hidden="true"
+            ><img
+              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+              width="34"
+              height="36"
+              alt=""
+              aria-hidden="true" /></span
+          ><span class="brand-copy"
+            ><span class="brand-name">sacit çınar</span
+            ><span class="brand-prompt"
+              >dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span
+        ></a>
+        <nav aria-label="Main navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups">Write-ups</a
+          ><a href="/codex/" data-section="codex" class="active" aria-current="page">Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main class="projects-main cs-main cs-http-curl" id="codex-main">
+      <div class="cs-breadcrumb">
+        <a href="/codex/" data-section="codex">Codex</a><span aria-hidden="true">/</span
+        ><span>HTTP / cURL</span>
+      </div>
+      <section class="projects-intro cs-intro cs-detail-intro">
+        <h1>HTTP / cURL</h1>
+        <p>HTTP methods, response codes and practical curl options for everyday requests.</p>
+        <p class="cs-filter-note cs-reference-note">
+          Replace &lt;…&gt; with your value; […] is optional.
+        </p>
+        <p class="cs-filter-note cs-reference-note">
+          Options below follow curl &lt;url&gt;. In Windows PowerShell 5.1, use curl.exe to avoid
+          the curl alias.
+        </p>
+        <p class="cs-filter-note cs-reference-note">
+          Examples use POSIX-shell quoting and illustrative example.com URLs.
+        </p>
+      </section>
+      <div class="cs-detail-layout">
+        <aside class="cs-toc-rail">
+          <details class="cs-toc" open>
+            <summary>ON THIS PAGE</summary>
+            <nav aria-label="HTTP / cURL categories">
+              <a href="#everyday-requests">Everyday requests</a>
+              <a href="#request-data-authentication">Request data &amp; authentication</a>
+              <a href="#files-output">Files &amp; output</a>
+              <a href="#connections-troubleshooting">Connections &amp; troubleshooting</a>
+              <a href="#http-methods">HTTP methods</a>
+              <a href="#common-response-codes">Common response codes</a>
+            </nav>
+          </details>
+        </aside>
+        <div class="cs-category-list">
+          <section class="cs-category" aria-labelledby="everyday-requests">
+            <h2 id="everyday-requests">Everyday requests</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Everyday requests reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command / option</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>curl &lt;url&gt;</code>
+                    </td>
+                    <td>Request a URL and print the response body.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-I</code>
+                    </td>
+                    <td>Make a HEAD request and show headers.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-i</code>
+                    </td>
+                    <td>Include response headers with the body.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-L</code>
+                    </td>
+                    <td>Follow HTTP redirects.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-H "&lt;name&gt;: &lt;value&gt;"</code>
+                    </td>
+                    <td>Add or replace a request header.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-X &lt;method&gt;</code>
+                    </td>
+                    <td>Set the method; does not supply a request body.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="request-data-authentication">
+            <h2 id="request-data-authentication">Request data &amp; authentication</h2>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table"
+                aria-label="Request data &amp; authentication reference"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command / option</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-d '&lt;data&gt;'</code>
+                    </td>
+                    <td>Send a request body; HTTP defaults to POST.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>--json '&lt;json&gt;'</code>
+                    </td>
+                    <td>Send JSON with JSON Content-Type and Accept.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-H 'Authorization: Bearer &lt;token&gt;'</code>
+                    </td>
+                    <td>Send a bearer token header.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-u '&lt;user&gt;:&lt;password&gt;'</code>
+                    </td>
+                    <td>Supply credentials for server authentication.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-F '&lt;field&gt;=@&lt;file&gt;'</code>
+                    </td>
+                    <td>Upload a file as multipart form data.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>--data-urlencode '&lt;name&gt;=&lt;value&gt;'</code>
+                    </td>
+                    <td>Send a URL-encoded form field; defaults to POST.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-G --data-urlencode '&lt;name&gt;=&lt;value&gt;'</code>
+                    </td>
+                    <td>Send URL-encoded data in the query string.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>--data-binary @&lt;file&gt;</code>
+                    </td>
+                    <td>Send the file body without text conversion.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-b '&lt;name&gt;=&lt;value&gt;'</code>
+                    </td>
+                    <td>Send cookies; -b &lt;file&gt; reads a cookie file.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-c &lt;file&gt;</code>
+                    </td>
+                    <td>Save received cookies to a cookie jar file.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <dl class="cs-examples">
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >curl --json '{"name":"demo"}' https://example.com/api</code
+                  >
+                </dt>
+                <dd class="cs-example-description">Send a JSON POST request.</dd>
+              </div>
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >curl -H 'Authorization: Bearer TOKEN' https://example.com/api</code
+                  >
+                </dt>
+                <dd class="cs-example-description">Send an example bearer token.</dd>
+              </div>
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >curl -F 'file=@report.pdf' https://example.com/upload</code
+                  >
+                </dt>
+                <dd class="cs-example-description">Upload a file as multipart form data.</dd>
+              </div>
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >curl -G --data-urlencode 'q=hello world' https://example.com/search</code
+                  >
+                </dt>
+                <dd class="cs-example-description">Add a URL-encoded query parameter.</dd>
+              </div>
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >curl -b 'session=DEMO' -c cookies.txt https://example.com</code
+                  >
+                </dt>
+                <dd class="cs-example-description">Send a cookie and save received cookies.</dd>
+              </div>
+            </dl>
+          </section>
+          <section class="cs-category" aria-labelledby="files-output">
+            <h2 id="files-output">Files &amp; output</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Files &amp; output reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command / option</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-o &lt;file&gt;</code>
+                    </td>
+                    <td>Save the response body to a local file.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-O</code>
+                    </td>
+                    <td>Use the filename from the URL path.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-sS</code>
+                    </td>
+                    <td>Hide progress while retaining error messages.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-D &lt;file&gt;</code>
+                    </td>
+                    <td>Save response headers to a file.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-w '%{http_code}'</code>
+                    </td>
+                    <td>Print the HTTP status after the transfer.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-C -</code>
+                    </td>
+                    <td>Resume a transfer from the local file size.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-T &lt;file&gt;</code>
+                    </td>
+                    <td>Upload a file; HTTP defaults to PUT.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <dl class="cs-examples">
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >curl -L -o report.pdf https://example.com/report.pdf</code
+                  >
+                </dt>
+                <dd class="cs-example-description">Follow redirects and save the response body.</dd>
+              </div>
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >curl -C - -o archive.zip https://example.com/archive.zip</code
+                  >
+                </dt>
+                <dd class="cs-example-description">Resume a previously interrupted download.</dd>
+              </div>
+            </dl>
+          </section>
+          <section class="cs-category" aria-labelledby="connections-troubleshooting">
+            <h2 id="connections-troubleshooting">Connections &amp; troubleshooting</h2>
+            <div class="cs-table-scroll">
+              <table
+                class="cs-reference-table"
+                aria-label="Connections &amp; troubleshooting reference"
+              >
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command / option</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-v</code>
+                    </td>
+                    <td>Show verbose connection and header details.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>--connect-timeout &lt;seconds&gt;</code>
+                    </td>
+                    <td>Limit the connection establishment time.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>--max-time &lt;seconds&gt;</code>
+                    </td>
+                    <td>Limit the total transfer duration.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>--fail-with-body</code>
+                    </td>
+                    <td>Return an error for HTTP 400+ and keep the body.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>--retry &lt;N&gt;</code>
+                    </td>
+                    <td>Retry eligible transient failures up to N times.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>--retry-delay &lt;seconds&gt;</code>
+                    </td>
+                    <td>Set the delay between retry attempts.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-k</code>
+                    </td>
+                    <td>Skip TLS certificate verification.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>--cacert &lt;file&gt;</code>
+                    </td>
+                    <td>Verify the server using a custom CA certificate file.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-x &lt;proxy-url&gt;</code>
+                    </td>
+                    <td>Send requests through a proxy.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>--resolve &lt;host&gt;:&lt;port&gt;:&lt;ip&gt;</code>
+                    </td>
+                    <td>Override address resolution for a host and port.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>--compressed</code>
+                    </td>
+                    <td>Request compressed data and decompress the response.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>-4 / -6</code>
+                    </td>
+                    <td>Resolve names to IPv4 / IPv6 addresses only.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>--http1.1 / --http2</code>
+                    </td>
+                    <td>Request HTTP/1.1 / HTTP/2 when supported.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <dl class="cs-examples">
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >curl -v --connect-timeout 5 --max-time 20 https://example.com</code
+                  >
+                </dt>
+                <dd class="cs-example-description">Inspect the connection with time limits.</dd>
+              </div>
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >curl --resolve example.com:443:192.0.2.10 https://example.com/</code
+                  >
+                </dt>
+                <dd class="cs-example-description">
+                  Test a specific server while keeping the hostname and TLS name.
+                </dd>
+              </div>
+            </dl>
+          </section>
+          <section class="cs-category" aria-labelledby="http-methods">
+            <h2 id="http-methods">HTTP methods</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="HTTP methods reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Method</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>GET</code>
+                    </td>
+                    <td>Retrieve a representation of a resource.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>POST</code>
+                    </td>
+                    <td>Submit data for resource-specific processing.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>PUT</code>
+                    </td>
+                    <td>Create or replace the target resource state.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>PATCH</code>
+                    </td>
+                    <td>Apply partial changes to a resource.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>DELETE</code>
+                    </td>
+                    <td>Request removal of the target association.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>HEAD</code>
+                    </td>
+                    <td>Retrieve GET-like headers without the body.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>OPTIONS</code>
+                    </td>
+                    <td>Request supported communication options.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+      <section class="cs-category cs-status-category" aria-labelledby="common-response-codes">
+        <h2 id="common-response-codes">Common response codes</h2>
+        <div class="cs-status-grid">
+          <table class="cs-status-table" aria-label="HTTP 2xx">
+            <colgroup>
+              <col class="cs-status-code-col" />
+              <col />
+            </colgroup>
+            <thead>
+              <tr>
+                <th colspan="2" scope="colgroup">
+                  <code>2xx</code>
+                  <span>Success</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">
+                  <code>200</code>
+                </th>
+                <td class="cs-status-description">OK — the request succeeded.</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>201</code>
+                </th>
+                <td class="cs-status-description">Created — one or more resources were created.</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>202</code>
+                </th>
+                <td class="cs-status-description">
+                  Accepted — processing has not necessarily completed.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>204</code>
+                </th>
+                <td class="cs-status-description">No Content — success without a response body.</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>206</code>
+                </th>
+                <td class="cs-status-description">Partial Content — a range response.</td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="cs-status-table" aria-label="HTTP 3xx">
+            <colgroup>
+              <col class="cs-status-code-col" />
+              <col />
+            </colgroup>
+            <thead>
+              <tr>
+                <th colspan="2" scope="colgroup">
+                  <code>3xx</code>
+                  <span>Redirection</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">
+                  <code>301</code>
+                </th>
+                <td class="cs-status-description">Moved Permanently — use the new location.</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>302</code>
+                </th>
+                <td class="cs-status-description">Found — a temporary redirect.</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>303</code>
+                </th>
+                <td class="cs-status-description">
+                  See Other — follow the Location to retrieve a result.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>304</code>
+                </th>
+                <td class="cs-status-description">Not Modified — reuse a cached representation.</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>307</code>
+                </th>
+                <td class="cs-status-description">
+                  Temporary Redirect — preserve the request method.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>308</code>
+                </th>
+                <td class="cs-status-description">
+                  Permanent Redirect — preserve the request method.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="cs-status-table" aria-label="HTTP 4xx">
+            <colgroup>
+              <col class="cs-status-code-col" />
+              <col />
+            </colgroup>
+            <thead>
+              <tr>
+                <th colspan="2" scope="colgroup">
+                  <code>4xx</code>
+                  <span>Client errors</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">
+                  <code>400</code>
+                </th>
+                <td class="cs-status-description">
+                  Bad Request — the server cannot process the request.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>401</code>
+                </th>
+                <td class="cs-status-description">
+                  Unauthorized — authentication credentials are needed.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>403</code>
+                </th>
+                <td class="cs-status-description">Forbidden — the server refuses the request.</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>404</code>
+                </th>
+                <td class="cs-status-description">
+                  Not Found — the target resource was not found.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>405</code>
+                </th>
+                <td class="cs-status-description">
+                  Method Not Allowed — method unsupported for this resource.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>408</code>
+                </th>
+                <td class="cs-status-description">
+                  Request Timeout — request not received in time.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>409</code>
+                </th>
+                <td class="cs-status-description">
+                  Conflict — request conflicts with resource state.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>410</code>
+                </th>
+                <td class="cs-status-description">Gone — the resource is no longer available.</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>413</code>
+                </th>
+                <td class="cs-status-description">
+                  Content Too Large — request content exceeds a limit.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>415</code>
+                </th>
+                <td class="cs-status-description">
+                  Unsupported Media Type — request format is unsupported.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>416</code>
+                </th>
+                <td class="cs-status-description">
+                  Range Not Satisfiable — requested range cannot be served.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>422</code>
+                </th>
+                <td class="cs-status-description">
+                  Unprocessable Content — content cannot be processed.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>429</code>
+                </th>
+                <td class="cs-status-description">
+                  Too Many Requests — a rate limit was exceeded.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="cs-status-table" aria-label="HTTP 5xx">
+            <colgroup>
+              <col class="cs-status-code-col" />
+              <col />
+            </colgroup>
+            <thead>
+              <tr>
+                <th colspan="2" scope="colgroup">
+                  <code>5xx</code>
+                  <span>Server errors</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">
+                  <code>500</code>
+                </th>
+                <td class="cs-status-description">
+                  Internal Server Error — an unexpected server failure.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>502</code>
+                </th>
+                <td class="cs-status-description">Bad Gateway — an invalid upstream response.</td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>503</code>
+                </th>
+                <td class="cs-status-description">
+                  Service Unavailable — the server is temporarily unable.
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">
+                  <code>504</code>
+                </th>
+                <td class="cs-status-description">
+                  Gateway Timeout — an upstream response was too late.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2026 Mehmet Sacit Çınar</p>
+        <nav aria-label="Footer navigation" class="footer-nav">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups">Write-ups</a
+          ><a href="/codex/" data-section="codex" class="active" aria-current="page">Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/navigation.js" defer></script>
+    <script src="/linux-reference.js" defer></script>
+  </body>
+</html>

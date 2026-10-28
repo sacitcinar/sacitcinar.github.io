@@ -1,6 +1,17 @@
 (() => {
   'use strict';
   const translations = {
+  "Success": "Başarılı",
+  "Redirection": "Yönlendirme",
+  "Client errors": "İstemci hataları",
+  "Server errors": "Sunucu hataları",
+  "HTTP response codes by class": "Sınıflarına göre HTTP yanıt kodları",
+
+  "Shell & redirection": "Shell ve yönlendirme",
+  "Windows network utilities": "Windows ağ araçları",
+  "Use parentheses: search evaluates OR before AND; where and eval evaluate AND before OR.": "Parantez kullanın: search, OR işlemini AND’den önce; where ve eval ise AND işlemini OR’dan önce değerlendirir.",
+  "Force-with-lease rewrites history; background fetches can weaken its default expected-ref check.": "Force-with-lease geçmişi yeniden yazar; arka plandaki fetch işlemleri varsayılan referans kontrolünü zayıflatabilir.",
+
   "About": "Hakkımda",
   "ABOUT ME": "HAKKIMDA",
   "Research": "Araştırmalar",
@@ -268,7 +279,7 @@
     let node;
     while ((node = walker.nextNode())) {
       const parent = node.parentElement;
-      if (!parent || parent.closest('script, style, pre, code, textarea, td, .language-toggle, .research-publisher, .research-byline:has(a), [data-research-count], [data-research-range], [data-writeup-count], .research-card .project-description, .research-card .project-tags, .writeup-card .project-description, .writeup-card .project-tags')) continue;
+      if (!parent || parent.closest('script, style, pre, code, textarea, td, .cs-example-description, .language-toggle, .research-publisher, .research-byline:has(a), [data-research-count], [data-research-range], [data-writeup-count], .research-card .project-description, .research-card .project-tags, .writeup-card .project-description, .writeup-card .project-tags')) continue;
       const articleBody = parent.closest('.research-copy');
       if (articleBody && !parent.closest('#publication, #sources')) continue;
       const tocLink = parent.closest('.article-toc a');

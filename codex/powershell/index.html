@@ -1,0 +1,1102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0c0d10" />
+    <meta
+      name="description"
+      content="Everyday commands for files, object pipelines, processes and Windows administration."
+    />
+    <title>PowerShell Codex</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/about.css" />
+    <link rel="stylesheet" href="/projects.css" />
+    <link rel="stylesheet" href="/research.css" />
+    <link rel="stylesheet" href="/theme.css" />
+    <link rel="stylesheet" href="/codex.css" />
+    <link rel="stylesheet" href="/typography.css" />
+    <link rel="stylesheet" href="/palette.css" />
+    <link
+      rel="icon"
+      href="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon-32.png?v=castle-original7" sizes="32x32" type="image/png" />
+    <link
+      rel="canonical"
+      href="https://sacitcinar.github.io/codex/powershell/"
+    />
+    <link rel="stylesheet" href="/i18n.css" />
+    <script src="/i18n.js" defer></script>
+  </head>
+  <body data-section-page="codex" class="projects-body codex-body">
+    <a class="skip-link" href="#codex-main">Skip to content</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"
+          ><span class="brand-mark" aria-hidden="true"
+            ><img
+              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+              width="34"
+              height="36"
+              alt=""
+              aria-hidden="true" /></span
+          ><span class="brand-copy"
+            ><span class="brand-name">sacit çınar</span
+            ><span class="brand-prompt"
+              >dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span
+        ></a>
+        <nav aria-label="Main navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups">Write-ups</a
+          ><a
+            href="/codex/"
+            data-section="codex"
+            class="active"
+            aria-current="page"
+            >Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main class="projects-main cs-main cs-powershell" id="codex-main">
+      <div class="cs-breadcrumb">
+        <a href="/codex/" data-section="codex">Codex</a
+        ><span aria-hidden="true">/</span><span>PowerShell</span>
+      </div>
+      <section class="projects-intro cs-intro cs-detail-intro">
+        <h1>PowerShell</h1>
+        <p>Everyday commands for files, object pipelines, processes and Windows administration.</p>
+        <p class="cs-filter-note cs-reference-note">
+          Replace &lt;…&gt; with your value; […] is optional.
+        </p>
+        <p class="cs-filter-note cs-reference-note">
+          Pipelines pass objects. Pipeline commands follow &lt;command&gt; |; Windows-only cmdlets
+          require Windows.
+        </p>
+      </section>
+      <div class="cs-detail-layout">
+        <aside class="cs-toc-rail">
+          <details class="cs-toc" open>
+            <summary>ON THIS PAGE</summary>
+            <nav aria-label="PowerShell categories">
+              <a href="#files-navigation">Files &amp; navigation</a>
+              <a href="#pipelines-objects">Pipelines &amp; objects</a>
+              <a href="#processes-services">Processes &amp; services</a>
+              <a href="#logs-networking">Logs &amp; networking</a>
+              <a href="#windows-network-utilities">Windows network utilities</a>
+              <a href="#data-requests">Data &amp; requests</a>
+              <a href="#help-scripting">Help &amp; scripting</a>
+            </nav>
+          </details>
+        </aside>
+        <div class="cs-category-list">
+          <section class="cs-category" aria-labelledby="files-navigation">
+            <h2 id="files-navigation">Files &amp; navigation</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Files &amp; navigation reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-ChildItem &lt;path&gt;</code>
+                    </td>
+                    <td>List files and directories.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td>
+                      <code>-Recurse</code>
+                    </td>
+                    <td>Include child directories recursively.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td>
+                      <code>-Filter &lt;pattern&gt;</code>
+                    </td>
+                    <td>Filter names using the provider, such as *.log.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-Force</code>
+                    </td>
+                    <td>Include hidden and system items when supported.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Set-Location &lt;dir&gt;</code>
+                    </td>
+                    <td>Change the current location.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-Location</code>
+                    </td>
+                    <td>Show the current location.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Test-Path &lt;path&gt;</code>
+                    </td>
+                    <td>Check whether a path exists.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-Content &lt;file&gt;</code>
+                    </td>
+                    <td>Read file contents.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td>
+                      <code>-Raw</code>
+                    </td>
+                    <td>Read the file as one string.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-Encoding utf8</code>
+                    </td>
+                    <td>Specify the text encoding.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-Content &lt;file&gt; -Tail &lt;count&gt; -Wait</code>
+                    </td>
+                    <td>Follow appended lines in a text file.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Select-String -Path &lt;file&gt; -Pattern &lt;regex&gt;</code>
+                    </td>
+                    <td>Find text matching a regular expression.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td>
+                      <code>-SimpleMatch</code>
+                    </td>
+                    <td>Treat the pattern as literal text.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td>
+                      <code>-Context &lt;before&gt;,&lt;after&gt;</code>
+                    </td>
+                    <td>Include surrounding lines.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-AllMatches</code>
+                    </td>
+                    <td>Find all matches on each input line.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Copy-Item &lt;source&gt; &lt;destination&gt;</code>
+                    </td>
+                    <td>Copy an item.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-Recurse</code>
+                    </td>
+                    <td>Copy nested directories and their contents.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Move-Item &lt;source&gt; &lt;destination&gt;</code>
+                    </td>
+                    <td>Move or rename an item.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>New-Item &lt;path&gt; -ItemType File</code>
+                    </td>
+                    <td>Create an empty file.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Remove-Item &lt;path&gt;</code>
+                    </td>
+                    <td>Remove the selected item.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td>
+                      <code>-Recurse</code>
+                    </td>
+                    <td>Remove directory contents recursively.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-Force</code>
+                    </td>
+                    <td>Include hidden or read-only items when permitted.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Set-Content &lt;file&gt; -Value &lt;text&gt;</code>
+                    </td>
+                    <td>Write text, replacing existing file contents.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-Encoding utf8</code>
+                    </td>
+                    <td>Write using UTF-8 encoding.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Add-Content &lt;file&gt; -Value &lt;text&gt;</code>
+                    </td>
+                    <td>Append text to a file.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-Encoding utf8</code>
+                    </td>
+                    <td>Append using UTF-8 encoding.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-FileHash &lt;file&gt;</code>
+                    </td>
+                    <td>Calculate a file’s SHA-256 hash by default.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-Algorithm &lt;name&gt;</code>
+                    </td>
+                    <td>Choose a hash algorithm; SHA256 is the default.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <dl class="cs-examples">
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line">Get-ChildItem . -Filter *.log -Recurse</code>
+                </dt>
+                <dd class="cs-example-description">
+                  Find .log files in the current directory tree.
+                </dd>
+              </div>
+            </dl>
+          </section>
+          <section class="cs-category" aria-labelledby="pipelines-objects">
+            <h2 id="pipelines-objects">Pipelines &amp; objects</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Pipelines &amp; objects reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Where-Object { &lt;condition&gt; }</code>
+                    </td>
+                    <td>Filter incoming objects.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Select-Object &lt;properties&gt;</code>
+                    </td>
+                    <td>Choose output properties.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-First &lt;N&gt;</code>
+                    </td>
+                    <td>Keep the first N objects.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Sort-Object &lt;property&gt;</code>
+                    </td>
+                    <td>Sort incoming objects by a property.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-Descending</code>
+                    </td>
+                    <td>Sort highest values first.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>ForEach-Object { &lt;action&gt; }</code>
+                    </td>
+                    <td>Process each incoming object.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Measure-Object</code>
+                    </td>
+                    <td>Count incoming objects.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-Property &lt;name&gt; -Sum</code>
+                    </td>
+                    <td>Sum the values of a numeric property.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>&lt;command&gt; | Get-Member</code>
+                    </td>
+                    <td>Inspect object properties and methods.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Format-Table [&lt;properties&gt;]</code>
+                    </td>
+                    <td>Format objects as a table for display.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Format-List [&lt;properties&gt;]</code>
+                    </td>
+                    <td>Format properties as a vertical list.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Out-File &lt;file&gt; -Encoding utf8</code>
+                    </td>
+                    <td>Write formatted output to a UTF-8 file.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Tee-Object -FilePath &lt;file&gt;</code>
+                    </td>
+                    <td>Save output and pass it through the pipeline.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <dl class="cs-examples">
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line">Get-Process | Where-Object { $_.CPU -gt 60 }</code>
+                </dt>
+                <dd class="cs-example-description">Select processes using over 60 CPU seconds.</dd>
+              </div>
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >Get-Process | Sort-Object CPU -Descending | Select-Object -First 5</code
+                  >
+                </dt>
+                <dd class="cs-example-description">
+                  Show five processes with the highest CPU time.
+                </dd>
+              </div>
+            </dl>
+          </section>
+          <section class="cs-category" aria-labelledby="processes-services">
+            <h2 id="processes-services">Processes &amp; services</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Processes &amp; services reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-Process</code>
+                    </td>
+                    <td>List running processes.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-Process -Id &lt;pid&gt;</code>
+                    </td>
+                    <td>Inspect a process by ID.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-Service [&lt;name&gt;]</code>
+                    </td>
+                    <td>List Windows services or inspect one.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Stop-Process -Id &lt;pid&gt;</code>
+                    </td>
+                    <td>Stop the selected process.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Restart-Service &lt;name&gt;</code>
+                    </td>
+                    <td>Restart a Windows service.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Start-Service &lt;name&gt;</code>
+                    </td>
+                    <td>Start a service.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Stop-Service &lt;name&gt;</code>
+                    </td>
+                    <td>Stop a service.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Start-Process &lt;program&gt;</code>
+                    </td>
+                    <td>Start a program or process.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-CimInstance &lt;class&gt;</code>
+                    </td>
+                    <td>Query CIM management information.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <dl class="cs-examples">
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >Get-CimInstance Win32_OperatingSystem | Select-Object Caption,
+                    LastBootUpTime</code
+                  >
+                </dt>
+                <dd class="cs-example-description">
+                  Inspect the Windows edition and last boot time.
+                </dd>
+              </div>
+            </dl>
+          </section>
+          <section class="cs-category" aria-labelledby="logs-networking">
+            <h2 id="logs-networking">Logs &amp; networking</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Logs &amp; networking reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-WinEvent -LogName &lt;log&gt;</code>
+                    </td>
+                    <td>Read events from a Windows log.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-MaxEvents &lt;N&gt;</code>
+                    </td>
+                    <td>Return at most N events.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-WinEvent -FilterHashtable @{LogName='System'; Id=6005}</code>
+                    </td>
+                    <td>Read System events with event ID 6005 on Windows.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-WinEvent -Path &lt;file.evtx&gt;</code>
+                    </td>
+                    <td>Read events from a saved Windows event log.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Test-NetConnection &lt;host&gt; -Port &lt;port&gt;</code>
+                    </td>
+                    <td>Test a TCP connection on Windows.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Test-Connection &lt;host&gt;</code>
+                    </td>
+                    <td>Send ICMP echo requests.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-NetIPConfiguration</code>
+                    </td>
+                    <td>Show IP addresses, gateways and DNS settings.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-NetIPAddress</code>
+                    </td>
+                    <td>List configured IP addresses.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-NetAdapter</code>
+                    </td>
+                    <td>List network adapters and link status.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-NetTCPConnection</code>
+                    </td>
+                    <td>List TCP connections on Windows.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-State Listen</code>
+                    </td>
+                    <td>Show listening TCP sockets.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Resolve-DnsName &lt;domain&gt;</code>
+                    </td>
+                    <td>Resolve a DNS name.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-DnsClientCache</code>
+                    </td>
+                    <td>List cached DNS records.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Clear-DnsClientCache</code>
+                    </td>
+                    <td>Clear the DNS resolver cache.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <dl class="cs-examples">
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >Get-WinEvent -FilterHashtable @{LogName='System'; Level=2}</code
+                  >
+                </dt>
+                <dd class="cs-example-description">Read error-level System events on Windows.</dd>
+              </div>
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >Get-WinEvent -Path .\System.evtx -MaxEvents 20</code
+                  >
+                </dt>
+                <dd class="cs-example-description">
+                  Read the most recent 20 events from a saved log.
+                </dd>
+              </div>
+            </dl>
+          </section>
+          <section class="cs-category" aria-labelledby="windows-network-utilities">
+            <h2 id="windows-network-utilities">Windows network utilities</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Windows network utilities reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command / option</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>ipconfig</code>
+                    </td>
+                    <td>Show basic adapter IP configuration.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>ipconfig /all</code>
+                    </td>
+                    <td>Show full adapter, DHCP and DNS details.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>ipconfig /displaydns</code>
+                    </td>
+                    <td>Show cached DNS records.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>ipconfig /flushdns</code>
+                    </td>
+                    <td>Clear the DNS resolver cache.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>ipconfig /release [&lt;adapter&gt;]</code>
+                    </td>
+                    <td>Release a DHCP IPv4 lease.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>ipconfig /renew [&lt;adapter&gt;]</code>
+                    </td>
+                    <td>Renew a DHCP IPv4 lease.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>arp -a</code>
+                    </td>
+                    <td>Show the IPv4 ARP cache.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>nslookup &lt;domain&gt; [&lt;server&gt;]</code>
+                    </td>
+                    <td>Query DNS using an optional server.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tracert &lt;host&gt;</code>
+                    </td>
+                    <td>Trace the route to a destination.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>pathping &lt;host&gt;</code>
+                    </td>
+                    <td>Trace a route and measure loss over time.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>route print</code>
+                    </td>
+                    <td>Show the Windows routing table.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <dl class="cs-examples">
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line">nslookup example.com 1.1.1.1</code>
+                </dt>
+                <dd class="cs-example-description">
+                  Resolve a domain using a specified DNS server.
+                </dd>
+              </div>
+            </dl>
+          </section>
+          <section class="cs-category" aria-labelledby="data-requests">
+            <h2 id="data-requests">Data &amp; requests</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Data &amp; requests reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Import-Csv &lt;file&gt;</code>
+                    </td>
+                    <td>Read CSV rows as objects.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Export-Csv &lt;file&gt; -NoTypeInformation</code>
+                    </td>
+                    <td>Save incoming objects as CSV.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>ConvertFrom-Json</code>
+                    </td>
+                    <td>Parse incoming JSON text into objects.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>ConvertTo-Json</code>
+                    </td>
+                    <td>Serialize incoming objects as JSON.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-Depth &lt;N&gt;</code>
+                    </td>
+                    <td>Set nesting depth; the default is only 2.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Invoke-RestMethod -Uri &lt;url&gt;</code>
+                    </td>
+                    <td>Request an endpoint and parse its response.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td>
+                      <code>-Method &lt;method&gt;</code>
+                    </td>
+                    <td>Set the HTTP method.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td>
+                      <code>-Headers &lt;hashtable&gt;</code>
+                    </td>
+                    <td>Add request headers.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td>
+                      <code>-Body &lt;data&gt;</code>
+                    </td>
+                    <td>Supply request data.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-ContentType &lt;type&gt;</code>
+                    </td>
+                    <td>Set the request body content type.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Invoke-WebRequest -Uri &lt;url&gt;</code>
+                    </td>
+                    <td>Request a web resource and inspect its response.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-OutFile &lt;file&gt;</code>
+                    </td>
+                    <td>Save the response body to a file.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <dl class="cs-examples">
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line">$rows = Get-Process | Select-Object Name, Id</code>
+                  <code class="cs-example-line"
+                    >$rows | Export-Csv processes.csv -NoTypeInformation</code
+                  >
+                </dt>
+                <dd class="cs-example-description">Export process names and IDs to a CSV file.</dd>
+              </div>
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >Get-Content config.json -Raw | ConvertFrom-Json</code
+                  >
+                </dt>
+                <dd class="cs-example-description">Read a JSON file into PowerShell objects.</dd>
+              </div>
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line">$data | ConvertTo-Json -Depth 10</code>
+                </dt>
+                <dd class="cs-example-description">
+                  Preserve nested data beyond the default JSON depth.
+                </dd>
+              </div>
+            </dl>
+          </section>
+          <section class="cs-category" aria-labelledby="help-scripting">
+            <h2 id="help-scripting">Help &amp; scripting</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Help &amp; scripting reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Command</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-Help &lt;command&gt;</code>
+                    </td>
+                    <td>Show help for a command.</td>
+                  </tr>
+                  <tr class="cs-table-option">
+                    <td>
+                      <code>-Examples</code>
+                    </td>
+                    <td>Show command examples.</td>
+                  </tr>
+                  <tr class="cs-table-option cs-option-last">
+                    <td>
+                      <code>-Full</code>
+                    </td>
+                    <td>Show the full help topic.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-Command &lt;pattern&gt;</code>
+                    </td>
+                    <td>Find available commands.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>$name = &lt;value&gt;</code>
+                    </td>
+                    <td>Assign a variable.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>$env:&lt;name&gt;</code>
+                    </td>
+                    <td>Read an environment variable.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>&lt;command&gt; -LiteralPath &lt;path&gt;</code>
+                    </td>
+                    <td>Treat a supported path literally, without wildcards.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>&lt;command&gt; -ErrorAction Stop</code>
+                    </td>
+                    <td>Turn non-terminating errors into terminating errors.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>&lt;command&gt; -WhatIf</code>
+                    </td>
+                    <td>Preview an action when the command supports it.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>&lt;command&gt; -Confirm</code>
+                    </td>
+                    <td>Request confirmation when supported.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-History</code>
+                    </td>
+                    <td>List command history from the current session.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Get-Clipboard</code>
+                    </td>
+                    <td>Read text from the clipboard.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Set-Clipboard -Value &lt;text&gt;</code>
+                    </td>
+                    <td>Write text to the clipboard.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <dl class="cs-examples">
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >try { Get-Item -LiteralPath '.\missing.txt' -ErrorAction Stop } catch {
+                    Write-Warning $_.Exception.Message }</code
+                  >
+                </dt>
+                <dd class="cs-example-description">Catch a command error and show its message.</dd>
+              </div>
+            </dl>
+          </section>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2026 Mehmet Sacit Çınar</p>
+        <nav aria-label="Footer navigation" class="footer-nav">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups">Write-ups</a
+          ><a
+            href="/codex/"
+            data-section="codex"
+            class="active"
+            aria-current="page"
+            >Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/navigation.js" defer></script>
+    <script src="/linux-reference.js" defer></script>
+  </body>
+</html>

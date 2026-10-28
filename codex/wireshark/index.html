@@ -1,0 +1,899 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0c0d10" />
+    <meta
+      name="description"
+      content="Wireshark display and capture filter reference for hosts, protocols, HTTP, DNS, TLS and TCP analysis."
+    />
+    <title>Wireshark Codex</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/about.css" />
+    <link rel="stylesheet" href="/projects.css" />
+    <link rel="stylesheet" href="/research.css" />
+    <link rel="stylesheet" href="/theme.css" />
+    <link rel="stylesheet" href="/codex.css" />
+    <link rel="stylesheet" href="/typography.css" />
+    <link rel="stylesheet" href="/palette.css" />
+    <link
+      rel="icon"
+      href="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon-32.png?v=castle-original7" sizes="32x32" type="image/png" />
+    <link
+      rel="canonical"
+      href="https://sacitcinar.github.io/codex/wireshark/"
+    />
+    <link rel="stylesheet" href="/i18n.css" />
+    <script src="/i18n.js" defer></script>
+  </head>
+  <body data-section-page="codex" class="projects-body codex-body">
+    <a class="skip-link" href="#codex-main">Skip to content</a>
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"
+          ><span class="brand-mark" aria-hidden="true"
+            ><img
+              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+              width="34"
+              height="36"
+              alt=""
+              aria-hidden="true" /></span
+          ><span class="brand-copy"
+            ><span class="brand-name">sacit çınar</span
+            ><span class="brand-prompt"
+              >dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span
+        ></a>
+        <nav aria-label="Main navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups">Write-ups</a
+          ><a
+            href="/codex/"
+            data-section="codex"
+            class="active"
+            aria-current="page"
+            >Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main class="projects-main cs-main cs-wireshark" id="codex-main">
+      <div class="cs-breadcrumb">
+        <a href="/codex/" data-section="codex">Codex</a
+        ><span aria-hidden="true">/</span><span>Wireshark</span>
+      </div>
+      <section class="projects-intro cs-intro cs-detail-intro">
+        <h1>Wireshark</h1>
+        <p>Display filters and capture expressions for everyday packet analysis.</p>
+        <p class="cs-filter-note cs-reference-note">
+          Replace &lt;…&gt; with your value; […] is optional.
+        </p>
+      </section>
+      <div class="cs-detail-layout">
+        <aside class="cs-toc-rail">
+          <details class="cs-toc" open>
+            <summary>ON THIS PAGE</summary>
+            <nav aria-label="Wireshark categories">
+              <a href="#hosts-ports">Hosts &amp; ports</a>
+              <a href="#common-protocols">Common protocols</a>
+              <a href="#filter-operators">Filter operators</a>
+              <a href="#http-dns-tls">HTTP, DNS &amp; TLS</a>
+              <a href="#tcp-analysis">TCP analysis</a>
+              <a href="#capture-filters">Capture filters</a>
+              <a href="#common-actions">Common actions</a>
+            </nav>
+          </details>
+        </aside>
+        <div class="cs-category-list">
+          <section class="cs-category" aria-labelledby="hosts-ports">
+            <h2 id="hosts-ports">Hosts &amp; ports</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Hosts &amp; ports filters">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Filter / expression</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>ip.addr == &lt;ip&gt;</code>
+                    </td>
+                    <td>Match either IPv4 endpoint.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>ip.src == &lt;ip&gt;</code>
+                    </td>
+                    <td>Match the source IPv4 address.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>ip.dst == &lt;ip&gt;</code>
+                    </td>
+                    <td>Match the destination IPv4 address.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp.port == &lt;port&gt;</code>
+                    </td>
+                    <td>Match either TCP port.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>udp.port == &lt;port&gt;</code>
+                    </td>
+                    <td>Match either UDP port.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp.srcport == &lt;port&gt;</code>
+                    </td>
+                    <td>Match a TCP source port.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp.dstport == &lt;port&gt;</code>
+                    </td>
+                    <td>Match a TCP destination port.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>udp.srcport == &lt;port&gt;</code>
+                    </td>
+                    <td>Match a UDP source port.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>udp.dstport == &lt;port&gt;</code>
+                    </td>
+                    <td>Match a UDP destination port.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp.stream == &lt;id&gt;</code>
+                    </td>
+                    <td>Isolate one TCP conversation.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>udp.stream == &lt;id&gt;</code>
+                    </td>
+                    <td>Isolate one UDP conversation.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>ip.addr == &lt;network/CIDR&gt;</code>
+                    </td>
+                    <td>Match IPv4 traffic involving a subnet.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>ipv6.addr == &lt;ipv6&gt;</code>
+                    </td>
+                    <td>Match either IPv6 endpoint.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>eth.addr == &lt;mac&gt;</code>
+                    </td>
+                    <td>Match either Ethernet address.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>frame.number == &lt;N&gt;</code>
+                    </td>
+                    <td>Select a frame by its capture number.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>frame.time_relative &gt; &lt;seconds&gt;</code>
+                    </td>
+                    <td>Select frames after a relative capture time.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <dl class="cs-examples">
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >ip.addr == 192.168.1.10 &amp;&amp; tcp.port == 443</code
+                  >
+                </dt>
+                <dd class="cs-example-description">
+                  Show TCP port 443 traffic involving this host.
+                </dd>
+              </div>
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >ip.addr == 192.0.2.0/24 &amp;&amp; tcp.dstport == 443</code
+                  >
+                </dt>
+                <dd class="cs-example-description">
+                  Show traffic involving a subnet and TCP destination 443.
+                </dd>
+              </div>
+            </dl>
+          </section>
+          <section class="cs-category" aria-labelledby="common-protocols">
+            <h2 id="common-protocols">Common protocols</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Common protocols filters">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Filter / expression</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp</code>
+                    </td>
+                    <td>Show packets decoded as TCP.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>udp</code>
+                    </td>
+                    <td>Show packets decoded as UDP.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>dns</code>
+                    </td>
+                    <td>Show decoded DNS traffic.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>http</code>
+                    </td>
+                    <td>Show decoded HTTP traffic.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tls</code>
+                    </td>
+                    <td>Show decoded TLS traffic.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>icmp</code>
+                    </td>
+                    <td>Show IPv4 ICMP traffic.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>arp</code>
+                    </td>
+                    <td>Show address-resolution traffic.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>icmpv6</code>
+                    </td>
+                    <td>Show IPv6 ICMP traffic.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>dhcp</code>
+                    </td>
+                    <td>Show decoded DHCPv4 traffic.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>dhcpv6</code>
+                    </td>
+                    <td>Show decoded DHCPv6 traffic.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="cs-category" aria-labelledby="filter-operators">
+            <h2 id="filter-operators">Filter operators</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Filter operators filters">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Filter / expression</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>&lt;filter1&gt; &amp;&amp; &lt;filter2&gt;</code>
+                    </td>
+                    <td>Require both conditions.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>&lt;filter1&gt; || &lt;filter2&gt;</code>
+                    </td>
+                    <td>Accept either condition.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>!(&lt;filter&gt;)</code>
+                    </td>
+                    <td>Exclude matching packets.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>(&lt;filter&gt;)</code>
+                    </td>
+                    <td>Group conditions explicitly.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>http.host contains "&lt;text&gt;"</code>
+                    </td>
+                    <td>Find text within an HTTP Host field.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>http.host matches "&lt;regex&gt;"</code>
+                    </td>
+                    <td>Match an HTTP Host with a regular expression.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <dl class="cs-examples">
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >(dns || http) &amp;&amp; !(ip.addr == 192.168.1.10)</code
+                  >
+                </dt>
+                <dd class="cs-example-description">Show DNS or HTTP, excluding this host.</dd>
+              </div>
+            </dl>
+          </section>
+          <section class="cs-category" aria-labelledby="http-dns-tls">
+            <h2 id="http-dns-tls">HTTP, DNS &amp; TLS</h2>
+            <p class="cs-filter-note cs-reference-note">
+              HTTP fields require decoded HTTP traffic; encrypted HTTPS needs decryption.
+            </p>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="HTTP, DNS &amp; TLS filters">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Filter / expression</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>http.request</code>
+                    </td>
+                    <td>Show HTTP requests.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>http.request.method == "&lt;method&gt;"</code>
+                    </td>
+                    <td>Select a request method, such as GET or POST.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>http.response.code == &lt;code&gt;</code>
+                    </td>
+                    <td>Match an HTTP response status.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>http.host == "&lt;domain&gt;"</code>
+                    </td>
+                    <td>Match the HTTP Host field.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>http.request.uri contains "&lt;text&gt;"</code>
+                    </td>
+                    <td>Find text in a request URI.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>http.user_agent contains "&lt;text&gt;"</code>
+                    </td>
+                    <td>Find text in a visible HTTP User-Agent.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>http.cookie</code>
+                    </td>
+                    <td>Show packets containing an HTTP Cookie field.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>http.authorization</code>
+                    </td>
+                    <td>Show packets containing HTTP authorization data.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>dns.qry.name == "&lt;domain&gt;"</code>
+                    </td>
+                    <td>Match a DNS query name.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>dns.flags.response == 0</code>
+                    </td>
+                    <td>Show DNS queries.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>dns.flags.rcode != 0</code>
+                    </td>
+                    <td>Show DNS responses with a nonzero result code.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>dns.a == &lt;ip&gt;</code>
+                    </td>
+                    <td>Find DNS A answers containing an IPv4 address.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tls.handshake.extensions_server_name == "&lt;domain&gt;"</code>
+                    </td>
+                    <td>Match a visible TLS server name.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tls.handshake.type == 1</code>
+                    </td>
+                    <td>Show visible TLS Client Hello messages.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tls.handshake.type == 2</code>
+                    </td>
+                    <td>Show visible TLS Server Hello messages.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <dl class="cs-examples">
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line">dns.qry.name == "example.com"</code>
+                </dt>
+                <dd class="cs-example-description">Match DNS messages with this query name.</dd>
+              </div>
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >http.response.code &gt;= 400 &amp;&amp; http.response.code &lt; 600</code
+                  >
+                </dt>
+                <dd class="cs-example-description">Show decoded HTTP client and server errors.</dd>
+              </div>
+            </dl>
+          </section>
+          <section class="cs-category" aria-labelledby="tcp-analysis">
+            <h2 id="tcp-analysis">TCP analysis</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="TCP analysis filters">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Filter / expression</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp.flags.syn == 1</code>
+                    </td>
+                    <td>Show segments with the SYN flag set.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp.flags.reset == 1</code>
+                    </td>
+                    <td>Show connection resets.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp.flags.fin == 1</code>
+                    </td>
+                    <td>Show segments with the FIN flag set.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp.analysis.retransmission</code>
+                    </td>
+                    <td>Show suspected TCP retransmissions.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp.analysis.fast_retransmission</code>
+                    </td>
+                    <td>Show suspected fast retransmissions.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp.analysis.duplicate_ack</code>
+                    </td>
+                    <td>Show duplicate acknowledgments.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp.analysis.zero_window</code>
+                    </td>
+                    <td>Show advertised zero receive windows.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp.len &gt; 0</code>
+                    </td>
+                    <td>Show TCP segments carrying payload bytes.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp.analysis.lost_segment</code>
+                    </td>
+                    <td>Show suspected missing TCP segments.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp.analysis.out_of_order</code>
+                    </td>
+                    <td>Show suspected out-of-order TCP segments.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <dl class="cs-examples">
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line"
+                    >tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0</code
+                  >
+                </dt>
+                <dd class="cs-example-description">
+                  Show initial SYN segments, excluding SYN/ACK.
+                </dd>
+              </div>
+            </dl>
+          </section>
+          <section class="cs-category" aria-labelledby="capture-filters">
+            <h2 id="capture-filters">Capture filters</h2>
+            <p class="cs-filter-note">
+              Set these before capture; the filter tables above use display syntax.
+            </p>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Capture filters filters">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Filter / expression</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>host &lt;ip&gt;</code>
+                    </td>
+                    <td>Capture traffic involving a host.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>port &lt;port&gt;</code>
+                    </td>
+                    <td>Capture TCP or UDP traffic on a port.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>tcp port &lt;port&gt;</code>
+                    </td>
+                    <td>Capture TCP traffic on a port.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>udp port &lt;port&gt;</code>
+                    </td>
+                    <td>Capture UDP traffic on a port.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>net &lt;network/CIDR&gt;</code>
+                    </td>
+                    <td>Capture traffic involving a network.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>src host &lt;ip&gt;</code>
+                    </td>
+                    <td>Capture packets from a host.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>dst host &lt;ip&gt;</code>
+                    </td>
+                    <td>Capture packets sent to a host.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>not port &lt;port&gt;</code>
+                    </td>
+                    <td>Exclude traffic matching a port.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <h3 class="cs-examples-title">Examples</h3>
+            <dl class="cs-examples">
+              <div class="cs-example-item">
+                <dt>
+                  <code class="cs-example-line">host 192.168.1.10 and tcp port 443</code>
+                </dt>
+                <dd class="cs-example-description">Capture this host’s TCP port 443 traffic.</dd>
+              </div>
+            </dl>
+          </section>
+          <section class="cs-category" aria-labelledby="common-actions">
+            <h2 id="common-actions">Common actions</h2>
+            <div class="cs-table-scroll">
+              <table class="cs-reference-table" aria-label="Common actions reference">
+                <colgroup>
+                  <col class="cs-command-col" />
+                  <col />
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th scope="col">Action / menu</th>
+                    <th scope="col">Description</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Analyze → Follow → TCP Stream</code>
+                    </td>
+                    <td>Reassemble and inspect the selected TCP conversation.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Statistics → Conversations</code>
+                    </td>
+                    <td>Compare traffic between pairs of endpoints.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Statistics → Endpoints</code>
+                    </td>
+                    <td>List hosts and their traffic totals.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Statistics → Protocol Hierarchy</code>
+                    </td>
+                    <td>Review the capture’s protocol breakdown.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>File → Export Objects → &lt;protocol&gt;</code>
+                    </td>
+                    <td>Save objects supported by the selected protocol.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Analyze → Expert Information</code>
+                    </td>
+                    <td>Review protocol warnings and analysis messages.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Analyze → Decode As</code>
+                    </td>
+                    <td>Choose a protocol dissector for selected traffic.</td>
+                  </tr>
+                </tbody>
+                <tbody>
+                  <tr class="cs-table-command">
+                    <td>
+                      <code>Statistics → I/O Graphs</code>
+                    </td>
+                    <td>Graph traffic volume and filtered packet rates.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2026 Mehmet Sacit Çınar</p>
+        <nav aria-label="Footer navigation" class="footer-nav">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups">Write-ups</a
+          ><a
+            href="/codex/"
+            data-section="codex"
+            class="active"
+            aria-current="page"
+            >Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/navigation.js" defer></script>
+    <script src="/linux-reference.js" defer></script>
+  </body>
+</html>
