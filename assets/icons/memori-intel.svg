@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 1280" role="img" aria-labelledby="title">
+  <title id="title">Memori Intel</title>
+  <defs>
+    <mask id="mark" maskUnits="userSpaceOnUse" x="0" y="0" width="1280" height="1280" style="mask-type:luminance">
+      <rect width="1280" height="1280" fill="white" />
+      <path fill="black" d="M 170,707 L 405,483 L 634,642 L 634,642 L 603,687 L 599,687 L 419,560 L 410,556 L 209,748 L 170,709 Z M 648,669 L 676,621 L 865,724 L 1069,501 L 1111,538 L 1111,539 L 877,795 L 648,670 Z" />
+    </mask>
+  </defs>
+  <rect width="1280" height="1280" rx="100" fill="#10DEC5" mask="url(#mark)" />
+</svg>

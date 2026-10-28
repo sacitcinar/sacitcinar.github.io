@@ -1,56 +1,57 @@
 <!doctype html>
+
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
     <title>Writeups</title>
     <meta
-      name="description"
       content="Mehmet Sacit Çınar's security portfolio. Research, blue team projects and forensic write-ups."
+      name="description"
     />
-    <meta name="theme-color" content="#0c0d10" />
-    <link rel="stylesheet" href="/style.css" />
-    <link rel="stylesheet" href="/about.css" />
-    <link rel="stylesheet" href="/projects.css" />
-    <link rel="stylesheet" href="/research.css" />
-    <link rel="stylesheet" href="/theme.css" />
+    <meta content="#0c0d10" name="theme-color" />
+    <link href="/style.css" rel="stylesheet" />
+    <link href="/about.css" rel="stylesheet" />
+    <link href="/projects.css" rel="stylesheet" />
+    <link href="/research.css" rel="stylesheet" />
+    <link href="/theme.css" rel="stylesheet" />
     <link
-      rel="icon"
       href="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+      rel="icon"
       type="image/svg+xml"
     />
-    <link rel="icon" href="/favicon-32.png?v=castle-original7" sizes="32x32" type="image/png" />
-    <link rel="shortcut icon" href="/favicon.ico?v=castle-original7" />
-    <link rel="stylesheet" href="/cheat-sheets.css" />
-    <link rel="stylesheet" href="/typography.css" />
-    <link rel="stylesheet" href="/palette.css" />
-    <link rel="stylesheet" href="/i18n.css" />
-    <script src="/i18n.js" defer></script>
+    <link href="/favicon-32.png?v=castle-original7" rel="icon" sizes="32x32" type="image/png" />
+    <link href="/favicon.ico?v=castle-original7" rel="shortcut icon" />
+    <link href="/cheat-sheets.css" rel="stylesheet" />
+    <link href="/typography.css" rel="stylesheet" />
+    <link href="/palette.css" rel="stylesheet" />
+    <link href="/i18n.css" rel="stylesheet" />
+    <script defer="" src="/i18n.js"></script>
   </head>
   <body data-section-page="writeups">
     <header class="site-header">
       <div class="header-inner">
-        <a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"
-          ><span class="brand-mark" aria-hidden="true"
+        <a aria-label="Sacit Çınar — About" class="brand" data-section="home" href="/index.html"
+          ><span aria-hidden="true" class="brand-mark"
             ><img
-              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
-              width="34"
-              height="36"
               alt=""
-              aria-hidden="true" /></span
+              aria-hidden="true"
+              height="36"
+              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+              width="34" /></span
           ><span class="brand-copy"
             ><span class="brand-name">sacit çınar</span
             ><span class="brand-prompt"
-              >dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span
+              >dominic@kali:~$<span aria-hidden="true" class="terminal-cursor"></span></span></span
         ></a>
         <nav aria-label="Main navigation">
-          <a href="/index.html" data-section="home">About</a
-          ><a href="/research.html" data-section="research">Research</a
-          ><a href="/projects.html" data-section="projects">Projects</a
-          ><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page"
+          <a data-section="home" href="/index.html">About</a
+          ><a data-section="research" href="/research.html">Research</a
+          ><a data-section="projects" href="/projects.html">Projects</a
+          ><a aria-current="page" class="active" data-section="writeups" href="/write-ups.html"
             >Write-ups</a
-          ><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a
-          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+          ><a data-section="cheatsheets" href="/cheat-sheets.html">Codex</a
+          ><a class="nav-contact" data-section="contact" href="/index.html#contact">Contact</a>
         </nav>
       </div>
     </header>
@@ -59,32 +60,153 @@
         <h1>Write-ups</h1>
         <p>Hack The Box and TryHackMe investigations, step by step.</p>
       </section>
-      <div class="writeup-filters" data-writeup-filters>
-        <div class="writeup-filter-row" role="group" aria-label="Platform">
+      <div class="writeup-filters" data-writeup-filters="">
+        <div aria-label="Platform" class="writeup-filter-row" role="group">
           <span class="filter-label">Platform</span
-          ><button type="button" data-writeup-platform="all" aria-pressed="true">All</button
-          ><button type="button" data-writeup-platform="htb" aria-pressed="false">HTB</button
-          ><button type="button" data-writeup-platform="thm" aria-pressed="false">THM</button>
+          ><button aria-pressed="true" data-writeup-platform="all" type="button">All</button
+          ><button aria-pressed="false" data-writeup-platform="htb" type="button">HTB</button
+          ><button aria-pressed="false" data-writeup-platform="thm" type="button">THM</button>
         </div>
         <div
-          class="writeup-filter-row"
-          data-writeup-types
-          role="group"
           aria-label="HTB category"
-          hidden
+          class="writeup-filter-row"
+          data-writeup-types=""
+          hidden=""
+          role="group"
         >
           <span class="filter-label">Category</span
-          ><button type="button" data-writeup-type="all" aria-pressed="true">All</button
-          ><button type="button" data-writeup-type="machines" aria-pressed="false">Machines</button
-          ><button type="button" data-writeup-type="sherlocks" aria-pressed="false">
+          ><button aria-pressed="true" data-writeup-type="all" type="button">All</button
+          ><button aria-pressed="false" data-writeup-type="machines" type="button">Machines</button
+          ><button aria-pressed="false" data-writeup-type="sherlocks" type="button">
             Sherlocks</button
-          ><button type="button" data-writeup-type="challenges" aria-pressed="false">
+          ><button aria-pressed="false" data-writeup-type="challenges" type="button">
             Challenges
           </button>
         </div>
       </div>
-      <p class="writeup-count" data-writeup-count role="status" aria-live="polite">7 results</p>
-      <section class="project-list" aria-label="Write-ups">
+      <p aria-live="polite" class="writeup-count" data-writeup-count="" role="status">12 results</p>
+      <section aria-label="Write-ups" class="project-list">
+        <article class="project-card writeup-card" data-platform="thm" data-type="challenges">
+          <div class="project-meta">
+            <span class="project-number">12</span><span class="project-badge badge-thm">THM</span
+            ><span class="project-badge">DISK FORENSICS</span><span class="project-badge">HARD</span
+            ><time class="research-date" datetime="2026-10-28">28 OCT 2026</time>
+          </div>
+          <h2><a href="/write-ups/dead-endpoint/">Dead Endpoint</a></h2>
+          <p class="project-description">
+            An internal photo gallery became unusable, and its images could no longer be opened.
+          </p>
+          <div class="project-bottom">
+            <ul class="project-tags">
+              <li>Ghidra</li>
+              <li>AES-GCM</li>
+              <li>Data recovery</li>
+            </ul>
+            <div class="project-links">
+              <a href="/write-ups/dead-endpoint/"
+                >Read write-up <span aria-hidden="true">↗</span></a
+              >
+            </div>
+          </div>
+        </article>
+        <article class="project-card writeup-card" data-platform="thm" data-type="challenges">
+          <div class="project-meta">
+            <span class="project-number">11</span><span class="project-badge badge-thm">THM</span
+            ><span class="project-badge">NETWORK FORENSICS</span
+            ><span class="project-badge">MEDIUM</span
+            ><time class="research-date" datetime="2026-10-28">28 OCT 2026</time>
+          </div>
+          <h2>
+            <a href="/write-ups/strange-and-unusual-activity/">Strange &amp; Unusual Activity</a>
+          </h2>
+          <p class="project-description">
+            A threat-intelligence feed flagged suspicious communications within the 10.10.14.0/24
+            corporate network, but the internal monitoring systems did not generate any alerts.
+          </p>
+          <div class="project-bottom">
+            <ul class="project-tags">
+              <li>Zeek</li>
+              <li>Kibana</li>
+              <li>C2</li>
+            </ul>
+            <div class="project-links">
+              <a href="/write-ups/strange-and-unusual-activity/"
+                >Read write-up <span aria-hidden="true">↗</span></a
+              >
+            </div>
+          </div>
+        </article>
+        <article class="project-card writeup-card" data-platform="thm" data-type="challenges">
+          <div class="project-meta">
+            <span class="project-number">10</span><span class="project-badge badge-thm">THM</span
+            ><span class="project-badge">DFIR</span><span class="project-badge">MEDIUM</span
+            ><time class="research-date" datetime="2026-10-28">28 OCT 2026</time>
+          </div>
+          <h2><a href="/write-ups/the-waiting-room/">The Waiting Room</a></h2>
+          <p class="project-description">
+            Michelle Smith received a supplier email concerning an upcoming payment run.
+          </p>
+          <div class="project-bottom">
+            <ul class="project-tags">
+              <li>OneNote</li>
+              <li>RC4</li>
+              <li>Wireshark</li>
+            </ul>
+            <div class="project-links">
+              <a href="/write-ups/the-waiting-room/"
+                >Read write-up <span aria-hidden="true">↗</span></a
+              >
+            </div>
+          </div>
+        </article>
+        <article class="project-card writeup-card" data-platform="thm" data-type="challenges">
+          <div class="project-meta">
+            <span class="project-number">09</span><span class="project-badge badge-thm">THM</span
+            ><span class="project-badge">MEMORY FORENSICS</span
+            ><span class="project-badge">MEDIUM</span
+            ><time class="research-date" datetime="2026-10-28">28 OCT 2026</time>
+          </div>
+          <h2><a href="/write-ups/day-o/">Day-O</a></h2>
+          <p class="project-description">
+            Sophia Reyes opened a document review package, but the preview application froze.
+          </p>
+          <div class="project-bottom">
+            <ul class="project-tags">
+              <li>Volatility</li>
+              <li>Shellcode</li>
+              <li>AES</li>
+            </ul>
+            <div class="project-links">
+              <a href="/write-ups/day-o/">Read write-up <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        </article>
+        <article class="project-card writeup-card" data-platform="thm" data-type="challenges">
+          <div class="project-meta">
+            <span class="project-number">08</span><span class="project-badge badge-thm">THM</span
+            ><span class="project-badge">WINDOWS FORENSICS</span
+            ><span class="project-badge">EASY</span
+            ><time class="research-date" datetime="2026-10-28">28 OCT 2026</time>
+          </div>
+          <h2>
+            <a href="/write-ups/handbook-for-the-recently-compromised/"
+              >Handbook for the Recently Compromised</a
+            >
+          </h2>
+          <p class="project-description">A Windows workstation was flagged for unusual activity.</p>
+          <div class="project-bottom">
+            <ul class="project-tags">
+              <li>Sysmon</li>
+              <li>PowerShell</li>
+              <li>Persistence</li>
+            </ul>
+            <div class="project-links">
+              <a href="/write-ups/handbook-for-the-recently-compromised/"
+                >Read write-up <span aria-hidden="true">↗</span></a
+              >
+            </div>
+          </div>
+        </article>
         <article class="project-card writeup-card" data-platform="htb" data-type="sherlocks">
           <div class="project-meta">
             <span class="project-number">07</span><span class="project-badge badge-htb">HTB</span
@@ -259,24 +381,24 @@
           </div>
         </article>
       </section>
-      <div class="project-card section-empty" data-writeup-empty hidden>
+      <div class="project-card section-empty" data-writeup-empty="" hidden="">
         <p class="project-description">No write-ups in this category yet.</p>
       </div>
     </main>
     <footer class="site-footer">
       <div class="footer-inner">
         <p>© 2026 Mehmet Sacit Çınar</p>
-        <nav class="footer-nav" aria-label="Footer navigation">
-          <a href="/index.html" data-section="home">About</a
-          ><a href="/research.html" data-section="research">Research</a
-          ><a href="/projects.html" data-section="projects">Projects</a
-          ><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page"
+        <nav aria-label="Footer navigation" class="footer-nav">
+          <a data-section="home" href="/index.html">About</a
+          ><a data-section="research" href="/research.html">Research</a
+          ><a data-section="projects" href="/projects.html">Projects</a
+          ><a aria-current="page" class="active" data-section="writeups" href="/write-ups.html"
             >Write-ups</a
-          ><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a
-          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+          ><a data-section="cheatsheets" href="/cheat-sheets.html">Codex</a
+          ><a class="nav-contact" data-section="contact" href="/index.html#contact">Contact</a>
         </nav>
       </div>
     </footer>
-    <script src="/navigation.js" defer></script>
+    <script defer="" src="/navigation.js"></script>
   </body>
 </html>

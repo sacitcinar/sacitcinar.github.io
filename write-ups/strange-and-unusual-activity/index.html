@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Strange &amp; Unusual Activity — THM Write-up</title>
+    <meta
+      name="description"
+      content="A threat-intelligence feed flagged suspicious communications within the 10.10.14.0/24 corporate network, but the internal monitoring systems did not generate any alerts."
+    />
+    <meta name="theme-color" content="#0c0d10" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/about.css" />
+    <link rel="stylesheet" href="/projects.css" />
+    <link rel="stylesheet" href="/research.css" />
+    <link rel="stylesheet" href="/theme.css" />
+    <link
+      rel="canonical"
+      href="https://sacit-security-portfolio.dmncdcco.chatgpt.site/write-ups/strange-and-unusual-activity/"
+    />
+    <link
+      rel="icon"
+      href="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon-32.png?v=castle-original7" sizes="32x32" type="image/png" />
+    <link rel="shortcut icon" href="/favicon.ico?v=castle-original7" />
+    <link rel="stylesheet" href="/cheat-sheets.css" />
+    <link rel="stylesheet" href="/typography.css" />
+    <link rel="stylesheet" href="/palette.css" />
+    <link rel="stylesheet" href="/i18n.css" />
+    <script src="/i18n.js" defer></script>
+  </head>
+  <body data-section-page="writeups">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"
+          ><span class="brand-mark" aria-hidden="true"
+            ><img
+              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+              width="34"
+              height="36"
+              alt=""
+              aria-hidden="true" /></span
+          ><span class="brand-copy"
+            ><span class="brand-name">sacit çınar</span
+            ><span class="brand-prompt"
+              >dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span
+        ></a>
+        <nav aria-label="Main navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page"
+            >Write-ups</a
+          ><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main class="projects-main research-detail writeup-detail">
+      <a class="project-return" data-section="writeups" href="/write-ups.html">← All write-ups</a>
+      <section class="research-hero">
+        <div class="project-meta">
+          <span class="project-badge badge-thm">THM</span
+          ><span class="project-badge">NETWORK FORENSICS</span
+          ><span class="project-badge">MEDIUM</span>
+        </div>
+        <h1>Strange &amp; Unusual Activity</h1>
+        <p class="research-deck">
+          A threat-intelligence feed flagged suspicious communications within the 10.10.14.0/24
+          corporate network, but the internal monitoring systems did not generate any alerts.
+        </p>
+        <p class="research-byline">
+          By Mehmet Sacit Çınar · <time datetime="2026-10-28">28 October 2026</time>
+        </p>
+      </section>
+      <div class="research-layout">
+        <aside class="article-toc">
+          <p>IN THIS WRITE-UP</p>
+          <nav aria-label="Table of contents">
+            <a href="#scenario">Scenario</a><a href="#overview">Overview</a
+            ><a href="#investigation-setup">Investigation Setup</a
+            ><a href="#task-1">Task 1 — C2 Domain</a><a href="#task-2">Task 2 — Callback Interval</a
+            ><a href="#task-3">Task 3 — Compromised Host</a
+            ><a href="#task-4">Task 4 — Total C2 Callbacks</a
+            ><a href="#task-5">Task 5 — Largest Outbound Data Transfer</a
+            ><a href="#findings-and-indicators">Findings and Indicators</a>
+          </nav>
+        </aside>
+        <article class="research-copy writeup-copy">
+          <h3 id="scenario">Scenario</h3>
+          <p>
+            A threat-intelligence feed flagged suspicious communications within the
+            <code>10.10.14.0/24</code> corporate network, but the internal monitoring systems did
+            not generate any alerts. The task was to investigate a 24-hour capture of network
+            traffic, identify the command-and-control (C2) communications, locate the affected
+            workstation and determine the extent of data transferred.
+          </p>
+          <div class="report-table-wrap">
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th scope="col">Field</th>
+                  <th scope="col">Details</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Platform</td>
+                  <td>TryHackMe</td>
+                </tr>
+                <tr>
+                  <td>Difficulty</td>
+                  <td>Medium</td>
+                </tr>
+                <tr>
+                  <td>Category</td>
+                  <td>Network Forensics / Threat Hunting</td>
+                </tr>
+                <tr>
+                  <td>Tools</td>
+                  <td>Kibana, Elasticsearch, Zeek</td>
+                </tr>
+                <tr>
+                  <td>Author</td>
+                  <td>dmncdcco</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <h2 id="overview">Overview</h2>
+          <p>
+            The investigation used Zeek logs available through Kibana Discover. DNS records were
+            examined to identify the suspicious domain and its communication frequency, while
+            connection records were used to investigate outbound data transfers.
+          </p>
+          <h3 id="investigation-setup">Investigation Setup</h3>
+          <p>
+            In Kibana Discover, the <code>zeek-*</code> data view was selected. The time picker in
+            the upper-right corner was changed from its default recent range to an
+            <strong>absolute time range covering the 7 October 2025 (24-hour) capture</strong>, and
+            the search was refreshed. This ensured that the historical Zeek records were visible.
+          </p>
+          <section class="autoit-task" id="task-1">
+            <h2>Task 1 — C2 Domain</h2>
+            <p class="task-question">
+              What is the domain name used by the command-and-control (C2) server?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer">
+                  <strong>Answer:</strong> <code>edge-metrics-sync.net</code>
+                </p>
+                <p>
+                  DNS traffic was isolated in Kibana Discover by filtering for destination port
+                  <code>53</code>:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">KQL</span
+                    ><button
+                      aria-controls="strange-and-unusual-activity-code-1"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="strange-and-unusual-activity-code-1"
+                  ><code class="language-kql">id.resp_p: 53
+</code></pre>
+                </div>
+                <p>
+                  The <code>query</code> field was examined using <strong>Top values</strong>.
+                  Alongside domains associated with familiar services,
+                  <code>edge-metrics-sync.net</code> appeared in approximately
+                  <strong>7.2%</strong> of the displayed DNS records.
+                </p>
+                <p>The domain was investigated further with:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">KQL</span
+                    ><button
+                      aria-controls="strange-and-unusual-activity-code-2"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="strange-and-unusual-activity-code-2"
+                  ><code class="language-kql">query: "edge-metrics-sync.net"
+</code></pre>
+                </div>
+                <p>This filter showed repeated requests to the same domain.</p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-2">
+            <h2>Task 2 — Callback Interval</h2>
+            <p class="task-question">
+              What is the callback interval, in seconds, between the compromised host and the C2
+              server?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>300</code></p>
+                <p>The DNS records for the identified domain were filtered again:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">KQL</span
+                    ><button
+                      aria-controls="strange-and-unusual-activity-code-3"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="strange-and-unusual-activity-code-3"
+                  ><code class="language-kql">query: "edge-metrics-sync.net"
+</code></pre>
+                </div>
+                <p>
+                  The <code>@timestamp</code> values of consecutive requests were compared in Kibana
+                  Discover:
+                </p>
+                <div class="report-table-wrap">
+                  <table class="report-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">Timestamp</th>
+                        <th scope="col">Time since previous request</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td><code>21:21:39.890</code></td>
+                        <td>—</td>
+                      </tr>
+                      <tr>
+                        <td><code>21:26:45.287</code></td>
+                        <td>305.397 seconds</td>
+                      </tr>
+                      <tr>
+                        <td><code>21:32:32.151</code></td>
+                        <td>346.864 seconds</td>
+                      </tr>
+                      <tr>
+                        <td><code>21:37:45.702</code></td>
+                        <td>313.551 seconds</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p>
+                  The requests followed an approximately five-minute pattern, with some variation
+                  between individual observations.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-3">
+            <h2>Task 3 — Compromised Host</h2>
+            <p class="task-question">What is the IP address of the compromised host?</p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>10.10.14.160</code></p>
+                <p>The C2 domain was filtered in Kibana Discover:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">KQL</span
+                    ><button
+                      aria-controls="strange-and-unusual-activity-code-4"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="strange-and-unusual-activity-code-4"
+                  ><code class="language-kql">query: "edge-metrics-sync.net"
+</code></pre>
+                </div>
+                <p>
+                  The <strong>Top values</strong> for <code>id.orig_h</code>, the source IP field,
+                  showed a single internal address associated with these DNS requests:
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">Output</span
+                    ><button
+                      aria-controls="strange-and-unusual-activity-code-5"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="strange-and-unusual-activity-code-5"
+                  ><code class="language-text">10.10.14.160
+</code></pre>
+                </div>
+                <p>
+                  This address falls within the <code>10.10.14.0/24</code> network specified in the
+                  scenario.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-4">
+            <h2>Task 4 — Total C2 Callbacks</h2>
+            <p class="task-question">
+              How many check-ins (callbacks) did the compromised host make to the C2 domain over the
+              capture window?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>289</code></p>
+                <p>The DNS records were filtered by the C2 domain:</p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">KQL</span
+                    ><button
+                      aria-controls="strange-and-unusual-activity-code-6"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="strange-and-unusual-activity-code-6"
+                  ><code class="language-kql">query: "edge-metrics-sync.net"
+</code></pre>
+                </div>
+                <p>
+                  Kibana Discover returned <strong>289 matching records</strong> over the capture
+                  window.
+                </p>
+              </div>
+            </details>
+          </section>
+          <section class="autoit-task" id="task-5">
+            <h2>Task 5 — Largest Outbound Data Transfer</h2>
+            <p class="task-question">
+              How many bytes of data were exfiltrated in the single largest outbound transfer to the
+              C2 server?
+            </p>
+            <details class="answer-spoiler">
+              <summary>Reveal answer</summary>
+              <div class="answer-content">
+                <p class="task-answer"><strong>Answer:</strong> <code>54078822</code></p>
+                <p>
+                  For this task, the investigation moved to Zeek connection logs
+                  (<code>zeek-conn</code>). The records were filtered to connections from the
+                  compromised workstation (<code>10.10.14.160</code>) to the C2 server
+                  (<code>203.0.113.77</code>):
+                </p>
+                <div class="writeup-terminal">
+                  <div class="writeup-terminal-bar">
+                    <span class="writeup-terminal-title">KQL</span
+                    ><button
+                      aria-controls="strange-and-unusual-activity-code-7"
+                      aria-label="Copy code to clipboard"
+                      class="copy-code"
+                      type="button"
+                    >
+                      <span data-copy-label="">Copy</span>
+                    </button>
+                  </div>
+                  <pre
+                    id="strange-and-unusual-activity-code-7"
+                  ><code class="language-kql">_index: "zeek-conn" AND id.orig_h: "10.10.14.160" AND id.resp_h: "203.0.113.77"
+</code></pre>
+                </div>
+                <p>The relevant fields were:</p>
+                <ul>
+                  <li><code>id.orig_h</code> — source IP address</li>
+                  <li><code>id.resp_h</code> — destination IP address</li>
+                  <li><code>orig_bytes</code> — bytes sent by the connection originator</li>
+                  <li><code>resp_bytes</code> — bytes received by the connection originator</li>
+                </ul>
+                <p>
+                  The <code>orig_bytes</code> field was added as a column in Discover. After
+                  removing the existing timestamp sort, the field was sorted
+                  <strong>high to low</strong> to identify the largest outbound transfer to the C2
+                  server.
+                </p>
+                <p>The highest recorded value was <strong>54,078,822 bytes</strong>.</p>
+              </div>
+            </details>
+          </section>
+          <h2 id="findings-and-indicators">Findings and Indicators</h2>
+          <p>
+            The analysis identified recurring DNS requests to the C2 domain from a single
+            workstation and a large outbound data transfer associated with the compromised host.
+          </p>
+          <div class="report-table-wrap">
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th scope="col">Indicator</th>
+                  <th scope="col">Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>C2 domain</td>
+                  <td><code>edge-metrics-sync[.]net</code></td>
+                </tr>
+                <tr>
+                  <td>C2 server IP (lab)</td>
+                  <td><code>203.0.113.77</code></td>
+                </tr>
+                <tr>
+                  <td>Compromised host</td>
+                  <td><code>10.10.14.160</code></td>
+                </tr>
+                <tr>
+                  <td>Callback interval</td>
+                  <td><code>300 seconds</code></td>
+                </tr>
+                <tr>
+                  <td>Total callbacks</td>
+                  <td><code>289</code></td>
+                </tr>
+                <tr>
+                  <td>Largest outbound transfer</td>
+                  <td><code>54,078,822 bytes</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <hr />
+          <p>
+            <em
+              >This write-up is intended for educational purposes and authorized security
+              research.</em
+            >
+          </p>
+        </article>
+      </div>
+    </main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2026 Mehmet Sacit Çınar</p>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page"
+            >Write-ups</a
+          ><a href="/cheat-sheets.html" data-section="cheatsheets">Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/navigation.js" defer></script>
+    <script src="/writeup.js" defer></script>
+  </body>
+</html>
