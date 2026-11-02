@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>OAuth Heist — HTB Write-up</title>
+    <meta name="description" content="A phishing-led cloud compromise unfolds across OAuth activity, stolen documents and database exfiltration." />
+    <meta name="theme-color" content="#0c0d10" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/about.css" />
+    <link rel="stylesheet" href="/projects.css" />
+    <link rel="stylesheet" href="/research.css" />
+    <link rel="stylesheet" href="/theme.css" />
+    <link
+      rel="canonical"
+      href="https://sacitcinar.github.io/write-ups/oauth-heist/"
+    />
+    <link
+      rel="icon"
+      href="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon-32.png?v=castle-original7" sizes="32x32" type="image/png" />
+    <link rel="shortcut icon" href="/favicon.ico?v=castle-original7" />
+    <link rel="stylesheet" href="/codex.css" />
+    <link rel="stylesheet" href="/typography.css" />
+    <link rel="stylesheet" href="/palette.css" />
+    <link rel="stylesheet" href="/i18n.css" />
+    <script src="/i18n.js" defer></script>
+  </head>
+  <body data-section-page="writeups">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"
+          ><span class="brand-mark" aria-hidden="true"
+            ><img
+              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+              width="34"
+              height="36"
+              alt=""
+              aria-hidden="true" /></span
+          ><span class="brand-copy"
+            ><span class="brand-name">sacit çınar</span
+            ><span class="brand-prompt"
+              >dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span
+        ></a>
+        <nav aria-label="Main navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page"
+            >Write-ups</a
+          ><a href="/codex/" data-section="codex">Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main class="projects-main research-detail writeup-detail">
+  <a class="project-return" data-section="writeups" href="/write-ups.html">← All write-ups</a>
+  <section class="research-hero">
+    <div class="project-meta">
+      <span class="project-badge badge-htb">HTB</span>
+      <span class="project-badge">THREAT HUNTING</span>
+      <span class="project-badge">GOOGLE CTF</span>
+    </div>
+    <h1>OAuth Heist</h1>
+    <p class="research-deck">A phishing-led cloud compromise unfolds across OAuth activity, stolen documents and database exfiltration.</p>
+    <p class="research-byline">By Mehmet Sacit Çınar · <time datetime="2026-11-01">1 November 2026</time></p>
+  </section>
+  <div class="research-layout">
+    <aside class="article-toc">
+      <p>IN THIS WRITE-UP</p>
+      <nav aria-label="Table of contents">
+        <a href="#scenario">Scenario</a>
+        <a href="#investigation-starting-point">Investigation Starting Point</a>
+        <a href="#task-1">Question 1</a>
+        <a href="#task-2">Question 2</a>
+        <a href="#task-3">Question 3</a>
+        <a href="#task-4">Question 4</a>
+        <a href="#task-5">Question 5</a>
+        <a href="#task-6">Question 6</a>
+        <a href="#incident-summary">Incident Summary</a>
+      </nav>
+    </aside>
+    <article class="research-copy writeup-copy">
+      <h3 id="scenario">Scenario</h3>
+      <p>Welcome to the Cymbal Investments Security Operations Center. A high-priority threat bulletin from Google Threat Intelligence covering SHINYHUNTERS has landed in your Emerging Threats. Leveraging the full power of Google SecOps, from SIEM search and Curated Detections to Google Threat Intelligence (GTI) adversary reporting, your mission is to investigate the initial identity compromise and uncover the full scope of the incident.</p>
+      <div class="report-table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th scope="col">Field</th>
+              <th scope="col">Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Platform</td>
+              <td>HTB CTF - Operation Cymbal: Cold Room</td>
+            </tr>
+            <tr>
+              <td>Difficulty</td>
+              <td>Easy</td>
+            </tr>
+            <tr>
+              <td>Category</td>
+              <td>Threat Hunting</td>
+            </tr>
+            <tr>
+              <td>Environment</td>
+              <td>Google SecOps</td>
+            </tr>
+            <tr>
+              <td>Reference</td>
+              <td>Threat Actors Associated with the ShinyHunters Brand Expand Targeting of Cloud Applications for Extortion Operations.pdf</td>
+            </tr>
+            <tr>
+              <td>Author</td>
+              <td>dmncdcco</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h2 id="investigation-starting-point">Investigation Starting Point</h2>
+      <p>The investigation began with the Google Threat Intelligence bulletin provided with the challenge, <strong>“Threat Actors Associated with the ShinyHunters Brand Expand Targeting of Cloud Applications for Extortion Operations.”</strong></p>
+      <p>A search for <strong>SHINYHUNTERS</strong> in <strong>Emerging Threats</strong> returned several reports. The campaign <strong>“Threat Actor Targeting Multiple Cloud Platforms in ShinyHunters-Branded Data Theft Extortion Operations”</strong> was selected because its description aligned with the bulletin’s focus on credential harvesting, SSO account compromise, and data theft across cloud applications.</p>
+      <figure class="report-figure autoit-evidence">
+        <a href="/assets/write-ups/oauth-heist/campaign.png" target="_blank" rel="noopener noreferrer">
+          <img alt="ShinyHunters campaign in Emerging Threats" src="/assets/write-ups/oauth-heist/campaign.png" loading="lazy" decoding="async" width="960" height="152">
+        </a>
+        <figcaption>ShinyHunters campaign in Emerging Threats</figcaption>
+      </figure>
+      <p>The campaign showed <strong>one matching IOC</strong>: <code>149.50.97.174</code>. This IP address provided the starting point for the SIEM investigation.</p>
+      <section class="autoit-task" id="task-1">
+        <h2>Question 1</h2>
+        <p class="task-question">What is the phishing domain where employee credentials were submitted via an HTTP POST request? (expected format: domainname.com)</p>
+        <details class="answer-spoiler">
+          <summary>Reveal answer</summary>
+          <div class="answer-content">
+            <p class="task-answer"><strong>Answer:</strong> <code>sso-cymbal-portal.com</code></p>
+            <p>The IP address identified in the campaign’s IOC section was searched in <strong>SIEM Search</strong>:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="oauth-heist-code-1" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="oauth-heist-code-1"><code class="language-text">ip = "149.50.97.174"
+</code></pre>
+            </div>
+            <p>The search returned two Zscaler HTTP events associated with <strong><code>elena.rostova</code></strong>.</p>
+            <figure class="report-figure autoit-evidence">
+              <a href="/assets/write-ups/oauth-heist/phishing-events.png" target="_blank" rel="noopener noreferrer">
+                <img alt="HTTP events associated with the phishing IP" src="/assets/write-ups/oauth-heist/phishing-events.png" loading="lazy" decoding="async" width="1013" height="102">
+              </a>
+              <figcaption>HTTP events associated with the phishing IP</figcaption>
+            </figure>
+            <p>The first recorded a GET request to the login page, followed by a POST request to the authentication endpoint. The POST event’s raw log contained:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="oauth-heist-code-2" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="oauth-heist-code-2"><code class="language-text">requestmethod=POST
+url=https://sso-cymbal-portal.com/api/v1/auth/token
+serverip=149.50.97.174
+user=elena.rostova
+status=200
+</code></pre>
+            </div>
+            <p>The POST request identified <strong><code>sso-cymbal-portal.com</code></strong> as the phishing domain used to collect the employee’s credentials.</p>
+          </div>
+        </details>
+      </section>
+      <section class="autoit-task" id="task-2">
+        <h2>Question 2</h2>
+        <p class="task-question">To prevent the compromised employee from noticing the persistence mechanism, the adversary abused a newly authorized third-party OAuth application to permanently purge security notifications from the victim’s inbox. What is the exact subject line of the first permanently deleted email, which alerted on multi-factor authentication changes? (expected format: Hello! This is a fake email subject line)</p>
+        <details class="answer-spoiler">
+          <summary>Reveal answer</summary>
+          <div class="answer-content">
+            <p class="task-answer"><strong>Answer:</strong> <code>Okta: A new MFA factor was added</code></p>
+            <p>With <strong><code>elena.rostova</code></strong> identified in the phishing events, the investigation continued by searching for activity associated with her email address. The following prompt was entered into <strong>Generate Query</strong>:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="oauth-heist-code-3" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="oauth-heist-code-3"><code class="language-text">events related with elena.rostova@cymbal-investments.com
+</code></pre>
+            </div>
+            <p>The generated query searched the user’s email address across user and email fields:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="oauth-heist-code-4" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="oauth-heist-code-4"><code class="language-text">principal.user.email_addresses = "elena.rostova@cymbal-investments.com"
+OR target.user.email_addresses = "elena.rostova@cymbal-investments.com"
+OR network.email.from = "elena.rostova@cymbal-investments.com"
+OR network.email.to = "elena.rostova@cymbal-investments.com"
+</code></pre>
+            </div>
+            <p>The results included two <strong><code>EMAIL_TRANSACTION</code></strong> events containing security notifications. The notification concerning an MFA change had the subject <strong>“Okta: A new MFA factor was added.”</strong></p>
+            <figure class="report-figure autoit-evidence">
+              <a href="/assets/write-ups/oauth-heist/security-notifications.png" target="_blank" rel="noopener noreferrer">
+                <img alt="Security notification subjects in the search results" src="/assets/write-ups/oauth-heist/security-notifications.png" loading="lazy" decoding="async" width="1129" height="96">
+              </a>
+              <figcaption>Security notification subjects in the search results</figcaption>
+            </figure>
+          </div>
+        </details>
+      </section>
+      <section class="autoit-task" id="task-3">
+        <h2>Question 3</h2>
+        <p class="task-question">Continuing to monitor the compromised employee’s cloud activity from the attacker’s proxy infrastructure, what sensitive internal document did the adversary locate and download? (expected format: File_Name.extension)</p>
+        <details class="answer-spoiler">
+          <summary>Reveal answer</summary>
+          <div class="answer-content">
+            <p class="task-answer"><strong>Answer:</strong> <code>Cymbal_Q3_Database_Architecture_and_Service_Accounts.pdf</code></p>
+            <p>The same email-address query also returned a Google Drive <strong><code>item_download</code></strong> event. Its raw log showed that <strong><code>elena.rostova@cymbal-investments.com</code></strong> downloaded a PDF from <strong><code>23.234.119.110</code></strong>, the attacker’s proxy IP.</p>
+            <p>The document name was recorded in the <strong><code>doc_title</code></strong> parameter. Relevant fields were:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="oauth-heist-code-5" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="oauth-heist-code-5"><code class="language-text">applicationName: drive
+ipAddress: 23.234.119.110
+name: item_download
+doc_title: Cymbal_Q3_Database_Architecture_and_Service_Accounts.pdf
+doc_type: pdf
+</code></pre>
+            </div>
+            <figure class="report-figure autoit-evidence">
+              <a href="/assets/write-ups/oauth-heist/document-download.png" target="_blank" rel="noopener noreferrer">
+                <img alt="Google Drive download event and document title" src="/assets/write-ups/oauth-heist/document-download.png" loading="lazy" decoding="async" width="1211" height="189">
+              </a>
+              <figcaption>Google Drive download event and document title</figcaption>
+            </figure>
+          </div>
+        </details>
+      </section>
+      <section class="autoit-task" id="task-4">
+        <h2>Question 4</h2>
+        <p class="task-question">Armed with credentials discovered in the stolen document, what privileged service account did the attacker authenticate to from the compromised employee’s workstation to access the internal database server? (expected format: username)</p>
+        <details class="answer-spoiler">
+          <summary>Reveal answer</summary>
+          <div class="answer-content">
+            <p class="task-answer"><strong>Answer:</strong> <code>svc_dbadmin</code></p>
+            <p>The phishing event examined in Question 1 recorded the employee’s workstation IP as <strong><code>10.240.12.65</code></strong>. To investigate subsequent authentication activity involving that workstation, the following query was run:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="oauth-heist-code-6" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="oauth-heist-code-6"><code class="language-text">ip = "10.240.12.65"
+</code></pre>
+            </div>
+            <p>The results included a <strong><code>USER_LOGIN</code></strong> event at <strong><code>2026-10-15T21:32:40</code></strong>, showing authentication under <strong><code>svc_dbadmin</code></strong>. This identified the privileged service account used in the next stage of the intrusion.</p>
+          </div>
+        </details>
+      </section>
+      <section class="autoit-task" id="task-5">
+        <h2>Question 5</h2>
+        <p class="task-question">Once authenticated to that internal server, what is the file name of the raw database dump exported by the attacker prior to compressing it into an archive? (expected format: file_name.extension)</p>
+        <details class="answer-spoiler">
+          <summary>Reveal answer</summary>
+          <div class="answer-content">
+            <p class="task-answer"><strong>Answer:</strong> <code>cymbal_cust_q3.bak</code></p>
+            <p>Activity associated with the service account was searched using:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="oauth-heist-code-7" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="oauth-heist-code-7"><code class="language-text">principal.user.userid = "svc_dbadmin" OR target.user.userid = "svc_dbadmin"
+</code></pre>
+            </div>
+            <p>The results included a <strong><code>PROCESS_LAUNCH</code></strong> event for <strong><code>sqlcmd.exe</code></strong>, launched by <strong><code>wsmprovhost.exe</code></strong>. Its raw log contained the database backup command:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">SQL</span>
+                <button class="copy-code" type="button" aria-controls="oauth-heist-code-8" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="oauth-heist-code-8"><code class="language-sql">BACKUP DATABASE [CymbalWealthMaster]
+TO DISK='C:\ProgramData\MSSQL\Backup\cymbal_cust_q3.bak'
+WITH FORMAT, COMPRESSION=OFF
+</code></pre>
+            </div>
+            <p>The command exported <strong><code>CymbalWealthMaster</code></strong> to <strong><code>cymbal_cust_q3.bak</code></strong>, with backup compression disabled.</p>
+            <figure class="report-figure autoit-evidence">
+              <a href="/assets/write-ups/oauth-heist/database-backup.png" target="_blank" rel="noopener noreferrer">
+                <img alt="Service account activity and SQL database backup command" src="/assets/write-ups/oauth-heist/database-backup.png" loading="lazy" decoding="async" width="1217" height="353">
+              </a>
+              <figcaption>Service account activity and SQL database backup command</figcaption>
+            </figure>
+          </div>
+        </details>
+      </section>
+      <section class="autoit-task" id="task-6">
+        <h2>Question 6</h2>
+        <p class="task-question">What is the full exfiltration URL (including destination IP and port) used by the attacker to transfer the compressed archive? (expected format: http://8.8.8.8:0000/path/file_name.extensions)</p>
+        <details class="answer-spoiler">
+          <summary>Reveal answer</summary>
+          <div class="answer-content">
+            <p class="task-answer"><strong>Answer:</strong> <code>http://142.11.200.188:8888/upload/cymbal_q3_exfil.tar.zst</code></p>
+            <p>The same service-account search returned a <strong><code>NETWORK_HTTP</code></strong> event involving <strong><code>142.11.200.188</code></strong>. Opening its raw log revealed a POST request containing the compressed archive’s destination URL:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="oauth-heist-code-9" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="oauth-heist-code-9"><code class="language-text">requestmethod=POST
+url=http://142.11.200.188:8888/upload/cymbal_q3_exfil.tar.zst
+user=svc_dbadmin
+status=200
+</code></pre>
+            </div>
+            <p>The request identified the destination IP, port <strong><code>8888</code></strong>, upload path, and archive name <strong><code>cymbal_q3_exfil.tar.zst</code></strong>. The server returned HTTP <strong><code>200</code></strong>.</p>
+          </div>
+        </details>
+      </section>
+      <h2 id="incident-summary">Incident Summary</h2>
+      <ol>
+        <li>
+          <strong>Credential harvesting:</strong> Elena Rostova accessed <code>sso-cymbal-portal.com</code> from workstation IP <code>10.240.12.65</code>. A GET request to the login page was followed by a POST to <code>/api/v1/auth/token</code> on <code>149.50.97.174</code>.</li>
+        <li>
+          <strong>Identity persistence and notification removal:</strong> The attacker added an MFA factor to the compromised account. As described in the challenge, a newly authorized OAuth application was then abused to permanently delete security notifications, including <strong>“Okta: A new MFA factor was added.”</strong>
+        </li>
+        <li>
+          <strong>Cloud document theft:</strong> Using the compromised employee’s cloud identity from proxy IP <code>23.234.119.110</code>, the adversary downloaded <code>Cymbal_Q3_Database_Architecture_and_Service_Accounts.pdf</code> from Google Drive.</li>
+        <li>
+          <strong>Service-account access:</strong> Credentials obtained from the stolen document were used to authenticate as <code>svc_dbadmin</code> from the employee’s workstation and continue toward the internal database server.</li>
+        <li>
+          <strong>Database export:</strong> Under <code>svc_dbadmin</code>, <code>wsmprovhost.exe</code> launched <code>sqlcmd.exe</code>. The SQL command backed up <code>CymbalWealthMaster</code> to <code>C:\ProgramData\MSSQL\Backup\cymbal_cust_q3.bak</code> without SQL backup compression.</li>
+        <li>
+          <strong>Archive preparation:</strong> Subsequent service-account activity included execution of <code>zstd.exe</code>. The archive later observed in the outbound transfer was named <code>cymbal_q3_exfil.tar.zst</code>.</li>
+        <li>
+          <strong>Data exfiltration:</strong> The archive was transferred through an HTTP POST to <code>http://142.11.200.188:8888/upload/cymbal_q3_exfil.tar.zst</code>. The Zscaler record showed a <code>200</code> response.</li>
+      </ol>
+      <hr>
+      <p><em>This write-up is intended for educational purposes and authorized security research.</em></p>
+    </article>
+  </div>
+</main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2026 Mehmet Sacit Çınar</p>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page"
+            >Write-ups</a
+          ><a href="/codex/" data-section="codex">Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/navigation.js" defer></script>
+    <script src="/writeup.js" defer></script>
+  </body>
+</html>

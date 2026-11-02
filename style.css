@@ -22,3 +22,10 @@ body{min-height:100vh;display:flex;flex-direction:column}body>main{flex:1;width:
 .site-footer{border-top:1px solid var(--line)}.footer-inner p{font-size:14px}
 @media(max-width:760px){:root{--content-gutter:26px}}
 @media(max-width:400px){:root{--content-gutter:20px}}
+
+/* One underline slides between menu items, including wrapped mobile rows. */
+.site-header .header-inner>nav{position:relative}
+.site-header nav.has-nav-indicator a.active:after{display:none}
+.site-header .nav-indicator{position:absolute;left:0;bottom:0;height:2px;background:var(--blue);box-shadow:0 0 12px #10DEC555;pointer-events:none;opacity:0}
+.site-header .nav-indicator.nav-indicator-motion{transition:transform 240ms cubic-bezier(.2,.7,.3,1),width 240ms cubic-bezier(.2,.7,.3,1)}
+@media(prefers-reduced-motion:reduce){.site-header .nav-indicator.nav-indicator-motion{transition:none}}

@@ -1,6 +1,53 @@
 (() => {
   'use strict';
   const translations = {
+  "With Python 3.10+ and Git installed, clone the repository and install the tool:": "Python 3.10+ ve Git kuruluysa repoyu klonlayıp aracı şu komutlarla kurabilirsiniz:",
+  "Installation": "Kurulum",
+  "Analyze a PCAP": "PCAP analizi",
+  "Custom output": "Çıktı konumu",
+
+  "An offline CLI tool that analyzes network behavior in PCAP files. Identifies scanning patterns, periodic connections and DNS activity, with supporting evidence in JSON and interactive HTML reports.": "PCAP dosyalarındaki ağ davranışlarını inceleyen çevrimdışı bir CLI aracı. Tarama örüntülerini, periyodik bağlantıları ve DNS etkinliğini belirleyerek bunları destekleyen bulguları JSON ve etkileşimli HTML raporlarında sunar.",
+  "Packet & flow analysis": "Paket ve akış analizi",
+  "Behavior findings": "Davranış bulguları",
+  "PCAP Behavior Core examines captured network traffic and brings observable behavior into a single report. Analysis runs locally, and the generated HTML report can be explored without a server or internet connection.": "PCAP Behavior Core, kaydedilmiş ağ trafiğini inceleyerek gözlemlenen davranışları tek bir raporda toplar. Analiz yerel ortamda yapılır; oluşturulan HTML raporu bir sunucuya veya internet bağlantısına ihtiyaç duymadan incelenebilir.",
+  "Network behavior, backed by packet evidence": "Paket kanıtlarıyla desteklenen ağ davranışı analizi",
+  "Read the capture.": "Trafik kaydının okunması",
+  "Parse packets and organize network activity into flows.": "Paketleri ayrıştırır ve ağ etkinliğini akışlar halinde düzenler.",
+  "Examine the behavior.": "Davranışların incelenmesi",
+  "Evaluate TCP scanning patterns, connection timing, DNS activity and traffic characteristics.": "TCP tarama örüntülerini, bağlantı zamanlamalarını, DNS etkinliğini ve trafiğin özelliklerini değerlendirir.",
+  "Present the evidence.": "Bulguların sunulması",
+  "Report endpoints, connection counts and time windows, with packet references that help trace each finding back to the capture.": "Uç noktaları, bağlantı sayılarını ve zaman aralıklarını raporlar. Paket referansları, her bulgunun trafik kaydındaki karşılığını incelemeyi kolaylaştırır.",
+  "From capture to findings": "Trafik kaydından bulgulara",
+  "TCP scanning patterns across destination ports and IP addresses.": "Hedef portlara ve IP adreslerine yönelik TCP tarama örüntüleri.",
+  "Periodic TCP connections and timing consistency.": "Periyodik TCP bağlantıları ve zamanlama tutarlılığı.",
+  "Matched DNS queries and responses, including concentrated NXDOMAIN activity.": "Eşleştirilen DNS sorguları ve yanıtları ile yoğun NXDOMAIN etkinliği.",
+  "Long-duration TCP flows and outbound traffic volumes.": "Uzun süreli TCP akışları ve dışarı giden trafik hacimleri.",
+  "FTP control commands and server responses, with credentials and file paths excluded from the report.": "Kimlik bilgileri ve dosya yolları rapora dahil edilmeden FTP kontrol komutları ve sunucu yanıtları.",
+  "Structured JSON output and a standalone interactive HTML report.": "Yapılandırılmış JSON çıktısı ve bağımsız, etkileşimli HTML raporu.",
+  "Python 3.10+ with no external runtime dependencies.": "Ek çalışma zamanı bağımlılığı gerektirmeyen Python 3.10+ uygulaması.",
+  "What it includes": "Özellikler",
+  "Analyze a capture:": "Bir trafik kaydını analiz etmek için:",
+  "Save the reports to a custom location:": "Raporları farklı bir konuma kaydetmek için:",
+  "The command produces both JSON and HTML output.": "Komut hem JSON hem de HTML çıktısı oluşturur.",
+  "Run it locally": "Yerel ortamda çalıştırma",
+  "Overview of the capture and observed network activity.": "Trafik kaydının ve gözlemlenen ağ etkinliğinin genel görünümü.",
+  "Behavior findings with supporting evidence and packet references.": "Destekleyici kanıtlar ve paket referanslarıyla birlikte davranış bulguları.",
+  "A look at the report": "Rapor görünümü",
+  "Findings describe observed behavior rather than confirmed attacks. Legitimate automated activity can produce similar patterns, while incomplete captures and encrypted traffic can limit visibility. Review each finding alongside its evidence and the wider investigation context.": "Bulgular, doğrulanmış saldırıları değil gözlemlenen davranışları gösterir. Meşru otomatik işlemler benzer örüntüler oluşturabilir; eksik trafik kayıtları ve şifreli trafik ise görünürlüğü sınırlandırabilir. Her bulguyu, onu destekleyen kanıtlarla ve incelemenin genel bağlamıyla birlikte değerlendirin.",
+  "Reading the result": "Sonuçları yorumlama",
+  "Protocol coverage:": "Protokol kapsamı:",
+  "HTTP request, TLS handshake and DNS-over-TCP analysis need to be added. Important context can currently be missed.": "HTTP istekleri, TLS el sıkışma bilgileri ve DNS-over-TCP analizi eklenmeli. Şu an önemli bağlamlar kaçabiliyor.",
+  "Packet reassembly:": "Paket birleştirme:",
+  "General TCP stream and IP fragment reassembly are not available. These are needed to interpret content split across multiple packets correctly.": "Genel TCP stream ve IP fragment reassembly yok. Birden fazla pakete bölünen içeriklerin doğru yorumlanması için gerekli.",
+  "PCAPNG support:": "PCAPNG desteği:",
+  "PCAPNG input is currently explicitly rejected; users must convert the file.": "Şu an açıkça reddediliyor; kullanıcı dosyayı dönüştürmek zorunda kalıyor.",
+  "Large files:": "Büyük dosyalar:",
+  "Although SQLite is used, all flows and DNS events are kept in memory. RAM usage and processing time should be measured on large captures, and this design should be improved.": "SQLite kullanılsa da bütün flow’lar ve DNS olayları bellekte tutuluyor. Büyük capture’larda RAM ve süre ölçülüp bu yapı iyileştirilmeli.",
+  "Current Limitations": "Mevcut Eksikler",
+  "network forensics": "ağ adli analizi",
+  "traffic analysis": "trafik analizi",
+  "behavior analysis": "davranış analizi",
+
   "Success": "Başarılı",
   "Redirection": "Yönlendirme",
   "Client errors": "İstemci hataları",
@@ -246,6 +293,74 @@
     if (!translated) return text;
     return (text.match(/^\s*/)?.[0] || '') + translated + (text.match(/\s*$/)?.[0] || '');
   }
+  // Reserve the larger EN/TR footprint before a language switch can move siblings.
+  function measureLanguages(element, axis) {
+    const width = element.getBoundingClientRect().width;
+    if (!width || !element.getClientRects().length) return 0;
+    const clone = element.cloneNode(true);
+    clone.removeAttribute('id');
+    clone.setAttribute('aria-hidden', 'true');
+    Object.assign(clone.style, {
+      position: 'absolute', visibility: 'hidden', pointerEvents: 'none',
+      inset: '0 auto auto 0', margin: '0',
+      inlineSize: axis === 'width' ? 'max-content' : `${width}px`,
+      maxInlineSize: 'none', minInlineSize: '0', minBlockSize: '0', blockSize: 'auto'
+    });
+    const sourceWalker = document.createTreeWalker(element, NodeFilter.SHOW_TEXT);
+    const cloneWalker = document.createTreeWalker(clone, NodeFilter.SHOW_TEXT);
+    const pairs = [];
+    let originalNode, clonedNode;
+    while ((originalNode = sourceWalker.nextNode()) && (clonedNode = cloneWalker.nextNode())) {
+      pairs.push([originalNode, clonedNode]);
+    }
+    element.parentElement.append(clone);
+    let maximum = 0;
+    for (const locale of ['en', 'tr']) {
+      clone.lang = locale;
+      for (const [originalNode, clonedNode] of pairs) {
+        const original = originals.get(originalNode) ?? originalNode.nodeValue;
+        const technical = originalNode.parentElement.closest('pre, code, [aria-hidden="true"]');
+        const date = !!originalNode.parentElement.closest('time');
+        clonedNode.nodeValue = locale === 'tr' && !technical ? translate(original, date) : original;
+      }
+      maximum = Math.max(maximum, clone.getBoundingClientRect()[axis]);
+    }
+    clone.remove();
+    return Math.ceil(maximum);
+  }
+  function stabilizeLayout() {
+    const widthTargets = document.querySelectorAll(
+      '.site-header nav a[data-section], .footer-nav a[data-section], ' +
+      '.resume-button, .intro-name .kicker-label, .contact-latest-layout .section-heading h2'
+    );
+    for (const element of widthTargets) {
+      const width = measureLanguages(element, 'width');
+      if (width) {
+        element.classList.add('i18n-width-stable');
+        element.style.setProperty('--language-width', `${width}px`);
+      }
+    }
+    const heightTargets = document.querySelectorAll(
+      '.intro-story > p, .about-role, .intro-location, .social-name, ' +
+      '.latest-content-list li:not([hidden]) a'
+    );
+    for (const element of heightTargets) {
+      const height = measureLanguages(element, 'height');
+      if (height) {
+        element.classList.add('i18n-height-stable');
+        element.style.setProperty('--language-height', `${height}px`);
+      }
+    }
+    document.dispatchEvent(new Event('portfolio:layoutchange'));
+  }
+  let layoutFrame = 0;
+  function queueLayout() {
+    cancelAnimationFrame(layoutFrame);
+    layoutFrame = requestAnimationFrame(stabilizeLayout);
+  }
+  addEventListener('resize', queueLayout);
+  document.fonts?.ready.then(queueLayout);
+  document.fonts?.addEventListener('loadingdone', queueLayout);
   function localizeCounts() {
     document.querySelectorAll('[data-research-count], [data-writeup-count]').forEach(label => {
       const selector = label.hasAttribute('data-research-count') ? '.research-card' : '.writeup-card:not([hidden])';
@@ -300,6 +415,7 @@
       });
     });
     localizeCounts();
+    stabilizeLayout();
     const titles = {Research:'Araştırmalar',Projects:'Projeler',Contact:'İletişim',Writeups:'Write-ups'};
     const reverse = Object.fromEntries(Object.entries(titles).map(([en,tr]) => [tr,en]));
     const english = reverse[document.title] || document.title;

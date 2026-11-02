@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PCAP Behavior Core</title>
+    <meta
+      name="description"
+      content="An offline CLI tool that analyzes network behavior in PCAP files. Identifies scanning patterns, periodic connections and DNS activity, with supporting evidence in JSON and interactive HTML reports."
+    />
+    <meta name="theme-color" content="#0c0d10" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/projects.css" />
+    <link rel="stylesheet" href="/about.css" />
+    <link rel="stylesheet" href="/research.css" />
+    <link rel="stylesheet" href="/theme.css" />
+    <link
+      rel="canonical"
+      href="https://sacitcinar.github.io/projects/pcap-behavior-core/"
+    />
+    <link
+      rel="icon"
+      href="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon-32.png?v=castle-original7" sizes="32x32" type="image/png" />
+    <link rel="shortcut icon" href="/favicon.ico?v=castle-original7" />
+    <link rel="stylesheet" href="/codex.css" />
+    <link rel="stylesheet" href="/typography.css" />
+    <link rel="stylesheet" href="/palette.css" />
+    <link rel="stylesheet" href="/i18n.css" />
+    <script src="/i18n.js" defer></script>
+  </head>
+  <body data-section-page="projects" class="projects-body">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"
+          ><span class="brand-mark" aria-hidden="true"
+            ><img
+              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+              width="34"
+              height="36"
+              alt=""
+              aria-hidden="true" /></span
+          ><span class="brand-copy"
+            ><span class="brand-name">sacit çınar</span
+            ><span class="brand-prompt"
+              >dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span
+        ></a>
+        <nav aria-label="Main navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects" class="active" aria-current="page"
+            >Projects</a
+          ><a href="/write-ups.html" data-section="writeups">Write-ups</a
+          ><a href="/codex/" data-section="codex">Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main class="projects-main real-project-detail">
+  <a class="project-return" href="/projects.html" data-section="projects">← Projects</a>
+  <article>
+    <header class="project-detail-intro">
+      <div class="project-meta">
+        <span class="project-badge">GITHUB</span>
+        <span class="project-badge">PYTHON</span>
+        <span class="project-badge">CLI</span>
+      </div>
+      <h1>PCAP Behavior Core</h1>
+      <p class="project-description">An offline CLI tool that analyzes network behavior in PCAP files. Identifies scanning patterns, periodic connections and DNS activity, with supporting evidence in JSON and interactive HTML reports.</p>
+      <a class="repository-link" href="https://github.com/sacitcinar/pcap-behavior-core" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span>
+      </a>
+      <ol class="pipeline" aria-label="Analysis workflow">
+        <li>
+          <span class="pipeline-chip">PCAP</span>
+        </li>
+        <li>
+          <span class="pipeline-chip">Packet &amp; flow analysis</span>
+        </li>
+        <li>
+          <span class="pipeline-chip">Behavior findings</span>
+        </li>
+        <li>
+          <span class="pipeline-chip">JSON / HTML</span>
+        </li>
+      </ol>
+    </header>
+    <div class="project-article-body">
+      <section class="project-story">
+        <h2>Network behavior, backed by packet evidence</h2>
+        <p>PCAP Behavior Core examines captured network traffic and brings observable behavior into a single report. Analysis runs locally, and the generated HTML report can be explored without a server or internet connection.</p>
+      </section>
+      <section class="project-story">
+        <h2>From capture to findings</h2>
+        <ol class="method-list">
+          <li>
+            <strong>Read the capture.</strong>
+            <p>Parse packets and organize network activity into flows.</p>
+          </li>
+          <li>
+            <strong>Examine the behavior.</strong>
+            <p>Evaluate TCP scanning patterns, connection timing, DNS activity and traffic characteristics.</p>
+          </li>
+          <li>
+            <strong>Present the evidence.</strong>
+            <p>Report endpoints, connection counts and time windows, with packet references that help trace each finding back to the capture.</p>
+          </li>
+        </ol>
+      </section>
+      <section class="project-story">
+        <h2>What it includes</h2>
+        <ul class="feature-list">
+          <li>TCP scanning patterns across destination ports and IP addresses.</li>
+          <li>Periodic TCP connections and timing consistency.</li>
+          <li>Matched DNS queries and responses, including concentrated NXDOMAIN activity.</li>
+          <li>Long-duration TCP flows and outbound traffic volumes.</li>
+          <li>FTP control commands and server responses, with credentials and file paths excluded from the report.</li>
+          <li>Structured JSON output and a standalone interactive HTML report.</li>
+          <li>Python 3.10+ with no external runtime dependencies.</li>
+        </ul>
+      </section>
+      <section class="project-story pcap-usage">
+        <h2>Run it locally</h2>
+        <p>With Python 3.10+ and Git installed, clone the repository and install the tool:</p>
+        <div class="usage-terminal">
+          <div class="terminal-caption"><span aria-hidden="true">›_</span> <span>Installation</span></div>
+          <pre><code>git clone https://github.com/sacitcinar/pcap-behavior-core.git
+cd pcap-behavior-core
+python -m pip install .</code></pre>
+        </div>
+        <p>Analyze a capture:</p>
+        <div class="usage-terminal">
+          <div class="terminal-caption"><span aria-hidden="true">›_</span> <span>Analyze a PCAP</span></div>
+          <pre><code>python -m pcapcore capture.pcap</code></pre>
+        </div>
+        <p>Save the reports to a custom location:</p>
+        <div class="usage-terminal">
+          <div class="terminal-caption"><span aria-hidden="true">›_</span> <span>Custom output</span></div>
+          <pre><code>python -m pcapcore capture.pcap -o results/analysis.json</code></pre>
+        </div>
+        <p>The command produces both JSON and HTML output.</p>
+      </section>
+      <section class="project-story">
+        <h2>A look at the report</h2>
+        <figure class="terminal-figure">
+          <a href="/assets/projects/pcap-behavior-core/overview.jpg" target="_blank" rel="noopener noreferrer">
+            <img src="/assets/projects/pcap-behavior-core/overview.jpg" width="1353" height="764" alt="Overview of the capture and observed network activity." loading="lazy" decoding="async">
+          </a>
+          <figcaption>Overview of the capture and observed network activity.</figcaption>
+        </figure>
+        <figure class="terminal-figure">
+          <a href="/assets/projects/pcap-behavior-core/behavior-findings.jpg" target="_blank" rel="noopener noreferrer">
+            <img src="/assets/projects/pcap-behavior-core/behavior-findings.jpg" width="1348" height="767" alt="Behavior findings with supporting evidence and packet references." loading="lazy" decoding="async">
+          </a>
+          <figcaption>Behavior findings with supporting evidence and packet references.</figcaption>
+        </figure>
+      </section>
+      <section class="project-story">
+        <h2>Reading the result</h2>
+        <p>Findings describe observed behavior rather than confirmed attacks. Legitimate automated activity can produce similar patterns, while incomplete captures and encrypted traffic can limit visibility. Review each finding alongside its evidence and the wider investigation context.</p>
+      </section>
+      <section class="project-story project-limits">
+        <h2>Current Limitations</h2>
+        <ol class="method-list">
+          <li>
+            <strong>Protocol coverage:</strong>
+            <p>HTTP request, TLS handshake and DNS-over-TCP analysis need to be added. Important context can currently be missed.</p>
+          </li>
+          <li>
+            <strong>Packet reassembly:</strong>
+            <p>General TCP stream and IP fragment reassembly are not available. These are needed to interpret content split across multiple packets correctly.</p>
+          </li>
+          <li>
+            <strong>PCAPNG support:</strong>
+            <p>PCAPNG input is currently explicitly rejected; users must convert the file.</p>
+          </li>
+          <li>
+            <strong>Large files:</strong>
+            <p>Although SQLite is used, all flows and DNS events are kept in memory. RAM usage and processing time should be measured on large captures, and this design should be improved.</p>
+          </li>
+        </ol>
+      </section>
+      <a class="repository-link" href="https://github.com/sacitcinar/pcap-behavior-core" target="_blank" rel="noopener noreferrer">Explore the source code <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  </article>
+</main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2026 Mehmet Sacit Çınar</p>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects" class="active" aria-current="page"
+            >Projects</a
+          ><a href="/write-ups.html" data-section="writeups">Write-ups</a
+          ><a href="/codex/" data-section="codex">Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/navigation.js" defer></script>
+  </body>
+</html>

@@ -24,6 +24,35 @@
     get() { try { return sessionStorage.getItem(stateKey); } catch { return null; } },
     set(value) { try { sessionStorage.setItem(stateKey, value); } catch {} }
   };
+  // A single persistent marker travels between active links instead of being recreated.
+  const headerNav = document.querySelector('.header-inner > nav');
+  const indicator = document.createElement('span');
+  indicator.className = 'nav-indicator';
+  indicator.setAttribute('aria-hidden', 'true');
+  headerNav?.append(indicator);
+  let indicatorReady = false;
+  let indicatorFrame = 0;
+  function updateNavigationIndicator(animate = true) {
+    const active = headerNav?.querySelector('a[data-section].active');
+    if (!active) return;
+    const navRect = headerNav.getBoundingClientRect();
+    const linkRect = active.getBoundingClientRect();
+    if (!indicatorReady || !animate) indicator.classList.remove('nav-indicator-motion');
+    indicator.style.width = `${linkRect.width}px`;
+    indicator.style.transform = `translate(${linkRect.left - navRect.left + headerNav.scrollLeft}px, ${linkRect.bottom - navRect.bottom}px)`;
+    indicator.style.opacity = '1';
+    headerNav.classList.add('has-nav-indicator');
+    if (!indicatorReady || !animate) {
+      cancelAnimationFrame(indicatorFrame);
+      indicatorFrame = requestAnimationFrame(() => {
+        indicator.classList.add('nav-indicator-motion');
+        indicatorReady = true;
+      });
+    }
+  }
+  document.addEventListener('portfolio:layoutchange', () => updateNavigationIndicator());
+  addEventListener('resize', () => updateNavigationIndicator(false));
+  document.fonts?.ready.then(() => updateNavigationIndicator(false));
   function activeSection(section) {
     if (section === 'about') section = 'home';
     document.querySelectorAll('nav [data-section]').forEach(link => {
@@ -32,6 +61,7 @@
       if (selected) link.setAttribute('aria-current', 'page');
       else link.removeAttribute('aria-current');
     });
+    updateNavigationIndicator();
   }
   function localize() { window.PortfolioI18n?.apply(); }
   function updateResearchCount() {

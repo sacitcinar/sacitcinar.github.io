@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Rogue Synthesis — HTB Write-up</title>
+    <meta name="description" content="A malicious VS Code extension leads to token theft and persistence in a CI/CD build pipeline." />
+    <meta name="theme-color" content="#0c0d10" />
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="stylesheet" href="/about.css" />
+    <link rel="stylesheet" href="/projects.css" />
+    <link rel="stylesheet" href="/research.css" />
+    <link rel="stylesheet" href="/theme.css" />
+    <link
+      rel="canonical"
+      href="https://sacitcinar.github.io/write-ups/rogue-synthesis/"
+    />
+    <link
+      rel="icon"
+      href="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon-32.png?v=castle-original7" sizes="32x32" type="image/png" />
+    <link rel="shortcut icon" href="/favicon.ico?v=castle-original7" />
+    <link rel="stylesheet" href="/codex.css" />
+    <link rel="stylesheet" href="/typography.css" />
+    <link rel="stylesheet" href="/palette.css" />
+    <link rel="stylesheet" href="/i18n.css" />
+    <script src="/i18n.js" defer></script>
+  </head>
+  <body data-section-page="writeups">
+    <header class="site-header">
+      <div class="header-inner">
+        <a class="brand" data-section="home" href="/index.html" aria-label="Sacit Çınar — About"
+          ><span class="brand-mark" aria-hidden="true"
+            ><img
+              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+              width="34"
+              height="36"
+              alt=""
+              aria-hidden="true" /></span
+          ><span class="brand-copy"
+            ><span class="brand-name">sacit çınar</span
+            ><span class="brand-prompt"
+              >dominic@kali:~$<span class="terminal-cursor" aria-hidden="true"></span></span></span
+        ></a>
+        <nav aria-label="Main navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page"
+            >Write-ups</a
+          ><a href="/codex/" data-section="codex">Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main class="projects-main research-detail writeup-detail">
+  <a class="project-return" data-section="writeups" href="/write-ups.html">← All write-ups</a>
+  <section class="research-hero">
+    <div class="project-meta">
+      <span class="project-badge badge-htb">HTB</span>
+      <span class="project-badge">AI MISUSE</span>
+      <span class="project-badge">GOOGLE CTF</span>
+    </div>
+    <h1>Rogue Synthesis</h1>
+    <p class="research-deck">A malicious VS Code extension leads to token theft and persistence in a CI/CD build pipeline.</p>
+    <p class="research-byline">By Mehmet Sacit Çınar · <time datetime="2026-11-01">1 November 2026</time></p>
+  </section>
+  <div class="research-layout">
+    <aside class="article-toc">
+      <p>IN THIS WRITE-UP</p>
+      <nav aria-label="Table of contents">
+        <a href="#scenario">Scenario</a>
+        <a href="#investigation-starting-point">Investigation Starting Point</a>
+        <a href="#investigation">Investigation</a>
+        <a href="#task-1">Question 1</a>
+        <a href="#task-2">Question 2</a>
+        <a href="#task-3">Question 3</a>
+        <a href="#task-4">Question 4</a>
+        <a href="#task-5">Question 5</a>
+        <a href="#task-6">Question 6</a>
+        <a href="#incident-summary">Incident Summary</a>
+      </nav>
+    </aside>
+    <article class="research-copy writeup-copy">
+      <h3 id="scenario">Scenario</h3>
+      <p>Cymbal Investments' Threat Hunting team has received an intelligence bulletin regarding AI threats. Armed with Google Threat Intelligence (GTI) reporting and Google SecOps SIEM, your mission is to hunt down the initial compromise and identify the adversary's ultimate target in our CI/CD pipeline.</p>
+      <div class="report-table-wrap">
+        <table class="report-table">
+          <thead>
+            <tr>
+              <th scope="col">Field</th>
+              <th scope="col">Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Platform</td>
+              <td>HTB CTF - Operation Cymbal: Cold Room</td>
+            </tr>
+            <tr>
+              <td>Difficulty</td>
+              <td>Medium</td>
+            </tr>
+            <tr>
+              <td>Category</td>
+              <td>AI Misuse</td>
+            </tr>
+            <tr>
+              <td>Environment</td>
+              <td>Google SecOps</td>
+            </tr>
+            <tr>
+              <td>Evidence</td>
+              <td>Google Threat Intelligence bulletin, Zscaler HTTP logs, and Windows Sysmon events</td>
+            </tr>
+            <tr>
+              <td>Author</td>
+              <td>dmncdcco</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <h2 id="investigation-starting-point">Investigation Starting Point</h2>
+      <p>The investigation began with the intelligence bulletin supplied with the challenge, <strong>“GTIG AI Threat Tracker: Advances in Threat Actor Usage of AI Tools.”</strong></p>
+      <p>On page 3, the PROMPTFLUX code example showed a function that queried the Gemini API. The code specified <strong><code>gemini-1.5-flash-latest</code></strong> as the model and <strong><code>generativelanguage.googleapis.com</code></strong> as the API host. This address provided the starting point for the SIEM investigation.</p>
+      <figure class="report-figure autoit-evidence">
+        <a href="/assets/write-ups/rogue-synthesis/bulletin-api.png" target="_blank" rel="noopener noreferrer">
+          <img alt="Gemini model and API address in the bulletin's PROMPTFLUX code example" src="/assets/write-ups/rogue-synthesis/bulletin-api.png" loading="lazy" decoding="async" width="689" height="74">
+        </a>
+        <figcaption>Gemini model and API address in the bulletin's PROMPTFLUX code example</figcaption>
+      </figure>
+      <h2 id="investigation">Investigation</h2>
+      <section class="autoit-task" id="task-1">
+        <h2>Question 1</h2>
+        <p class="task-question">What developer username initiated a request to the model used by our AI threat? (expected format: user.name)</p>
+        <details class="answer-spoiler">
+          <summary>Reveal answer</summary>
+          <div class="answer-content">
+            <p class="task-answer"><strong>Answer:</strong> <code>alex.chen</code></p>
+            <p>The API host identified in the bulletin was searched in <strong>SIEM Search</strong>:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="rogue-synthesis-code-1" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="rogue-synthesis-code-1"><code class="language-text">target.url = /generativelanguage.googleapis.com/ nocase
+</code></pre>
+            </div>
+            <p>The search returned one Zscaler <strong><code>NETWORK_HTTP</code></strong> event. Its raw log showed a POST request to the <code>gemini-1.5-flash-latest</code> model, associated with <strong><code>alex.chen</code></strong> and workstation IP <strong><code>10.240.12.80</code></strong>. Relevant fields were:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="rogue-synthesis-code-2" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="rogue-synthesis-code-2"><code class="language-text">requestmethod=POST
+url=https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=[REDACTED]
+clientIP=10.240.12.80
+user=alex.chen
+status=200
+</code></pre>
+            </div>
+            <p>The request identified <strong><code>alex.chen</code></strong> as the developer username that initiated the API query.</p>
+            <figure class="report-figure autoit-evidence">
+              <a href="/assets/write-ups/rogue-synthesis/api-request.png" target="_blank" rel="noopener noreferrer">
+                <img alt="Gemini API request associated with alex.chen" src="/assets/write-ups/rogue-synthesis/api-request.png" loading="lazy" decoding="async" width="1810" height="869">
+              </a>
+              <figcaption>Gemini API request associated with alex.chen</figcaption>
+            </figure>
+          </div>
+        </details>
+      </section>
+      <section class="autoit-task" id="task-2">
+        <h2>Question 2</h2>
+        <p class="task-question">What package was downloaded immediately prior to the API query? (expected format: File_Name.extension)</p>
+        <details class="answer-spoiler">
+          <summary>Reveal answer</summary>
+          <div class="answer-content">
+            <p class="task-answer"><strong>Answer:</strong> <code>SyntaxOptimizer-2.1.4.vsix</code></p>
+            <p>With the username and workstation IP identified, related activity was searched using:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="rogue-synthesis-code-3" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="rogue-synthesis-code-3"><code class="language-text">principal.user.userid = "alex.chen" OR principal.ip = "10.240.12.80"
+</code></pre>
+            </div>
+            <p>The search returned 27 events. Examining the activity before the API query revealed a GET request for a VS Code extension package. The raw log recorded:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="rogue-synthesis-code-4" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="rogue-synthesis-code-4"><code class="language-text">requestmethod=GET
+url=https://marketplace.visualstudio.com.cdn-cache.net/extensions/DevTools/SyntaxOptimizer/2.1.4/SyntaxOptimizer-2.1.4.vsix
+clientIP=10.240.12.80
+user=alex.chen
+status=200
+</code></pre>
+            </div>
+            <p>The filename at the end of the URL identified the downloaded package as <strong><code>SyntaxOptimizer-2.1.4.vsix</code></strong>.</p>
+            <figure class="report-figure autoit-evidence">
+              <a href="/assets/write-ups/rogue-synthesis/package-download.png" target="_blank" rel="noopener noreferrer">
+                <img alt="VS Code extension package downloaded before the Gemini API request" src="/assets/write-ups/rogue-synthesis/package-download.png" loading="lazy" decoding="async" width="1257" height="468">
+              </a>
+              <figcaption>VS Code extension package downloaded before the Gemini API request</figcaption>
+            </figure>
+          </div>
+        </details>
+      </section>
+      <section class="autoit-task" id="task-3">
+        <h2>Question 3</h2>
+        <p class="task-question">Following the outbound API request, what compiled executable was dropped into the local directory used by the malware for staging? (expected format: file_name.extension)</p>
+        <details class="answer-spoiler">
+          <summary>Reveal answer</summary>
+          <div class="answer-content">
+            <p class="task-answer"><strong>Answer:</strong> <code>sys_worker.exe</code></p>
+            <p>The same user/IP search showed a <code>cache_worker.c</code> file creation event after the API request, followed by a <strong><code>PROCESS_LAUNCH</code></strong> event for <strong><code>gcc.exe</code></strong>, launched by <strong><code>node.exe</code></strong>.</p>
+            <p>Opening the GCC event's raw log revealed the compilation command:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="rogue-synthesis-code-5" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="rogue-synthesis-code-5"><code class="language-text">gcc.exe -O2 C:\Users\alex.chen\AppData\Local\Temp\cache_worker.c -o C:\Users\alex.chen\AppData\Local\Temp\sys_worker.exe
+</code></pre>
+            </div>
+            <p>The <code>-o</code> argument specified <strong><code>sys_worker.exe</code></strong> as the output executable in the user's temporary directory.</p>
+            <p>The parent command line connected the compilation to the installed SyntaxOptimizer extension:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="rogue-synthesis-code-6" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="rogue-synthesis-code-6"><code class="language-text">node.exe "C:\Users\alex.chen\.vscode\extensions\devtools.syntaxoptimizer-2.1.4\out\optimizer-daemon.js"
+</code></pre>
+            </div>
+            <p>The Sysmon event also identified the workstation as <strong><code>CYM-DEV-WS-019.cymbal.corp</code></strong>.</p>
+            <figure class="report-figure autoit-evidence">
+              <a href="/assets/write-ups/rogue-synthesis/compilation.png" target="_blank" rel="noopener noreferrer">
+                <img alt="GCC command compiling cache_worker.c into sys_worker.exe" src="/assets/write-ups/rogue-synthesis/compilation.png" loading="lazy" decoding="async" width="1265" height="388">
+              </a>
+              <figcaption>GCC command compiling cache_worker.c into sys_worker.exe</figcaption>
+            </figure>
+          </div>
+        </details>
+      </section>
+      <section class="autoit-task" id="task-4">
+        <h2>Question 4</h2>
+        <p class="task-question">After elevating privileges via process hollowing on the developer’s workstation, what existing file in the user’s local cloud SDK configuration directory was read by the injected process to harvest tokens? (expected format: file_name.extension)</p>
+        <details class="answer-spoiler">
+          <summary>Reveal answer</summary>
+          <div class="answer-content">
+            <p class="task-answer"><strong>Answer:</strong> <code>credentials.db</code></p>
+            <p>The workstation hostname obtained from the GCC event's <code>Computer</code> field was used to examine its local activity:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="rogue-synthesis-code-7" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="rogue-synthesis-code-7"><code class="language-text">principal.hostname = /CYM-DEV-WS-019/ nocase
+</code></pre>
+            </div>
+            <p>The results included a <strong><code>PROCESS_LAUNCH</code></strong> event for <strong><code>cmd.exe</code></strong>, launched by <strong><code>svchost.exe</code></strong>. Its command line read a file from the user's local cloud SDK configuration directory:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Command Prompt</span>
+                <button class="copy-code" type="button" aria-controls="rogue-synthesis-code-8" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="rogue-synthesis-code-8"><code class="language-cmd">cmd.exe /c "type C:\Users\alex.chen\.gcloud\credentials.db"
+</code></pre>
+            </div>
+            <p>The <code>type</code> command identified <strong><code>credentials.db</code></strong> as the file read during token harvesting.</p>
+            <figure class="report-figure autoit-evidence">
+              <a href="/assets/write-ups/rogue-synthesis/token-harvesting.png" target="_blank" rel="noopener noreferrer">
+                <img alt="Command reading credentials.db from the user's cloud SDK directory" src="/assets/write-ups/rogue-synthesis/token-harvesting.png" loading="lazy" decoding="async" width="1252" height="300">
+              </a>
+              <figcaption>Command reading credentials.db from the user's cloud SDK directory</figcaption>
+            </figure>
+          </div>
+        </details>
+      </section>
+      <section class="autoit-task" id="task-5">
+        <h2>Question 5</h2>
+        <p class="task-question">Shortly after the local tokens were harvested on the workstation, the stolen data was exfiltrated via an outbound HTTP POST request to an external URI path masquerading as a telemetry endpoint. To what external domain was the data sent? (expected format: domain-name.com)</p>
+        <details class="answer-spoiler">
+          <summary>Reveal answer</summary>
+          <div class="answer-content">
+            <p class="task-answer"><strong>Answer:</strong> <code>dev-metrics-cdn.com</code></p>
+            <p>The investigation returned to the user/IP search from Question 2:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="rogue-synthesis-code-9" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="rogue-synthesis-code-9"><code class="language-text">principal.user.userid = "alex.chen" OR principal.ip = "10.240.12.80"
+</code></pre>
+            </div>
+            <p>A subsequent Zscaler <strong><code>NETWORK_HTTP</code></strong> event showed a POST request to an external telemetry path. Its raw log contained:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="rogue-synthesis-code-10" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="rogue-synthesis-code-10"><code class="language-text">event_timestamp=2026-10-15 20:39:05
+requestmethod=POST
+url=https://dev-metrics-cdn.com/api/v2/telemetry
+serverip=172.67.210.44
+clientIP=10.240.12.80
+user=alex.chen
+status=200
+</code></pre>
+            </div>
+            <p>The request identified <strong><code>dev-metrics-cdn.com</code></strong> as the destination domain. The <code>/api/v2/telemetry</code> path matched the telemetry endpoint described in the question, and the server returned HTTP <strong><code>200</code></strong>.</p>
+            <figure class="report-figure autoit-evidence">
+              <a href="/assets/write-ups/rogue-synthesis/exfiltration.png" target="_blank" rel="noopener noreferrer">
+                <img alt="Outbound POST to the external telemetry endpoint" src="/assets/write-ups/rogue-synthesis/exfiltration.png" loading="lazy" decoding="async" width="1252" height="405">
+              </a>
+              <figcaption>Outbound POST to the external telemetry endpoint</figcaption>
+            </figure>
+          </div>
+        </details>
+      </section>
+      <section class="autoit-task" id="task-6">
+        <h2>Question 6</h2>
+        <p class="task-question">Using the harvested service account to pivot laterally from the developer’s workstation to a secondary server, what PowerShell script was overwritten by the attacker via PowerShell to establish persistence? (expected format: file_name.extension)</p>
+        <details class="answer-spoiler">
+          <summary>Reveal answer</summary>
+          <div class="answer-content">
+            <p class="task-answer"><strong>Answer:</strong> <code>build_production.ps1</code></p>
+            <p>The workstation search from Question 4 also returned a <strong><code>NETWORK_CONNECTION</code></strong> event involving <strong><code>svc_cicd_deploy</code></strong> and <strong><code>CYM-CI-RUNNER-01.cymbal.corp</code></strong>. This exposed the service account used to reach the CI server.</p>
+            <figure class="report-figure autoit-evidence">
+              <a href="/assets/write-ups/rogue-synthesis/workstation-events.png" target="_blank" rel="noopener noreferrer">
+                <img alt="Workstation events showing the service account connection to the CI server" src="/assets/write-ups/rogue-synthesis/workstation-events.png" loading="lazy" decoding="async" width="1261" height="554">
+              </a>
+              <figcaption>Workstation events showing the service account connection to the CI server</figcaption>
+            </figure>
+            <p>Activity associated with that account was then searched using:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="rogue-synthesis-code-11" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="rogue-synthesis-code-11"><code class="language-text">principal.user.userid = "svc_cicd_deploy"
+</code></pre>
+            </div>
+            <p>The search returned three events: the connection to the CI server, a launch of <code>wsmprovhost.exe</code>, and a file event for <strong><code>build_production.ps1</code></strong>.</p>
+            <figure class="report-figure autoit-evidence">
+              <a href="/assets/write-ups/rogue-synthesis/build-script.png" target="_blank" rel="noopener noreferrer">
+                <img alt="Service account activity leading to build_production.ps1" src="/assets/write-ups/rogue-synthesis/build-script.png" loading="lazy" decoding="async" width="848" height="266">
+              </a>
+              <figcaption>Service account activity leading to build_production.ps1</figcaption>
+            </figure>
+            <p>The file event's raw log was a <strong>Sysmon Event ID 11</strong> on <strong><code>CYM-CI-RUNNER-01.cymbal.corp</code></strong>. Relevant fields were:</p>
+            <div class="writeup-terminal">
+              <div class="writeup-terminal-bar">
+                <span class="writeup-terminal-title">Query / Log</span>
+                <button class="copy-code" type="button" aria-controls="rogue-synthesis-code-12" aria-label="Copy code to clipboard">
+                  <span data-copy-label="">Copy</span>
+                </button>
+              </div>
+              <pre id="rogue-synthesis-code-12"><code class="language-text">UtcTime: 2026-10-15 21:48:25.000
+Image: C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe
+TargetFilename: C:\BuildRunner\scripts\build_production.ps1
+User: CYMBAL\svc_cicd_deploy
+</code></pre>
+            </div>
+            <p>The event linked PowerShell running under the service account to <strong><code>C:\BuildRunner\scripts\build_production.ps1</code></strong>, identifying the build script targeted for the persistence described in the challenge.</p>
+          </div>
+        </details>
+      </section>
+      <h2 id="incident-summary">Incident Summary</h2>
+      <ol>
+        <li>
+          <strong>Extension download:</strong> Alex Chen's workstation downloaded <code>SyntaxOptimizer-2.1.4.vsix</code> through an HTTPS GET request. The extension later appeared in the parent command line associated with payload compilation.</li>
+        <li>
+          <strong>AI API interaction:</strong> A POST request associated with <code>alex.chen</code> queried <code>gemini-1.5-flash-latest</code> through the Gemini API. A local <code>thinking_robot_log.txt</code> file creation event followed the request.</li>
+        <li>
+          <strong>Payload compilation:</strong> The extension's <code>optimizer-daemon.js</code> ran through <code>node.exe</code>, which launched GCC to compile <code>cache_worker.c</code> into <code>sys_worker.exe</code> in the user's Temp directory.</li>
+        <li>
+          <strong>Token harvesting:</strong> Following the process-hollowing stage described in the challenge, <code>svchost.exe</code> launched <code>cmd.exe</code> to read <code>C:\Users\alex.chen\.gcloud\credentials.db</code>.</li>
+        <li>
+          <strong>Outbound transfer:</strong> The workstation sent an HTTPS POST to <code>https://dev-metrics-cdn.com/api/v2/telemetry</code>. The Zscaler log recorded a <code>200</code> response.</li>
+        <li>
+          <strong>Lateral movement:</strong> Workstation activity showed <code>svc_cicd_deploy</code> connecting to <code>CYM-CI-RUNNER-01.cymbal.corp</code>. Subsequent account activity included <code>wsmprovhost.exe</code>.</li>
+        <li>
+          <strong>CI/CD persistence:</strong> On the CI server, PowerShell running as <code>CYMBAL\svc_cicd_deploy</code> generated a file event for <code>C:\BuildRunner\scripts\build_production.ps1</code>, the script overwritten to establish persistence in the build pipeline.</li>
+      </ol>
+      <hr>
+      <p><em>This write-up is intended for educational purposes and authorized security research.</em></p>
+    </article>
+  </div>
+</main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2026 Mehmet Sacit Çınar</p>
+        <nav class="footer-nav" aria-label="Footer navigation">
+          <a href="/index.html" data-section="home">About</a
+          ><a href="/research.html" data-section="research">Research</a
+          ><a href="/projects.html" data-section="projects">Projects</a
+          ><a href="/write-ups.html" data-section="writeups" class="active" aria-current="page"
+            >Write-ups</a
+          ><a href="/codex/" data-section="codex">Codex</a
+          ><a href="/index.html#contact" data-section="contact" class="nav-contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+    <script src="/navigation.js" defer></script>
+    <script src="/writeup.js" defer></script>
+  </body>
+</html>

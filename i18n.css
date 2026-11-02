@@ -44,11 +44,21 @@
   .language-toggle::before, .language-toggle span { transition: none; }
 }
 .language-toggle:focus-visible { outline: 2px solid var(--blue); outline-offset: 4px; }
-html[lang="tr"] .intro-story p { text-wrap: pretty; }
-@media (max-width: 760px) {
+
+@media (max-width: 810px) {
   .language-toggle {
     top: 12px;
     right: var(--content-gutter);
     transform: none;
   }
 }
+
+/* The two languages share the same geometry; longer text remains fully visible. */
+html{scrollbar-gutter:stable}
+.i18n-width-stable{min-inline-size:var(--language-width)}
+.i18n-height-stable{min-block-size:var(--language-height)}
+.site-header nav a[data-section],.footer-nav a[data-section]{justify-content:center;flex-shrink:0}
+.resume-button{justify-content:center;box-sizing:border-box}
+.intro-story p{text-wrap:wrap}
+.social-name{display:block;width:100%}
+.latest-content-meta{grid-template-columns:10ch 1ch 12ch}
