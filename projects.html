@@ -57,142 +57,152 @@
     <main class="projects-main">
       <section class="projects-intro">
         <h1>Projects</h1>
-        <p>Tools, SIEM labs and detection rules.</p>
+        <p>A collection of projects I’ve built while working on cybersecurity.</p>
       </section>
-      <section class="project-list" aria-label="Projects">
-        <article class="project-card">
-  <div class="project-meta">
-    <span class="project-number">01</span>
-    <span class="project-badge">GITHUB</span>
-    <span class="project-badge">PYTHON</span>
-    <span class="project-badge">CLI</span>
-  </div>
-  <h2>
-    <a href="/projects/pcap-behavior-core/">PCAP Behavior Core</a>
-  </h2>
-  <p class="project-description">An offline CLI tool that analyzes network behavior in PCAP files. Identifies scanning patterns, periodic connections and DNS activity, with supporting evidence in JSON and interactive HTML reports.</p>
-  <ol class="pipeline" aria-label="Analysis workflow">
-    <li>
-      <span class="pipeline-chip">PCAP</span>
-    </li>
-    <li>
-      <span class="pipeline-chip">Packet &amp; flow analysis</span>
-    </li>
-    <li>
-      <span class="pipeline-chip">Behavior findings</span>
-    </li>
-    <li>
-      <span class="pipeline-chip">JSON / HTML</span>
-    </li>
-  </ol>
-  <div class="project-bottom">
-    <ul class="project-tags" aria-label="Topics">
-      <li>network forensics</li>
-      <li>traffic analysis</li>
-      <li>behavior analysis</li>
-    </ul>
-    <div class="project-links">
-      <a href="/projects/pcap-behavior-core/">Read more <span aria-hidden="true">→</span>
-      </a>
-      <a href="https://github.com/sacitcinar/pcap-behavior-core" target="_blank" rel="noopener noreferrer">GitHub <span aria-hidden="true">↗</span>
-      </a>
-    </div>
-  </div>
-</article>
-        <article class="project-card">
-          <div class="project-meta">
-            <span class="project-number">02</span><span class="project-badge">GITHUB</span
-            ><span class="project-badge">PYTHON</span><span class="project-badge">CLI</span>
-          </div>
-          <h2><a href="/projects/url-reputation-checker/">URL Reputation Checker</a></h2>
-          <p class="project-description">
-            A CLI tool combining eight intelligence sources, plus optional OpenPhish support, with
-            domain context and URL heuristics. Delivers a unified report with a risk score, verdict
-            and coverage summary.
-          </p>
-          <ol class="pipeline" aria-label="Analysis workflow">
-            <li>
-              <span class="pipeline-chip"
-                ><span aria-hidden="true">🔗</span> URL / defanged URL</span
-              >
-            </li>
-            <li><span class="pipeline-chip">Refang &amp; normalize</span></li>
-            <li>
-              <span class="pipeline-chip"
-                ><span aria-hidden="true">🌐</span> Intel + heuristics</span
-              >
-            </li>
-            <li>
-              <span class="pipeline-chip"><span aria-hidden="true">📊</span> Risk score</span>
-            </li>
-            <li>
-              <span class="pipeline-chip"><span aria-hidden="true">🛡️</span> Verdict</span>
-            </li>
-          </ol>
-          <div class="project-bottom">
-            <ul class="project-tags" aria-label="Topics">
-              <li>threat intelligence</li>
-              <li>URL analysis</li>
-              <li>risk assessment</li>
+      <section class="project-list project-showcase-list" aria-label="Projects">
+        <article class="project-showcase" aria-labelledby="pcap-behavior-core-title">
+          <div class="project-showcase-copy">
+            <p class="project-showcase-category">Network forensics · Behavioral Analysis</p>
+            <h2 id="pcap-behavior-core-title"><a href="/projects/pcap-behavior-core/">PCAP Behavior Core</a></h2>
+            <p class="project-showcase-intro">A Python command-line tool for investigating recorded network traffic. It reads a PCAP file and traces each finding back to the capture.</p>
+            <ul class="project-showcase-points">
+              <li>Looks for TCP scanning patterns and connections that repeat at regular intervals.</li>
+              <li>Matches DNS queries with their responses and flags clusters of NXDOMAIN replies.</li>
+              <li>Writes a JSON report and a standalone HTML report with packet references.</li>
             </ul>
-            <div class="project-links">
-              <a href="/projects/url-reputation-checker/"
-                >Read more <span aria-hidden="true">→</span></a
-              ><a
-                href="https://github.com/sacitcinar/url-reputation-checker"
-                target="_blank"
-                rel="noopener noreferrer"
-                >GitHub <span aria-hidden="true">↗</span></a
-              >
+            <ul class="project-showcase-tags" aria-label="Technologies"><li>Python</li><li>CLI</li><li>PCAP</li><li>HTML</li><li>JSON</li></ul>
+            <div class="project-showcase-links">
+              <a href="/projects/pcap-behavior-core/">Read more <span aria-hidden="true">→</span></a>
+              <a href="https://github.com/sacitcinar/pcap-behavior-core" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
             </div>
+          </div>
+          <div class="project-showcase-panels">
+            <section class="project-showcase-panel">
+              <h3>Analysis workflow</h3>
+              <div class="project-flow">
+                <div class="project-flow-node"><span>PCAP</span></div>
+                <span class="project-flow-connector is-arrow" aria-hidden="true"></span>
+                <div class="project-flow-node"><span>Parse packets</span><small>Build flows</small></div>
+                <span class="project-flow-connector is-arrow" aria-hidden="true"></span>
+                <div class="project-flow-node"><span>Detect behavior</span><small>Scans · timing · DNS</small></div>
+                <span class="project-flow-connector is-arrow" aria-hidden="true"></span>
+                <div class="project-flow-node"><span>Report</span><small>HTML / JSON</small></div>
+              </div>
+            </section>
+            <section class="project-showcase-panel">
+              <div class="project-panel-header">
+                <h3>Example output</h3>
+                <span>8 findings</span>
+              </div>
+              <ul class="project-behavior-breakdown" aria-label="Behavior breakdown">
+                <li>
+                  <span>TCP multiple-host probe sweep</span>
+                  <span class="project-behavior-bar" aria-hidden="true" style="--share: 50%"></span>
+                  <strong>4</strong>
+                </li>
+                <li>
+                  <span>Periodic TCP connections</span>
+                  <span class="project-behavior-bar" aria-hidden="true" style="--share: 25%"></span>
+                  <strong>2</strong>
+                </li>
+                <li>
+                  <span>Long-lived TCP flow</span>
+                  <span class="project-behavior-bar" aria-hidden="true" style="--share: 12.5%"></span>
+                  <strong>1</strong>
+                </li>
+                <li>
+                  <span>TCP destination port sweep</span>
+                  <span class="project-behavior-bar" aria-hidden="true" style="--share: 12.5%"></span>
+                  <strong>1</strong>
+                </li>
+              </ul>
+              <a class="project-output-source" href="/assets/projects/pcap-behavior-core/behavior-findings.jpg">View report screenshot <span aria-hidden="true">↗</span></a>
+            </section>
           </div>
         </article>
-        <article class="project-card">
-          <div class="project-meta">
-            <span class="project-number">03</span><span class="project-badge">GITHUB</span
-            ><span class="project-badge">PYTHON</span><span class="project-badge">CLI</span>
-          </div>
-          <h2><a href="/projects/phishing-email-detector/">Phishing Email Detector</a></h2>
-          <p class="project-description">
-            A lightweight, offline CLI tool that analyzes .eml files using machine learning and
-            technical email inspection. Combines text classification with header, link and domain
-            analysis.
-          </p>
-          <ol class="pipeline" aria-label="Analysis workflow">
-            <li>
-              <span class="pipeline-chip"><span aria-hidden="true">📧</span> .eml</span>
-            </li>
-            <li>
-              <span class="pipeline-chip"
-                ><span aria-hidden="true">🔍</span> Parse &amp; inspect</span
-              >
-            </li>
-            <li><span class="pipeline-chip">TF-IDF</span></li>
-            <li>
-              <span class="pipeline-chip"
-                ><span aria-hidden="true">🧠</span> Logistic Regression</span
-              >
-            </li>
-            <li>
-              <span class="pipeline-chip"><span aria-hidden="true">📋</span> Assessment</span>
-            </li>
-          </ol>
-          <div class="project-bottom">
-            <ul class="project-tags" aria-label="Topics">
-              <li>email security</li>
-              <li>machine learning</li>
-              <li>offline analysis</li>
+        <article class="project-showcase" aria-labelledby="url-reputation-checker-title">
+          <div class="project-showcase-copy">
+            <p class="project-showcase-category">Threat intelligence · URL analysis</p>
+            <h2 id="url-reputation-checker-title"><a href="/projects/url-reputation-checker/">URL Reputation Checker</a></h2>
+            <p class="project-showcase-intro">A command-line tool for checking a suspicious URL. It collects existing reputation records and checks the address itself for signs of impersonation.</p>
+            <ul class="project-showcase-points">
+              <li>Accepts defanged URLs and can read a batch from a TXT or CSV file.</li>
+              <li>Checks eight intelligence sources and adds DNS, domain age and URL findings.</li>
+              <li>Reports a risk score and verdict, with coverage that shows which checks ran.</li>
             </ul>
-            <div class="project-links">
-              <a href="/projects/phishing-email-detector/"
-                >Read more <span aria-hidden="true">→</span></a
-              ><a
-                href="https://github.com/sacitcinar/phishing-email-detector"
-                target="_blank"
-                rel="noopener noreferrer"
-                >GitHub <span aria-hidden="true">↗</span></a
-              >
+            <ul class="project-showcase-tags" aria-label="Technologies"><li>Python</li><li>CLI</li><li>DNS</li><li>RDAP</li><li>JSON</li></ul>
+            <div class="project-showcase-links">
+              <a href="/projects/url-reputation-checker/">Read more <span aria-hidden="true">→</span></a>
+              <a href="https://github.com/sacitcinar/url-reputation-checker" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
             </div>
+          </div>
+          <div class="project-showcase-panels">
+            <section class="project-showcase-panel">
+              <h3>Analysis workflow</h3>
+              <div class="project-flow">
+                <div class="project-flow-node"><span>URL</span></div>
+                <span class="project-flow-connector is-arrow" aria-hidden="true"></span>
+                <div class="project-flow-node"><span>Refang &amp; normalize</span></div>
+                <span class="project-flow-connector is-split" aria-hidden="true"></span>
+                <div class="project-flow-branches">
+                  <div class="project-flow-node"><span>Reputation lookups</span><small>Feeds + APIs</small></div>
+                  <div class="project-flow-node"><span>Domain &amp; URL checks</span><small>DNS · RDAP · heuristics</small></div>
+                </div>
+                <span class="project-flow-connector is-merge" aria-hidden="true"></span>
+                <div class="project-flow-node"><span>Risk report</span><small>Score · Verdict · Coverage</small></div>
+              </div>
+            </section>
+            <section class="project-showcase-panel">
+              <div class="project-panel-header">
+                <h3>Example output</h3>
+              </div>
+              <dl class="project-output-values">
+                  <div><dt>Risk score</dt><dd>75/100</dd></div>
+                  <div><dt>Verdict</dt><dd class="is-warning">MALICIOUS</dd></div>
+                  <div><dt>Coverage</dt><dd>Medium</dd></div>
+              </dl>
+              <a class="project-output-source" href="/assets/projects/url-terminal-2.png">View terminal screenshot <span aria-hidden="true">↗</span></a>
+            </section>
+          </div>
+        </article>
+        <article class="project-showcase" aria-labelledby="phishing-email-detector-title">
+          <div class="project-showcase-copy">
+            <p class="project-showcase-category">Email security · ML</p>
+            <h2 id="phishing-email-detector-title"><a href="/projects/phishing-email-detector/">Phishing Email Detector</a></h2>
+            <p class="project-showcase-intro">A Python command-line tool for investigating suspicious emails. Give it a saved .eml file and it analyzes the message locally.</p>
+            <ul class="project-showcase-points">
+              <li>Uses TF-IDF and logistic regression to estimate whether the message text looks like phishing.</li>
+              <li>Checks sender and Reply-To domains and flags links whose displayed address differs from their destination.</li>
+              <li>Reports the model prediction and technical findings separately in a terminal summary or JSON.</li>
+            </ul>
+            <ul class="project-showcase-tags" aria-label="Technologies"><li>Python</li><li>CLI</li><li>TF-IDF</li><li>Logistic regression</li></ul>
+            <div class="project-showcase-links">
+              <a href="/projects/phishing-email-detector/">Read more <span aria-hidden="true">→</span></a>
+              <a href="https://github.com/sacitcinar/phishing-email-detector" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+          <div class="project-showcase-panels">
+            <section class="project-showcase-panel">
+              <h3>Analysis workflow</h3>
+              <div class="project-flow">
+                <div class="project-flow-node"><span>.eml</span></div>
+                <span class="project-flow-connector is-arrow" aria-hidden="true"></span>
+                <div class="project-flow-node"><span>Parse email</span></div>
+                <span class="project-flow-connector is-split" aria-hidden="true"></span>
+                <div class="project-flow-branches"><div class="project-flow-node"><span>Classify text</span><small>TF-IDF + logistic regression</small></div><div class="project-flow-node"><span>Inspect message</span><small>Headers + links</small></div></div>
+                <span class="project-flow-connector is-merge" aria-hidden="true"></span>
+                <div class="project-flow-node"><span>Assessment</span></div>
+              </div>
+            </section>
+            <section class="project-showcase-panel project-evaluation">
+              <h3>Evaluation</h3>
+              <dl class="project-output-values">
+                <div><dt>Training samples</dt><dd>27,761</dd></div>
+                <div><dt>Detection rate</dt><dd>95%</dd></div>
+                <div><dt>False alarms*</dt><dd>0</dd></div>
+              </dl>
+              <p class="project-output-reference">* Measured on 100 legitimate emails from SpamAssassin easy_ham.</p>
+            </section>
           </div>
         </article>
       </section>

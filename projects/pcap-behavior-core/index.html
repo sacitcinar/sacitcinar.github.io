@@ -59,133 +59,69 @@
       </div>
     </header>
     <main class="projects-main real-project-detail">
-  <a class="project-return" href="/projects.html" data-section="projects">← Projects</a>
-  <article>
-    <header class="project-detail-intro">
-      <div class="project-meta">
-        <span class="project-badge">GITHUB</span>
-        <span class="project-badge">PYTHON</span>
-        <span class="project-badge">CLI</span>
-      </div>
-      <h1>PCAP Behavior Core</h1>
-      <p class="project-description">An offline CLI tool that analyzes network behavior in PCAP files. Identifies scanning patterns, periodic connections and DNS activity, with supporting evidence in JSON and interactive HTML reports.</p>
-      <a class="repository-link" href="https://github.com/sacitcinar/pcap-behavior-core" target="_blank" rel="noopener noreferrer">View on GitHub <span aria-hidden="true">↗</span>
-      </a>
-      <ol class="pipeline" aria-label="Analysis workflow">
-        <li>
-          <span class="pipeline-chip">PCAP</span>
-        </li>
-        <li>
-          <span class="pipeline-chip">Packet &amp; flow analysis</span>
-        </li>
-        <li>
-          <span class="pipeline-chip">Behavior findings</span>
-        </li>
-        <li>
-          <span class="pipeline-chip">JSON / HTML</span>
-        </li>
-      </ol>
-    </header>
-    <div class="project-article-body">
-      <section class="project-story">
-        <h2>Network behavior, backed by packet evidence</h2>
-        <p>PCAP Behavior Core examines captured network traffic and brings observable behavior into a single report. Analysis runs locally, and the generated HTML report can be explored without a server or internet connection.</p>
-      </section>
-      <section class="project-story">
-        <h2>From capture to findings</h2>
-        <ol class="method-list">
-          <li>
-            <strong>Read the capture.</strong>
-            <p>Parse packets and organize network activity into flows.</p>
-          </li>
-          <li>
-            <strong>Examine the behavior.</strong>
-            <p>Evaluate TCP scanning patterns, connection timing, DNS activity and traffic characteristics.</p>
-          </li>
-          <li>
-            <strong>Present the evidence.</strong>
-            <p>Report endpoints, connection counts and time windows, with packet references that help trace each finding back to the capture.</p>
-          </li>
-        </ol>
-      </section>
-      <section class="project-story">
-        <h2>What it includes</h2>
-        <ul class="feature-list">
-          <li>TCP scanning patterns across destination ports and IP addresses.</li>
-          <li>Periodic TCP connections and timing consistency.</li>
-          <li>Matched DNS queries and responses, including concentrated NXDOMAIN activity.</li>
-          <li>Long-duration TCP flows and outbound traffic volumes.</li>
-          <li>FTP control commands and server responses, with credentials and file paths excluded from the report.</li>
-          <li>Structured JSON output and a standalone interactive HTML report.</li>
-          <li>Python 3.10+ with no external runtime dependencies.</li>
-        </ul>
-      </section>
-      <section class="project-story pcap-usage">
-        <h2>Run it locally</h2>
-        <p>With Python 3.10+ and Git installed, clone the repository and install the tool:</p>
-        <div class="usage-terminal">
-          <div class="terminal-caption"><span aria-hidden="true">›_</span> <span>Installation</span></div>
-          <pre><code>git clone https://github.com/sacitcinar/pcap-behavior-core.git
+      <a class="project-return" href="/projects.html" data-section="projects">← Projects</a>
+      <article>
+        <header class="project-detail-intro">
+          <ul class="project-showcase-tags project-detail-tags" aria-label="Technologies">
+            <li>Python</li>
+            <li>CLI</li>
+            <li>PCAP</li>
+            <li>HTML</li>
+            <li>JSON</li>
+          </ul>
+          <h1>PCAP Behavior Core</h1>
+          <p class="project-description">A command-line tool for investigating recorded network traffic offline. It looks for behavior such as TCP scans and recurring connections, then produces an interactive HTML report and structured JSON. Packet references let you trace findings back to the original capture.</p>
+          <a class="repository-link" href="https://github.com/sacitcinar/pcap-behavior-core" target="_blank" rel="noopener noreferrer">
+            View on GitHub <span aria-hidden="true">↗</span>
+          </a>
+        </header>
+        <div class="project-article-body">
+          <section class="project-story">
+            <h2>How it works</h2>
+            <ol class="method-list">
+              <li>Decode the packets, group related traffic into flows and pair DNS queries with their replies.</li>
+              <li>Look for TCP sweeps across hosts or ports, recurring connections, long-lived flows and clusters of NXDOMAIN replies.</li>
+              <li>Report each finding with its endpoints, time window and supporting evidence. Use the packet references to check it against the capture.</li>
+            </ol>
+          </section>
+          <section class="project-story pcap-usage">
+            <h2>Run it locally</h2>
+            <p>Clone and install the tool with Git and Python 3.10 or newer.</p>
+            <div class="usage-terminal">
+              <div class="terminal-caption"><span aria-hidden="true">›_</span> Usage example</div>
+              <pre><code>git clone https://github.com/sacitcinar/pcap-behavior-core.git
 cd pcap-behavior-core
-python -m pip install .</code></pre>
-        </div>
-        <p>Analyze a capture:</p>
-        <div class="usage-terminal">
-          <div class="terminal-caption"><span aria-hidden="true">›_</span> <span>Analyze a PCAP</span></div>
-          <pre><code>python -m pcapcore capture.pcap</code></pre>
-        </div>
-        <p>Save the reports to a custom location:</p>
-        <div class="usage-terminal">
-          <div class="terminal-caption"><span aria-hidden="true">›_</span> <span>Custom output</span></div>
-          <pre><code>python -m pcapcore capture.pcap -o results/analysis.json</code></pre>
-        </div>
-        <p>The command produces both JSON and HTML output.</p>
-      </section>
-      <section class="project-story">
-        <h2>A look at the report</h2>
-        <figure class="terminal-figure">
-          <a href="/assets/projects/pcap-behavior-core/overview.jpg" target="_blank" rel="noopener noreferrer">
-            <img src="/assets/projects/pcap-behavior-core/overview.jpg" width="1353" height="764" alt="Overview of the capture and observed network activity." loading="lazy" decoding="async">
+python -m pip install .
+python -m pcapcore capture.pcap</code></pre>
+            </div>
+            <p>The command writes JSON and HTML reports by default. Open the HTML file in a browser to explore it offline. To choose a different output name, run python -m pcapcore capture.pcap -o analysis.json.</p>
+          </section>
+          <section class="project-story">
+            <h2>Reading the report</h2>
+            <p>Start with the overview to see which hosts and services appear in the capture. Then open Findings to inspect a specific behavior and follow its evidence back to the packets. For example, a periodic connection might come from a scheduled job. Its timing gives you a lead to investigate.</p>
+            <figure class="terminal-figure">
+              <a href="/assets/projects/pcap-behavior-core/overview.jpg" target="_blank" rel="noopener noreferrer">
+                <img src="/assets/projects/pcap-behavior-core/overview.jpg" width="1353" height="764" alt="PCAP report overview with traffic and capture statistics" loading="lazy" decoding="async">
+              </a>
+              <figcaption>Capture overview and observed network activity.</figcaption>
+            </figure>
+            <figure class="terminal-figure">
+              <a href="/assets/projects/pcap-behavior-core/behavior-findings.jpg" target="_blank" rel="noopener noreferrer">
+                <img src="/assets/projects/pcap-behavior-core/behavior-findings.jpg" width="1348" height="767" alt="PCAP findings table showing TCP sweeps and periodic connections" loading="lazy" decoding="async">
+              </a>
+              <figcaption>Findings table with endpoints, time windows and links to supporting evidence.</figcaption>
+            </figure>
+          </section>
+          <section class="project-story project-limits">
+            <h2>Limits of the analysis</h2>
+            <p>Convert PCAPNG files to classic PCAP before running the tool. The current version covers selected network behaviors and leaves HTTP requests, TLS handshakes and DNS over TCP outside its analysis. It also lacks general TCP stream and IP fragment reassembly. Flows and DNS events stay in memory, so large captures can require more RAM.</p>
+          </section>
+          <a class="repository-link" href="https://github.com/sacitcinar/pcap-behavior-core" target="_blank" rel="noopener noreferrer">
+            Explore the source code <span aria-hidden="true">↗</span>
           </a>
-          <figcaption>Overview of the capture and observed network activity.</figcaption>
-        </figure>
-        <figure class="terminal-figure">
-          <a href="/assets/projects/pcap-behavior-core/behavior-findings.jpg" target="_blank" rel="noopener noreferrer">
-            <img src="/assets/projects/pcap-behavior-core/behavior-findings.jpg" width="1348" height="767" alt="Behavior findings with supporting evidence and packet references." loading="lazy" decoding="async">
-          </a>
-          <figcaption>Behavior findings with supporting evidence and packet references.</figcaption>
-        </figure>
-      </section>
-      <section class="project-story">
-        <h2>Reading the result</h2>
-        <p>Findings describe observed behavior rather than confirmed attacks. Legitimate automated activity can produce similar patterns, while incomplete captures and encrypted traffic can limit visibility. Review each finding alongside its evidence and the wider investigation context.</p>
-      </section>
-      <section class="project-story project-limits">
-        <h2>Current Limitations</h2>
-        <ol class="method-list">
-          <li>
-            <strong>Protocol coverage:</strong>
-            <p>HTTP request, TLS handshake and DNS-over-TCP analysis need to be added. Important context can currently be missed.</p>
-          </li>
-          <li>
-            <strong>Packet reassembly:</strong>
-            <p>General TCP stream and IP fragment reassembly are not available. These are needed to interpret content split across multiple packets correctly.</p>
-          </li>
-          <li>
-            <strong>PCAPNG support:</strong>
-            <p>PCAPNG input is currently explicitly rejected; users must convert the file.</p>
-          </li>
-          <li>
-            <strong>Large files:</strong>
-            <p>Although SQLite is used, all flows and DNS events are kept in memory. RAM usage and processing time should be measured on large captures, and this design should be improved.</p>
-          </li>
-        </ol>
-      </section>
-      <a class="repository-link" href="https://github.com/sacitcinar/pcap-behavior-core" target="_blank" rel="noopener noreferrer">Explore the source code <span aria-hidden="true">↗</span>
-      </a>
-    </div>
-  </article>
-</main>
+        </div>
+      </article>
+    </main>
     <footer class="site-footer">
       <div class="footer-inner">
         <p>© 2026 Mehmet Sacit Çınar</p>

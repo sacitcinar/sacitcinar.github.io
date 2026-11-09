@@ -62,166 +62,97 @@
       <a class="project-return" href="/projects.html" data-section="projects">← Projects</a>
       <article>
         <header class="project-detail-intro">
-          <div class="project-meta">
-            <span class="project-badge">GITHUB</span><span class="project-badge">PYTHON</span
-            ><span class="project-badge">CLI</span>
-          </div>
+          <ul class="project-showcase-tags project-detail-tags" aria-label="Technologies">
+            <li>Python</li>
+            <li>CLI</li>
+            <li>DNS</li>
+            <li>RDAP</li>
+            <li>JSON</li>
+          </ul>
           <h1>URL Reputation Checker</h1>
-          <p class="project-description">
-            A CLI tool combining eight intelligence sources, plus optional OpenPhish support, with
-            domain context and URL heuristics. Delivers a unified report with a risk score, verdict
-            and coverage summary.
-          </p>
-          <a
-            class="repository-link"
-            href="https://github.com/sacitcinar/url-reputation-checker"
-            target="_blank"
-            rel="noopener noreferrer"
-            >View on GitHub <span aria-hidden="true">↗</span></a
-          >
-          <ol class="pipeline" aria-label="Analysis workflow">
-            <li>
-              <span class="pipeline-chip"
-                ><span aria-hidden="true">🔗</span> URL / defanged URL</span
-              >
-            </li>
-            <li><span class="pipeline-chip">Refang &amp; normalize</span></li>
-            <li>
-              <span class="pipeline-chip"
-                ><span aria-hidden="true">🌐</span> Intel + heuristics</span
-              >
-            </li>
-            <li>
-              <span class="pipeline-chip"><span aria-hidden="true">📊</span> Risk score</span>
-            </li>
-            <li>
-              <span class="pipeline-chip"><span aria-hidden="true">🛡️</span> Verdict</span>
-            </li>
-          </ol>
+          <p class="project-description">A command-line tool for checking suspicious URLs. It looks up existing threat records, gathers domain and IP information, and checks the address for signs of impersonation. The tool performs lookups without opening the target site or submitting a new scan.</p>
+          <a class="repository-link" href="https://github.com/sacitcinar/url-reputation-checker" target="_blank" rel="noopener noreferrer">
+            View on GitHub <span aria-hidden="true">↗</span>
+          </a>
         </header>
         <div class="project-article-body">
           <section class="project-story">
-            <h2>One view of URL reputation</h2>
-            <p>
-              The checker brings existing threat records, domain and IP context, and URL structure
-              into a single report. It does not directly visit the submitted website or submit a new
-              scan.
-            </p>
-          </section>
-          <section class="project-story">
-            <h2>From URL to assessment</h2>
+            <h2>How it works</h2>
             <ol class="method-list">
-              <li>
-                <strong>Prepare the input.</strong>
-                <p>
-                  Normalize the URL and handle defanged input before extracting its domain and
-                  structural indicators.
-                </p>
-              </li>
-              <li>
-                <strong>Collect the evidence.</strong>
-                <p>
-                  Combine existing intelligence records with DNS, RDAP, domain age, ASN and
-                  geolocation context, then inspect impersonation and URL heuristics.
-                </p>
-              </li>
-              <li>
-                <strong>Explain the outcome.</strong>
-                <p>
-                  Finish with a 0–100 risk score, verdict and coverage summary. Missing keys or
-                  failed requests are shown as unavailable, not reported as clean.
-                </p>
-              </li>
+              <li>Normalize the URL, including defanged input such as hxxps[:]//example[.]com.</li>
+              <li>Look up existing reputation records and gather DNS, RDAP and IP information.</li>
+              <li>Check the URL for lookalike domains, brand impersonation and other suspicious patterns.</li>
+              <li>Report a risk score from 0 to 100, a verdict and the coverage of the reputation checks.</li>
             </ol>
           </section>
           <section class="project-story">
-            <h2>Intelligence sources</h2>
-            <p>
-              Eight intelligence integrations are available, with optional support for a
-              user-provided OpenPhish list. Domain and IP context is included separately.
-            </p>
-            <ul class="source-chips">
-              <li>VirusTotal</li>
-              <li>Google Safe Browsing</li>
-              <li>URLhaus</li>
-              <li>PhishTank</li>
-              <li>CERT Polska</li>
-              <li>Phishing.Database</li>
-              <li>urlscan.io</li>
-              <li>AbuseIPDB</li>
-              <li>OpenPhish</li>
-            </ul>
-          </section>
-          <section class="project-story">
-            <h2>What it includes</h2>
-            <ul class="feature-list">
-              <li>Single-URL analysis and TXT/CSV batch input.</li>
-              <li>Typosquatting, brand impersonation and Unicode/Punycode heuristics.</li>
-              <li>
-                JSON or Markdown reports, selectable providers and automation-friendly exit codes.
-              </li>
-              <li>Python 3.10+ with no external Python packages required.</li>
-            </ul>
-          </section>
-          <section class="project-story">
             <h2>Run it locally</h2>
-            <p>
-              Configure the API keys you have in your local .env file. Providers without required
-              credentials are marked as skipped or unavailable.
-            </p>
+            <p>Run the commands from the project folder with Python 3.10 or newer. Add any provider API keys you have to a local .env file. Sources that require a missing key are marked as skipped or unavailable.</p>
             <div class="usage-terminal">
               <div class="terminal-caption"><span aria-hidden="true">›_</span> Usage example</div>
               <pre><code>python3 app.py &#x27;https://example.com/login&#x27;
-
-# Save a JSON report
-python3 app.py &#x27;https://example.com/login&#x27; -o report.json</code></pre>
+python3 app.py &#x27;hxxps[:]//example[.]com/login&#x27; -o report.json
+python3 app.py urls.csv</code></pre>
             </div>
+            <p>For batch checks, use a TXT file with one URL per line or a CSV with a url column. Use --offline to check an address against local feeds and URL rules without making network requests.</p>
           </section>
           <section class="project-story">
-            <h2>A look at the terminal</h2>
-            <p>
-              These screenshots come from the repository’s EICAR example. EICAR is a harmless
-              anti-malware test file; the displayed verdict reflects the intelligence records at the
-              time of that example.
-            </p>
+            <h2>Intelligence sources</h2>
+            <ul class="feature-list project-source-groups">
+              <li>
+                <div class="project-source-row">
+                  <span class="project-source-label">URL reputation</span>
+                  <ul class="source-chips">
+                    <li>VirusTotal</li>
+                    <li>Google Safe Browsing</li>
+                    <li>URLhaus</li>
+                    <li>PhishTank</li>
+                    <li>CERT Polska</li>
+                    <li>Phishing.Database</li>
+                    <li>urlscan.io</li>
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <div class="project-source-row">
+                  <span class="project-source-label">Domain and IP</span>
+                  <ul class="source-chips">
+                    <li>DNS</li>
+                    <li>RDAP</li>
+                    <li>AbuseIPDB</li>
+                  </ul>
+                </div>
+              </li>
+              <li>
+                <div class="project-source-row">
+                  <span class="project-source-label">Optional feed</span>
+                  <div class="project-source-details">
+                    <ul class="source-chips">
+                      <li>OpenPhish</li>
+                    </ul>
+                    <span class="project-source-note">Local list</span>
+                  </div>
+                </div>
+              </li>
+            </ul>
+          </section>
+          <section class="project-story">
+            <h2>Reading the report</h2>
+            <p>The risk score reflects the evidence the tool found. Coverage shows how many reputation sources supplied usable results. A low score with limited coverage calls for further checking. UNKNOWN means there wasn’t enough evidence for a verdict of LIKELY SAFE.</p>
             <figure class="terminal-figure">
-              <a href="/assets/projects/url-terminal-1.png" target="_blank" rel="noopener"
-                ><img
-                  src="/assets/projects/url-terminal-1.png"
-                  alt="URL Reputation Checker showing the target URL and source intelligence for the EICAR test file"
-                  width="1109"
-                  height="629"
-                  loading="lazy"
-              /></a>
-              <figcaption>Source results and their availability.</figcaption>
+              <a href="/assets/projects/url-terminal-1.png" target="_blank" rel="noopener noreferrer">
+                <img src="/assets/projects/url-terminal-1.png" width="1109" height="629" alt="Terminal report showing reputation sources and their status" loading="lazy" decoding="async">
+              </a>
             </figure>
             <figure class="terminal-figure">
-              <a href="/assets/projects/url-terminal-2.png" target="_blank" rel="noopener"
-                ><img
-                  src="/assets/projects/url-terminal-2.png"
-                  alt="Domain and IP context, URL heuristics, and final assessment in the repository example"
-                  width="1108"
-                  height="648"
-                  loading="lazy"
-              /></a>
-              <figcaption>Context, findings and the final assessment.</figcaption>
+              <a href="/assets/projects/url-terminal-2.png" target="_blank" rel="noopener noreferrer">
+                <img src="/assets/projects/url-terminal-2.png" width="1108" height="648" alt="Terminal report showing domain context, findings and the final verdict" loading="lazy" decoding="async">
+              </a>
             </figure>
           </section>
-          <section class="project-story project-limits">
-            <h2>Reading the result</h2>
-            <p>
-              The risk score is not a probability, and a missing match does not prove safety. Review
-              the findings and coverage together. Third-party lookups may receive the submitted URL;
-              report redaction affects displayed and saved output rather than provider requests.
-            </p>
-          </section>
-          <a
-            class="repository-link"
-            href="https://github.com/sacitcinar/url-reputation-checker"
-            target="_blank"
-            rel="noopener noreferrer"
-            >Explore the source code <span aria-hidden="true">↗</span></a
-          >
+          <a class="repository-link" href="https://github.com/sacitcinar/url-reputation-checker" target="_blank" rel="noopener noreferrer">
+            Explore the source code <span aria-hidden="true">↗</span>
+          </a>
         </div>
       </article>
     </main>
