@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Citrix NetScaler: 28 Vulnerabilities Patched in ADC and Gateway</title>
+    <meta name="description" content="Citrix released updates for 28 vulnerabilities in NetScaler ADC and Gateway, including nine critical flaws. The report covers configuration-dependent exposure, fixed builds and upgrade priorities." />
+    <meta content="#0c0d10" name="theme-color" />
+    <link href="/style.css" rel="stylesheet" />
+    <link href="/about.css" rel="stylesheet" />
+    <link href="/projects.css" rel="stylesheet" />
+    <link href="/research.css" rel="stylesheet" />
+    <link href="/theme.css" rel="stylesheet" />
+    <link
+      href="https://sacitcinar.github.io/research/netscaler-28-vulnerabilities-november-2026/"
+      rel="canonical"
+    />
+    <link
+      rel="icon"
+      href="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+      type="image/svg+xml"
+    />
+    <link rel="icon" href="/favicon-32.png?v=castle-original7" sizes="32x32" type="image/png" />
+    <link rel="shortcut icon" href="/favicon.ico?v=castle-original7" />
+    <link rel="stylesheet" href="/codex.css" />
+    <link rel="stylesheet" href="/typography.css" />
+    <link rel="stylesheet" href="/palette.css" />
+    <link rel="stylesheet" href="/i18n.css" />
+    <script src="/i18n.js" defer></script>
+  </head>
+  <body class="research-body" data-section-page="research">
+    <header class="site-header">
+      <div class="header-inner">
+        <a aria-label="Sacit Çınar — About" class="brand" data-section="home" href="/index.html"
+          ><span class="brand-mark" aria-hidden="true"
+            ><img
+              src="/assets/brand/sacit-cinar-castle.svg?v=castle-original7"
+              width="34"
+              height="36"
+              alt=""
+              aria-hidden="true" /></span
+          ><span class="brand-copy"
+            ><span class="brand-name">sacit çınar</span
+            ><span class="brand-prompt"
+              >dominic@kali:~$<span aria-hidden="true" class="terminal-cursor"></span></span></span
+        ></a>
+        <nav aria-label="Main navigation">
+          <a data-section="home" href="/index.html">About</a
+          ><a aria-current="page" class="active" data-section="research" href="/research.html"
+            >Research</a
+          ><a data-section="projects" href="/projects.html">Projects</a
+          ><a data-section="writeups" href="/write-ups.html">Write-ups</a
+          ><a href="/codex/" data-section="codex">Codex</a
+          ><a class="nav-contact" data-section="contact" href="/index.html#contact">Contact</a>
+        </nav>
+      </div>
+    </header>
+    <main class="projects-main research-detail">
+  <a class="project-return" data-section="research" href="/research.html">← Research</a>
+  <article>
+    <header class="research-hero">
+      <div class="project-meta">
+        <span class="project-badge">CITRIX NETSCALER</span>
+        <span class="project-badge">VULNERABILITY ANALYSIS</span>
+      </div>
+      <h1>Citrix NetScaler: 28 Vulnerabilities Patched in ADC and Gateway</h1>
+      <div class="research-cves" aria-label="Vulnerability identifier and severity">
+        <div class="cve-badge-pair">
+          <span>CVE-2026-107412</span>
+          <span class="severity-label severity-critical" title="Citrix CTX697305; CVSS v4.0 base score">CVSS 4.0 · 9.5 · CRITICAL</span>
+        </div>
+        <div class="cve-badge-pair">
+          <span>CVE-2026-120868</span>
+          <span class="severity-label severity-critical" title="Citrix CTX697305; CVSS v4.0 base score">CVSS 4.0 · 9.3 · CRITICAL</span>
+        </div>
+      </div>
+      <p class="research-deck">Citrix released updates for 28 vulnerabilities in NetScaler ADC and Gateway, including nine critical flaws. The report covers configuration-dependent exposure, fixed builds and upgrade priorities.</p>
+      <p class="research-byline">Mehmet Sacit Çınar · Published through <a href="https://www.linkedin.com/company/memori-intel/" target="_blank" rel="noopener noreferrer">Memori Intel ↗</a></p>
+      <p class="research-edition">Published on LinkedIn: 13 November 2026</p>
+      <div class="research-actions">
+        <a href="/assets/research/netscaler-28-vulnerabilities-november-2026.pdf" target="_blank" rel="noopener noreferrer">Published Report ↗</a>
+        <a href="https://www.linkedin.com/feed/update/urn:li:activity:7526991037576314880/" target="_blank" rel="noopener noreferrer">View LinkedIn Post ↗</a>
+      </div>
+    </header>
+    <div class="research-layout">
+      <aside class="article-toc">
+        <p>IN THIS REPORT</p>
+        <nav aria-label="Article contents">
+          <a href="#overview">A patch across NetScaler services</a>
+          <a href="#exposure">Two reasons to prioritise patching</a>
+          <a href="#critical-flaws">Seven feature-specific critical flaws</a>
+          <a href="#authentication">Authentication and application processing</a>
+          <a href="#traffic-management">Traffic handling and management</a>
+          <a href="#versions">Which builds contain the fixes</a>
+          <a href="#deployment">Plan the upgrade and verify completion</a>
+          <a href="#publication">Published Report</a>
+          <a href="#sources">Sources</a>
+        </nav>
+      </aside>
+      <div class="research-copy">
+        <section class="project-story" id="overview">
+          <h2>A patch across NetScaler services</h2>
+          <p>Cloud Software Group released fixes on 12 November 2026 for 28 vulnerabilities in customer-managed NetScaler ADC and Gateway. The update fixes 9 critical, 15 high and 4 medium-severity vulnerabilities.</p>
+          <p>NetScaler handles application delivery and remote access. Its exposure depends on the services each appliance processes, from load balancing to authentication and VPN traffic.</p>
+          <p>Citrix describes unpredictable behaviour and denial of service. High CVSS impact scores do not, by themselves, establish a working remote-code-execution exploit.</p>
+          <p>Several findings came from AI-assisted code analysis. Citrix also credits external researchers in the bulletin.</p>
+        </section>
+        <section class="project-story" id="exposure">
+          <h2>Two reasons to prioritise patching</h2>
+          <h3>CVE-2026-120868 / Packet processing / CVSS v4.0 9.3</h3>
+          <p>A buffer-bounds failure in core packet processing affects ADC and Gateway without requiring an additional feature, including the default configuration. The CVSS vector specifies network access, no privileges and no user interaction.</p>
+          <p>An appliance that does not use DNS load balancing, SMPP or a particular authentication method still meets this vulnerability’s configuration condition.</p>
+          <h3>CVE-2026-107412 / Gateway and AAA / CVSS v4.0 9.5</h3>
+          <p>This CVE groups multiple memory overflows. It applies to Gateway configurations using SSL VPN, ICA Proxy, clientless VPN or RDP Proxy, and to authentication, authorisation and accounting (AAA) virtual servers.</p>
+          <p>The vector specifies no authentication or user interaction, with an additional attack requirement (AT:P). The public advisory does not explain that requirement or provide a complete exploit mechanism.</p>
+          <p>Prioritise internet-facing Gateway and AAA appliances. Other affected ADC deployments still require the update because the packet-processing flaw has no additional feature prerequisite.</p>
+        </section>
+        <section class="project-story" id="critical-flaws">
+          <h2>Seven feature-specific critical flaws</h2>
+          <p>Each entry below has a CVSS v4.0 base score of 9.3. The configured feature determines which processing path is exposed.</p>
+          <div class="report-table-wrap">
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th scope="col">CVE</th>
+                  <th scope="col">Service</th>
+                  <th scope="col">Configuration condition</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>CVE-2026-107407</td>
+                  <td>SMPP</td>
+                  <td>SMPP load-balancing or content-switching virtual server.</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-107408</td>
+                  <td>DNS / DoH</td>
+                  <td>DNS load balancing and recursive DNS resolution.</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-107409</td>
+                  <td>DoH</td>
+                  <td>DNS load balancing over HTTPS.</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-107410</td>
+                  <td>Push</td>
+                  <td>Load-balancing virtual server of type PUSH.</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-107415</td>
+                  <td>Email OTP</td>
+                  <td>Email Action configured.</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-111334</td>
+                  <td>EPA / EPAS</td>
+                  <td>VPN or AAA virtual server with Endpoint Analysis.</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-120864</td>
+                  <td>ICA proxy</td>
+                  <td>Gateway VPN, AAA or content-routing HDX virtual server.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>These issues concern memory overflow or corruption. Citrix lists unpredictable behaviour or denial of service as the outcome.</p>
+        </section>
+        <section class="project-story" id="authentication">
+          <h2>Authentication and application processing</h2>
+          <p>High and medium severity findings extend beyond the critical set. The entries below identify the affected function and CVSS v4.0 score.</p>
+          <div class="report-table-wrap">
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th scope="col">CVE</th>
+                  <th scope="col">CVSS v4.0</th>
+                  <th scope="col">Function</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>CVE-2026-107413</td>
+                  <td>8.7</td>
+                  <td>SAML authentication</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-107414</td>
+                  <td>8.7</td>
+                  <td>WebAuth authentication</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-111340</td>
+                  <td>8.7</td>
+                  <td>Knowledge-based authentication</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-111341</td>
+                  <td>8.7</td>
+                  <td>Client-certificate authentication</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-111342</td>
+                  <td>8.7</td>
+                  <td>LDAP authentication</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-111333</td>
+                  <td>6.9</td>
+                  <td>Authentication request handling</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-111337</td>
+                  <td>8.7</td>
+                  <td>Base64 policy-expression decoding</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-111338</td>
+                  <td>6.9</td>
+                  <td>Authentication material in logs</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-111339</td>
+                  <td>6.9</td>
+                  <td>Application Firewall inspection</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <h3>A distinct data-exposure issue</h3>
+          <p>CVE-2026-111338 writes sensitive authentication material to <code>/var/log/httperror.log</code>. Exploitation requires local read access after a logout has occurred.</p>
+        </section>
+        <section class="project-story" id="traffic-management">
+          <h2>Traffic handling and management</h2>
+          <p>These ten entries complete the 28-CVE inventory. Their reachability depends on the appliance configuration and the access conditions in the bulletin.</p>
+          <div class="report-table-wrap">
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th scope="col">CVE</th>
+                  <th scope="col">CVSS v4.0</th>
+                  <th scope="col">Function / condition</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>CVE-2026-107411</td>
+                  <td>8.7</td>
+                  <td>RTSP load balancing / ALG</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-111335</td>
+                  <td>6.9</td>
+                  <td>Request handling; reboot-loop condition</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-111336</td>
+                  <td>8.3</td>
+                  <td>HTTP/2-enabled HTTP profile</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-120860</td>
+                  <td>8.7</td>
+                  <td>Diameter, SIP/TCP, MQTT, RADIUS</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-120861</td>
+                  <td>8.7</td>
+                  <td>GSLB / geolocation functions</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-120862</td>
+                  <td>8.7</td>
+                  <td>SIP ALG / DNS answer logging</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-120863</td>
+                  <td>8.7</td>
+                  <td>Management plane: NSIP / NSIP6</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-120865</td>
+                  <td>8.7</td>
+                  <td>HTTP/3 (QUIC) virtual servers</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-120866</td>
+                  <td>7.7</td>
+                  <td>BGP neighbour without TCP-MD5</td>
+                </tr>
+                <tr>
+                  <td>CVE-2026-120867</td>
+                  <td>8.7</td>
+                  <td>Specified TLS ECH / SafeNet HSM setups</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p>Feature checks help establish individual exposure. Citrix still recommends upgrading when listed feature prerequisites appear absent, because the release includes additional security fixes.</p>
+        </section>
+        <section class="project-story" id="versions">
+          <h2>Which builds contain the fixes</h2>
+          <p>For each supported branch below, builds earlier than the listed release are affected. Install that release or a later patched build in the same branch.</p>
+          <div class="report-table-wrap">
+            <table class="report-table">
+              <thead>
+                <tr>
+                  <th scope="col">Product / branch</th>
+                  <th scope="col">Fixed from</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>ADC / Gateway 14.1</td>
+                  <td>14.1-73.57</td>
+                </tr>
+                <tr>
+                  <td>ADC / Gateway 13.1</td>
+                  <td>13.1-64.39</td>
+                </tr>
+                <tr>
+                  <td>ADC 14.1-FIPS</td>
+                  <td>14.1-73.58 FIPS</td>
+                </tr>
+                <tr>
+                  <td>ADC 13.1-FIPS / 13.1-NDcPP</td>
+                  <td>13.1-37.293</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <h3>Customer-managed deployments</h3>
+          <p>The bulletin applies to appliances managed by customers. Secure Private Access Hybrid deployments using NetScaler instances must also update those instances.</p>
+          <h3>Citrix-managed services</h3>
+          <p>Citrix says the covered Secure Private Access, Gateway Service, Adaptive Auth and NetScaler Console Service environments have already received the security updates.</p>
+        </section>
+        <section class="project-story" id="deployment">
+          <h2>Plan the upgrade and verify completion</h2>
+          <h3>Order and service impact</h3>
+          <p>Citrix specifies upgrading ADC/Gateway before NetScaler Console. Existing ICA sessions terminate during the upgrade and must be started again afterwards.</p>
+          <p>For environments using pooled or flexed Console-based licensing, moving from a pre-14.1-51.x Console build may require a LAS exception or extension. Review the vendor’s licensing sequence before scheduling the change.</p>
+          <h3>Check the upgrade result</h3>
+          <p>NetScaler Console can list affected instances in CVE Detection and initiate an upgrade workflow. Its assessment may take several hours to refresh; the documentation provides a Scan-Now option.</p>
+          <p>After the upgrade, confirm the intended build and check the application-delivery and remote-access functions used by the deployment.</p>
+          <h3>Exploitation status at disclosure</h3>
+          <p>At publication, Citrix reported no known unmitigated exploits for the announced vulnerabilities. CERT-EU reported no confirmed public proof of concept. This describes the disclosure status on 12 November 2026.</p>
+        </section>
+        <section class="project-story" id="publication">
+          <h2>Published Report</h2>
+          <div class="publication-panel">
+            <a href="/assets/research/netscaler-28-vulnerabilities-november-2026.pdf" target="_blank" rel="noopener noreferrer">
+              <img src="/assets/research/netscaler-28-vulnerabilities-november-2026-cover.png" width="900" height="1125" loading="lazy" alt="Cover of the Citrix NetScaler: 28 Vulnerabilities Patched in ADC and Gateway report">
+            </a>
+            <div>
+              <p>Prepared by Mehmet Sacit Çınar for Memori Intel, based on the vendor disclosures and sources listed below. Original technical findings are attributed to their respective authors.</p>
+              <a href="/assets/research/netscaler-28-vulnerabilities-november-2026.pdf" target="_blank" rel="noopener noreferrer">Published Report ↗</a>
+              <a href="https://www.linkedin.com/feed/update/urn:li:activity:7526991037576314880/" target="_blank" rel="noopener noreferrer">View LinkedIn Post ↗</a>
+            </div>
+          </div>
+        </section>
+        <section class="project-story" id="sources">
+          <h2>Sources</h2>
+          <ol class="research-sources">
+            <li>
+              <a href="https://support.citrix.com/external/article/CTX697305" target="_blank" rel="noopener noreferrer">Citrix — NetScaler ADC and Gateway Security Bulletin CTX697305 ↗</a>
+            </li>
+            <li>
+              <a href="https://cert.europa.eu/publications/security-advisories/2026-020" target="_blank" rel="noopener noreferrer">CERT-EU — Security Advisory 2026-020 ↗</a>
+            </li>
+          </ol>
+        </section>
+      </div>
+    </div>
+  </article>
+</main>
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p>© 2026 Mehmet Sacit Çınar</p>
+        <nav aria-label="Footer navigation" class="footer-nav">
+          <a data-section="home" href="/index.html">About</a
+          ><a aria-current="page" class="active" data-section="research" href="/research.html"
+            >Research</a
+          ><a data-section="projects" href="/projects.html">Projects</a
+          ><a data-section="writeups" href="/write-ups.html">Write-ups</a
+          ><a href="/codex/" data-section="codex">Codex</a
+          ><a class="nav-contact" data-section="contact" href="/index.html#contact">Contact</a>
+        </nav>
+      </div>
+    </footer>
+    <script defer src="/navigation.js"></script>
+  </body>
+</html>
