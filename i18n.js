@@ -1,6 +1,9 @@
 (() => {
   'use strict';
   const translations = {
+  "Research page 3": "Araştırmalar: sayfa 3",
+"Prepared by Mehmet Sacit Çınar for Memori Intel, based on the vendor disclosures and sources listed below. Original technical findings are attributed to their respective authors.": "Bu rapor, aşağıda listelenen üretici duyuruları ve kaynaklar temel alınarak Mehmet Sacit Çınar tarafından Memori Intel için hazırlanmıştır. Özgün teknik bulgular ilgili yazarlara atfedilmiştir.",
+
   "A lightweight command-line tool for investigating suspicious emails saved as .eml files. The analysis runs entirely offline, so the message stays on your computer.": ".eml olarak kaydedilmiş şüpheli e-postaları incelemek için geliştirdiğim hafif bir komut satırı aracı. Araç tüm analizi bilgisayarınızda çevrimdışı yapar.",
   "Read the subject, headers and body from the .eml file.": ".eml dosyasından konu satırını, başlıkları ve mesaj gövdesini okur.",
   "Prepare the text using the same steps as during training.": "Metni eğitimdeki adımlarla hazırlar.",
