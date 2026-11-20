@@ -491,6 +491,26 @@
   addEventListener('resize', queueLayout);
   document.fonts?.ready.then(queueLayout);
   document.fonts?.addEventListener('loadingdone', queueLayout);
+  function updateLatestDates(now = new Date()) {
+    const today = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+    document.querySelectorAll('[data-latest-list] time[datetime]').forEach(time => {
+      const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(time.getAttribute('datetime'));
+      if (!match) return;
+      const [, year, month, day] = match.map(Number);
+      const published = Date.UTC(year, month - 1, day);
+      const days = Math.round((today - published) / 86400000);
+      const date = `${String(day).padStart(2, '0')}.${String(month).padStart(2, '0')}.${year}`;
+      let label = date;
+      if (days === 0) label = language === 'tr' ? 'Bugün' : 'Today';
+      else if (days === 1) label = language === 'tr' ? 'Dün' : 'Yesterday';
+      else if (days > 1 && days < 7) label = language === 'tr' ? `${days} gün önce` : `${days} days ago`;
+      else if (days >= 7 && days < 30) {
+        const weeks = Math.floor(days / 7);
+        label = language === 'tr' ? `${weeks} hafta önce` : `${weeks} ${weeks === 1 ? 'week' : 'weeks'} ago`;
+      }
+      if (time.textContent !== label) time.textContent = label;
+    });
+  }
   function localizeCounts() {
     document.querySelectorAll('[data-research-count], [data-writeup-count]').forEach(label => {
       const selector = label.hasAttribute('data-research-count') ? '.research-card' : '.writeup-card:not([hidden])';
@@ -545,6 +565,7 @@
       });
     });
     localizeCounts();
+    updateLatestDates();
     stabilizeLayout();
     const titles = {Research:'Araştırmalar',Projects:'Projeler',Contact:'İletişim',Writeups:'Write-ups'};
     const reverse = Object.fromEntries(Object.entries(titles).map(([en,tr]) => [tr,en]));
@@ -572,6 +593,9 @@
     });
     header.append(toggle);
   }
+  setInterval(() => { if (!document.hidden) updateLatestDates(); }, 60000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) updateLatestDates(); });
+  addEventListener('focus', () => updateLatestDates());
   window.PortfolioI18n = { apply };
   apply();
 })();
